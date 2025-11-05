@@ -33,14 +33,14 @@ function parseJwt(token: string): JwtPayload {
   providedIn: 'root'
 })
 export class UserService {
-  private signinUrl = `${environment.apiUrl}/user/signin`;
-  private signupUrl = `${environment.apiUrl}/user/signup`;
+  private signinUrl = `${environment.apiUrl}/auth/login`;
+private signupUrl = `${environment.apiUrl}/auth/register`;
   private apiUrl = `${environment.apiUrl}/user`;
 
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
-    const loginData = { email, password };
+const loginData = { username: email, password };
     return this.http.post(this.signinUrl, loginData).pipe(
       tap((response: any) => {
         console.log('Response from server:', response);
@@ -59,8 +59,8 @@ export class UserService {
         let normalizedRole = response.role;
         if (normalizedRole) {
           normalizedRole = normalizedRole.charAt(0).toUpperCase() + normalizedRole.slice(1).toLowerCase();
-          if (normalizedRole.toLowerCase() === 'simpleuser') {
-            normalizedRole = 'SimpleUser';
+          if (normalizedRole.toLowerCase() === 'user') {
+            normalizedRole = 'USER';
           }
         }
         localStorage.setItem('userRole', normalizedRole);

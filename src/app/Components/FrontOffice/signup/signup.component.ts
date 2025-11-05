@@ -29,27 +29,37 @@ export class SignupComponent {
       birthDate: ['', [Validators.required]]
     });
   }
+  
+onSignup(): void {
+  if (this.signupForm.valid) {
+    const formData = this.signupForm.value;
 
-  onSignup(): void {
-    if (this.signupForm.valid) {
-      console.log('Signup form data:', this.signupForm.value);
+    const signupPayload = {
+      username: formData.email,       // use email as username
+      email: formData.email,
+      password: formData.password,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      address: formData.address,
+      role: 'USER'                    // default role
+    };
 
-      this.userService.signup(this.signupForm.value).subscribe(
-        (response: any) => {
-          console.log('Signup success:', response);
-          this.router.navigate(['/login']);
-          alert('Signup successful! Please log in.');
-        },
-        (error: any) => {
-          console.error('Signup error:', error);
-          alert('Signup failed: ' + (error.message || 'Please try again.'));
-        }
-      );
-    } else {
-      console.log('Form is not valid');
-      alert('Please fill out the form correctly');
-    }
+    this.userService.signup(signupPayload).subscribe(
+      (response: any) => {
+        console.log('Signup success:', response);
+        alert('Signup successful! You can now log in.');
+        this.router.navigate(['/login']);
+      },
+      (error: any) => {
+        console.error('Signup error:', error);
+        alert('Signup failed: ' + (error.message || 'Please try again.'));
+      }
+    );
+  } else {
+    alert('Please fill out the form correctly');
   }
+}
+
 
   get firstName() { return this.signupForm.get('firstName'); }
   get lastName() { return this.signupForm.get('lastName'); }

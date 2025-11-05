@@ -79,7 +79,7 @@ export class PartnerCommissionComponent implements OnInit {
       const decoded = this.decodeToken(token);
       console.log('Decoded role:', decoded.role);
 
-      if (decoded.role === 'SimpleUser') {
+      if (decoded.role === 'USER') {
         this.commissionService.getUserDetails().subscribe({
           next: (user: any) => {
             console.log('Fetched user:', user);

@@ -27,7 +27,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     // Get user role from localStorage
-    this.userRole = localStorage.getItem('userRole') || 'SimpleUser';
+    this.userRole = localStorage.getItem('userRole') || 'USER';
     console.log('Initial user role:', this.userRole);
     
     // Set menu items based on user role
@@ -36,7 +36,7 @@ export class SidebarComponent implements OnInit {
     // Listen for changes to localStorage
     window.addEventListener('storage', (event) => {
       if (event.key === 'userRole') {
-        this.userRole = event.newValue || 'SimpleUser';
+        this.userRole = event.newValue || 'USER';
         this.setMenuItems();
       }
     });
@@ -72,7 +72,7 @@ export class SidebarComponent implements OnInit {
           sidebarnavItem.path === 'driver-interface/schedule' // For driver-specific routes
         );
         break;
-      case 'SimpleUser':
+      case 'USER':
         this.sidebarnavItems = ALL_ROUTES.filter((sidebarnavItem: RouteInfo) =>
           sidebarnavItem.path === 'trips/create' ||
           sidebarnavItem.path === 'carpooling/create' ||

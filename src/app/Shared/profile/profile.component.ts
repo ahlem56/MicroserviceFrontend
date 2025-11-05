@@ -93,7 +93,7 @@ Object: any;
     this.checkAvailability(); // Check availability when the component is initialized
     this.fetchSubscriptionDetails();  // Fetch subscription details
 
-    if (this.userRole === 'SimpleUser') {
+    if (this.userRole === 'USER') {
       this.subscriptionStartDate = this.user.subscriptionStartDate;
       // Add fallback message
     }

@@ -39,7 +39,7 @@ export class LoginComponent {
             this.router.navigate(['back-office/dashboard']);
           } else if (role === 'driver') {
             this.router.navigate(['driver-interface/trips']);
-          } else if (role === 'simpleuser' && user.partner && user.partner.partnerId) {
+          } else if (role === 'USER' && user.partner && user.partner.partnerId) {
             this.router.navigate(['partner/commissions']);
           } else {
             this.router.navigate(['landingPage']);
