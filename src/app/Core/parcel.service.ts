@@ -10,11 +10,24 @@ export class ParcelService {
   private apiUrl = 'http://localhost:8089/examen/parcel/'; // Assurez-vous que l'URL est correcte
 
   constructor(private http: HttpClient) {}
-
+/*
   createParcel(parcelData: any, simpleUserId: number, headers: HttpHeaders): Observable<any> {
     const url = `${this.apiUrl}createParcel/${simpleUserId}`;
     return this.http.post(url, parcelData, { headers });
   }
+    */
+   createParcel(parcelData: any): Observable<any> {
+  const token = localStorage.getItem('token');
+ const headers = new HttpHeaders({
+  'Authorization': `Bearer ${token}`,
+  'Content-Type': 'application/json'
+});
+
+
+
+  return this.http.post('http://localhost:8089/examen/parcel/add', parcelData, { headers });
+}
+
   // Get all trips for a specific driver
   getParcelForDriver(driverId: number, headers: HttpHeaders): Observable<any[]> {
     const url = `${this.apiUrl}driver/${driverId}`;
@@ -26,9 +39,16 @@ export class ParcelService {
   
     return this.http.get<any[]>(url, { headers });
   }
+  //pour monolotique
+  /*
   getParcels(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}get-all-parcels`);
   }
+    */
+   getParcels(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}all`);
+}
+
   assignParcelToDriver(parcelId: number, driverId: number) {
     const headers = new HttpHeaders({
         'Authorization': `Bearer ${localStorage.getItem('token')}`

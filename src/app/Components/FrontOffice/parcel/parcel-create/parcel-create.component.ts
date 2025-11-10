@@ -40,7 +40,7 @@ export class ParcelCreateFrontOfficeComponent {
         this.simpleUserId = currentUser.userId;  // You should already have the user info in localStorage
         console.log("SimpleUser ID: ", this.simpleUserId);  // Verify the SimpleUser ID
       }
-    
+    /*
       createParcel() {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -72,7 +72,40 @@ export class ParcelCreateFrontOfficeComponent {
           }
         );
       }
-      
+      */
+     createParcel() {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    this.errorMessage = 'User not authenticated.';
+    return;
+  }
+
+  if (!this.parcel.parcelWeight || !this.parcel.parcelCategory ||
+      !this.parcel.recepeientPhoneNumber || !this.parcel.senderPhoneNumber ||
+      !this.parcel.parcelDeparture || !this.parcel.parcelDestination) {
+    this.errorMessage = 'Please fill out all fields';
+    return;
+  }
+
+  this.parcelService.createParcel(this.parcel).subscribe({
+    next: (createdParcel) => {
+      console.log('✅ Parcel created:', createdParcel);
+      this.successMessage = 'Your parcel has been created successfully!';
+      this.errorMessage = '';
+
+      // Optionnel : redirection vers paiement
+      // this.router.navigate(['/stripe'], { queryParams: { parcelId: createdParcel.parcelId } });
+
+      this.parcel = {}; // reset form
+    },
+    error: (err) => {
+      console.error('❌ Error creating parcel:', err);
+      this.errorMessage = 'Failed to create parcel.';
+    }
+  });
+}
+
       onKeyPress(event: KeyboardEvent) {
         const charCode = event.which ? event.which : event.keyCode;
         // Vérifie si le caractère est un chiffre (0-9)
