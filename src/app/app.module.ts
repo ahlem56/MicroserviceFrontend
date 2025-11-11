@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule,DatePipe } from '@angular/common';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './Core/auth.interceptor';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -216,7 +217,12 @@ import {VehicleTravelHistoryComponent} from "./Components/BackOffice/vehicle/veh
     NotificationFrontOfficeComponent,
     FullComponent   // Import standalone component
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+
+  ],
+
   bootstrap: [AppComponent],
   exports: [FooterComponent]
 })

@@ -26,6 +26,7 @@ export class VehicleEditBackOfficeComponent {
       vehicleType: ['', Validators.required],
       vehicleModel: ['', Validators.required],
       vehicleCapacity: ['', [Validators.required, Validators.min(1)]],
+      vehicleSerialNumber: ['', Validators.required],
       vehiculeMaintenanceDate: ['', Validators.required],
       vehiculeInsuranceStatus: [false],
       vehiculeInsuranceDate: ['']
@@ -40,24 +41,44 @@ export class VehicleEditBackOfficeComponent {
   loadVehicle(): void {
     this.vehicleService.getVehicleById(this.vehicleId).subscribe({
       next: (vehicle) => {
+        console.log('Vehicle loaded for editing:', vehicle);
+        // Map backend fields to form fields
         this.vehicleForm.patchValue({
-          ...vehicle,
-          vehiculeMaintenanceDate: this.formatDate(vehicle.vehiculeMaintenanceDate),
+          vehicleType: vehicle.vehicleType || 'CAR',
+          vehicleModel: vehicle.vehicleModel || vehicle.model || '',
+          vehicleCapacity: vehicle.vehicleCapacity ?? vehicle.capacity ?? '',
+          vehicleSerialNumber: vehicle.vehicleSerialNumber ?? vehicle.serialNumber ?? '',
+          vehiculeMaintenanceDate: this.formatDate(vehicle.vehiculeMaintenanceDate || vehicle.maintenanceDate),
+          vehiculeInsuranceStatus: vehicle.vehiculeInsuranceStatus ?? (vehicle.insuranceStatus?.toLowerCase() === 'valid' || vehicle.insuranceStatus?.toLowerCase() === 'active'),
           vehiculeInsuranceDate: this.formatDate(vehicle.vehiculeInsuranceDate)
         });
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading vehicle:', err);
-        this.errorMessage = 'Failed to load vehicle details';
+        this.errorMessage = err.message || 'Failed to load vehicle details. The vehicle may not exist.';
         this.isLoading = false;
       }
     });
   }
 
-  private formatDate(dateString: any): string {
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
+  private formatDate(dateValue: any): string {
+    if (!dateValue) return '';
+    if (typeof dateValue === 'string') {
+      // If it's already in YYYY-MM-DD format, return as is
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return dateValue;
+      // If it includes time, extract just the date part
+      return dateValue.split('T')[0];
+    }
+    if (dateValue instanceof Date) {
+      return dateValue.toISOString().split('T')[0];
+    }
+    try {
+      const date = new Date(dateValue);
+      return date.toISOString().split('T')[0];
+    } catch {
+      return '';
+    }
   }
 
   onSubmit(): void {
