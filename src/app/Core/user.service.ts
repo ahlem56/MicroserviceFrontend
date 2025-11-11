@@ -50,6 +50,7 @@ function parseJwt(token: string): JwtPayload {
   providedIn: 'root'
 })
 export class UserService {
+
   // Use Angular dev proxy for CORS-free calls in dev
   private signinUrl = `/auth/login`;
   private signupUrl = `/auth/register`;
@@ -59,7 +60,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
-const loginData = { username: email, password };
+    const loginData: any = { username: email, password, email }; // send both fields to satisfy either contract
     return this.http.post(this.signinUrl, loginData).pipe(
       tap((response: any) => {
         console.log('Response from server:', response);

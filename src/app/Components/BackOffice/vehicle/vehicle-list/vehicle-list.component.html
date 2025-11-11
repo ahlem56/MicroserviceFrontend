@@ -35,24 +35,20 @@
       <thead>
       <tr>
         <th>Model</th>
-        <th>Type</th>
         <th>Capacity</th>
+        <th>Serial Number</th>
         <th>Insurance Status</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let vehicle of filteredVehicles">
-        <td data-label="Model">{{ vehicle.vehicleModel }}</td>
-        <td data-label="Type">
-            <span class="type-badge {{ vehicle.vehicleType.toLowerCase() }}">
-              {{ vehicle.vehicleType }}
-            </span>
-        </td>
-        <td data-label="Capacity">{{ vehicle.vehicleCapacity }} seats</td>
+        <td data-label="Model">{{ getVehicleModel(vehicle) }}</td>
+        <td data-label="Capacity">{{ getVehicleCapacity(vehicle) }} seats</td>
+        <td data-label="Serial Number">{{ getSerialNumber(vehicle) }}</td>
         <td data-label="Insurance">
-            <span class="status-badge" [class.insured]="vehicle.vehiculeInsuranceStatus">
-              {{ vehicle.vehiculeInsuranceStatus ? 'Insured' : 'Uninsured' }}
+            <span class="status-badge" [class.insured]="getInsuranceStatus(vehicle)">
+              {{ getInsuranceStatus(vehicle) ? 'Insured' : 'Uninsured' }}
             </span>
         </td>
         <td class="actions">

@@ -16,13 +16,13 @@
 
   <div *ngIf="!isLoading && !errorMessage">
     <div class="vehicle-info-card">
-      <h3>{{ vehicle.vehicleModel }}</h3>
+      <h3>{{ vehicle?.vehicleModel || 'Unknown' }}</h3>
       <div class="vehicle-details">
-        <span class="type-badge {{ vehicle.vehicleType.toLowerCase() }}">
-          {{ vehicle.vehicleType }}
+        <span class="type-badge {{ (vehicle?.vehicleType || 'unknown').toLowerCase() }}">
+          {{ vehicle?.vehicleType || 'UNKNOWN' }}
         </span>
         <span class="detail-item">
-          <i class="fas fa-users"></i> {{ vehicle.vehicleCapacity }} seats
+          <i class="fas fa-users"></i> {{ (vehicle?.vehicleCapacity ?? 0) }} seats
         </span>
       </div>
     </div>

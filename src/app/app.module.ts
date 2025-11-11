@@ -219,8 +219,10 @@ import {VehicleTravelHistoryComponent} from "./Components/BackOffice/vehicle/veh
   ],
   providers: [
     DatePipe,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+
   ],
+
   bootstrap: [AppComponent],
   exports: [FooterComponent]
 })

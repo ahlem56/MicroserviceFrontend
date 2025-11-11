@@ -9,18 +9,24 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private http: HttpClient) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Prefer a gateway token if present (e.g., Keycloak or exchanged token)
     const gatewayToken = localStorage.getItem('gatewayToken');
     const symfonyToken = localStorage.getItem('token');
 
+    const isAuthEndpoint =
+      req.url.includes('/auth/login') || req.url.includes('/auth/register');
+
+    // Simple auth for login/register endpoints
+    if (!symfonyToken || isAuthEndpoint) {
+      return next.handle(req);
+    }
+
     const isGatewayCall =
-      // Absolute gateway URL (docker/prod)
       req.url.startsWith(`${environment.gatewayUrl}/`) ||
-      // Relative gateway-routed paths
       req.url.includes('/reclamation/') ||
       req.url.includes('/event-service/') ||
       req.url.includes('/trip/') ||
-      req.url.includes('/user-service/');
+      req.url.includes('/user-service/') ||
+      req.url.includes('/vehicule-service/'); // <-- added vehicule-service
 
     const bearer = isGatewayCall ? (gatewayToken || symfonyToken) : symfonyToken;
 
@@ -28,12 +34,10 @@ export class AuthInterceptor implements HttpInterceptor {
       ? req.clone({ setHeaders: { Authorization: `Bearer ${bearer}` } })
       : req;
 
-    // In dev, let proxy handle CORS, don't try exchange logic
     if (!environment.production) {
       return next.handle(authedReq);
     }
 
-    // In docker/prod, if call to gateway fails with 401, try exchange once then retry
     return next.handle(authedReq).pipe(
       catchError(err => {
         if (!isGatewayCall || err.status !== 401) {
@@ -46,9 +50,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
         const candidates = environment.tokenExchangeUrlCandidates ?? [environment.tokenExchangeUrl];
 
-        // Try GET then POST for each candidate; accept multiple response shapes
         const tryOne = (url: string) => {
-          // GET
           return this.http.get(url, {
             headers: { Authorization: `Bearer ${symfonyToken}` },
             observe: 'response',
@@ -59,7 +61,6 @@ export class AuthInterceptor implements HttpInterceptor {
                 const token = extractAccessToken(res.body) || extractAccessTokenFromHeaders(res.headers?.get('Authorization'));
                 if (token) return of(token);
               }
-              // POST fallback
               return this.http.post(url, {}, {
                 headers: { Authorization: `Bearer ${symfonyToken}` },
                 observe: 'response',
@@ -113,5 +114,3 @@ function normalizeToken(value: string): string | null {
   if (!value) return null;
   return value.startsWith('Bearer ') ? value.slice(7) : value;
 }
-
-

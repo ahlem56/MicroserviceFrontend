@@ -45,6 +45,14 @@
           Capacity must be at least 1
         </div>
       </div>
+
+      <div class="form-group">
+        <label>Serial Number</label>
+        <input type="text" formControlName="vehicleSerialNumber" class="form-control" inputmode="numeric" pattern="\d*">
+        <div class="error-msg" *ngIf="vehicleForm.get('vehicleSerialNumber')?.hasError('required') && vehicleForm.get('vehicleSerialNumber')?.touched">
+          Serial number is required
+        </div>
+      </div>
     </div>
 
     <div class="form-section">
