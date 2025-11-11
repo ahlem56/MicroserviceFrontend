@@ -51,45 +51,49 @@ private directionsService!: google.maps.DirectionsService;
 
   // Charger les voyages depuis le backend
   loadTrips(): void {
-    // Récupérer l'utilisateur depuis localStorage
-    const userStr = localStorage.getItem('user');
-
-    if (!userStr) {
-      this.errorMessage = 'User not found in localStorage. Please log in again!';
-      this.isLoading = false;
-      return;
-    }
-
-    const user = JSON.parse(userStr);  // Parser l'objet utilisateur
-    const driverId = user.userId;  // Extraire l'ID du conducteur
-
-    console.log('Driver ID:', driverId);  // Log l'ID du conducteur pour vérification
-
-    if (!driverId || isNaN(driverId)) {  // Vérifier si l'ID est valide
-      this.errorMessage = 'Invalid driver ID!';
-      this.isLoading = false;
-      return;
-    }
-
-    // Configurer les en-têtes pour la requête
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    });
-
-    // Appeler le service pour obtenir les voyages du conducteur
-    this.tripService.getTripsForDriver(driverId, headers).subscribe({
-      next: (response) => {
-        this.trips = response;  // Assigner la réponse à la liste des voyages
-        this.filteredTrips = response;  // Initialiser la liste filtrée
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching trips:', error);
-        this.errorMessage = 'Failed to load trips. Please try again later.';
-        this.isLoading = false;
-      }
-    });
+  const userStr = localStorage.getItem('user');
+  if (!userStr) {
+    this.errorMessage = 'User not found in localStorage. Please log in again!';
+    this.isLoading = false;
+    return;
   }
+
+  const user = JSON.parse(userStr);
+  const driverId = user.userId || user.id;  // ✅ support both keys
+
+  if (!driverId || isNaN(driverId)) {
+    this.errorMessage = 'Invalid driver ID!';
+    this.isLoading = false;
+    return;
+  }
+
+  console.log('Driver ID for trip fetch:', driverId);
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    this.errorMessage = 'Missing token — please log in again!';
+    this.isLoading = false;
+    return;
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.tripService.getTripsForDriver(driverId, headers).subscribe({
+    next: (response) => {
+      console.log('✅ Trips received from backend:', response);
+      this.trips = response || [];
+      this.filteredTrips = this.trips;
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('❌ Error fetching trips:', error);
+      this.errorMessage = 'Failed to load trips. Please try again later.';
+      this.isLoading = false;
+    }
+  });
+}
 
   // Appliquer les filtres (recherche et statut)
   applyFilters(): void {

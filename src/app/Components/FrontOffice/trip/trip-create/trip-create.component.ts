@@ -7,7 +7,6 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
-import { RatingService } from 'src/app/Core/rating.service';
 
 @Component({
   selector: 'app-trip-create',
@@ -49,43 +48,41 @@ export class TripCreateFrontOfficeComponent implements OnInit, AfterViewInit {
     private router: Router,
     private http: HttpClient, 
     private ngZone: NgZone ,
-    private ratingService: RatingService
   ) {}
 
-  ngOnInit() {
+ ngOnInit() {
+  this.driverService.getAvailableDrivers().subscribe({
+    next: (drivers) => {
+      console.log('✅ Available drivers from API:', drivers);
+      this.availableDrivers = drivers;
+    },
+    error: (error) => {
+      this.errorMessage = 'Error fetching drivers. Please try again later.';
+      console.error('❌ Driver loading error:', error);
+    }
+  });
 
-    this.driverService.getAvailableDrivers().subscribe(
-      (drivers) => {
-        this.availableDrivers = drivers;
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  this.simpleUserId = currentUser.userId;
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.mapCenter = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        this.markerPosition = this.mapCenter;
+        this.getAddressFromLatLng(this.mapCenter, 'departure');
       },
       (error) => {
-        this.errorMessage = 'Error fetching drivers. Please try again later.';
-        console.error(error);
+        console.error("Geolocation error:", error);
+        this.errorMessage = "Could not detect your location.";
       }
     );
-
-    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    this.simpleUserId = currentUser.userId;
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.mapCenter = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          this.markerPosition = this.mapCenter;
-          this.getAddressFromLatLng(this.mapCenter, 'departure');
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-          this.errorMessage = "Could not detect your location.";
-        }
-      );
-    }
-    this.loadDriversWithRatings(); // 👈 add this line to load drivers smartly
-
   }
+}
+
 
   ngAfterViewInit() {
     if (this.googleMap) {
@@ -177,76 +174,60 @@ export class TripCreateFrontOfficeComponent implements OnInit, AfterViewInit {
   }
   
 
-  createTrip() {
-    this.errorMessage = ''; 
-    const currentDate = new Date();
-    const selectedDate = new Date(this.trip.tripDate);
+ createTrip() {
+  this.errorMessage = '';
 
-    if (!this.trip.tripDeparture || !this.trip.tripDestination) {
-      this.errorMessage = 'Departure and destination locations are required.';
-      return;
-    }
-
-    if (!this.trip.tripType) {
-      this.errorMessage = 'Trip type is required.';
-      return;
-    }
-
-    if (!this.trip.tripDate || selectedDate <= currentDate) {
-      this.errorMessage = 'Date of departure must be in the future.';
-      return;
-    }
-
-    if (this.trip.numberOfPassengers < 1 || this.trip.numberOfPassengers > 4) {
-      this.errorMessage = 'Number of people must be between 1 and 4.';
-      return;
-    }
-
-    if (!this.selectedDriverId) {
-      this.errorMessage = 'Please select a driver.';
-      return;
-    }
-
-    if (!this.simpleUserId) {
-      this.errorMessage = 'User ID is not available.';
-      return;
-    }
-
-
-    if (!this.selectedDriverId) {
-      this.errorMessage = 'Please select a driver.';
-      return;
-    }
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    // Create clean payload without driverId
-  const tripPayload = {
-    tripDeparture: this.trip.tripDeparture,
-    tripDestination: this.trip.tripDestination,
-    tripDate: this.trip.tripDate,
-    tripDuration: this.trip.tripDuration,
-    tripPrice: this.trip.tripPrice,
-    tripType: this.trip.tripType,
-    numberOfPassengers: this.trip.numberOfPassengers,
-    reservationStatus: 'PENDING',
-    latitude: this.trip.latitude,
-    longitude: this.trip.longitude
-  }; 
-  console.log('Trip Payload being sent:', tripPayload);// trip-create.component.ts
-this.tripService.createTrip(tripPayload, this.simpleUserId!, this.selectedDriverId, headers).subscribe(
-  (createdTrip) => {
-    console.log('Trip Created', createdTrip);
-    this.successMessage = 'Your trip has been created successfully!';
-    this.resetForm();
-    const tripId = createdTrip.tripId; // Extract the dynamic tripId
-    this.router.navigate(['/stripe'], { queryParams: { tripId: tripId } });   },
-  (error) => {
-    this.errorMessage = 'Failed to create trip. Please try again later.';
-    console.error(error);
+  // Basic validation
+  if (!this.trip.tripDeparture || !this.trip.tripDestination) {
+    this.errorMessage = 'Departure and destination are required.';
+    return;
   }
-);
+
+  if (!this.trip.tripDate) {
+    this.errorMessage = 'Please select a departure date.';
+    return;
+  }
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    this.errorMessage = 'You must be logged in to create a trip.';
+    return;
+  }
+
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  this.trip.userId = currentUser.id;
+  this.trip.driverId = this.selectedDriverId;
+
+  const payload = {
+    ...this.trip,
+    reservationStatus: 'PENDING',
+    numberOfPassengers: this.trip.numberOfPassengers || 1,
+    latitude: Number(this.trip.latitude) || 36.8,
+    longitude: Number(this.trip.longitude) || 10.1
+  };
+
+  console.log('🚀 Sending trip payload:', payload);
+
+  // Ensure you're sending the correct token
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  // Log the headers to check if Authorization is sent
+  console.log('Authorization Header:', headers);
+
+  this.tripService.createTrip(payload, token).subscribe({
+    next: (response) => {
+      console.log('✅ Trip created:', response);
+      this.successMessage = 'Your trip has been created successfully!';
+      this.resetForm();
+    },
+    error: (err) => {
+      console.error('❌ Trip creation failed:', err);
+      this.errorMessage = 'Failed to create trip. Please try again.';
+    }
+  });
 }
+
+
 
 resetForm() {
   this.trip = {
@@ -263,50 +244,44 @@ resetForm() {
   this.selectedDriverId = null;
 }
 
-  getRouteData(origin: string, destination: string, waypoints: string[] = []): void {
-    if (!this.map) {
-      console.error("Map is not initialized.");
-      return;
-    }
-  
-    const params: any = {
-      origin,
-      destination,
-      departure_time: 'now',  // Ensures that traffic is included in the response
-    };
-  
-    if (waypoints.length > 0) {
-      params.waypoints = waypoints.join('|');
-      params.optimize_waypoints = 'true';
-    }
-  
-    // Make HTTP request to fetch directions
-    this.http.get('http://localhost:8089/examen/maps/directions', { params }).subscribe(
-      (response: any) => {
-        if (response.routes && response.routes.length > 0) {
-          const route = response.routes[0].legs[0];
-          
-          // Duration with traffic (in seconds)
-          const durationInSeconds = route.duration_in_traffic ? route.duration_in_traffic.value : route.duration.value;
-          
-          this.trip.tripDuration = route.duration.text;  // Display duration as text
-          this.trip.tripPrice = this.calculateDynamicPrice(durationInSeconds);  // Calculate the price
-  
-          // Polyline data for displaying the route
-          const encodedPolyline = response.routes[0].overview_polyline.points;
-          console.log('Encoded Polyline:', encodedPolyline);
-          this.drawRoutePolyline(encodedPolyline);
+getRouteData(origin: string, destination: string): void {
+  if (!this.map) {
+    console.error("Map is not initialized.");
+    return;
+  }
+
+  const params = { origin, destination };
+
+  this.http.get<any>('http://localhost:8090/trip/maps/directions', { params })
+    .subscribe({
+      next: (response) => {
+        console.log('📦 Directions response:', response);
+
+        if (response.duration) {
+          this.trip.tripDuration = response.duration;
+        }
+
+        if (response.distance) {
+          // Extract numeric value from "6.7 km"
+          const distanceKm = parseFloat(response.distance.replace(' km', '').trim());
+          this.trip.tripPrice = this.calculateDynamicPrice(distanceKm);
+        }
+
+        if (response.polyline) {
+          this.drawRoutePolyline(response.polyline);
         } else {
-          console.error('No route found!');
+          console.error('No polyline in response!');
           this.errorMessage = 'No route found!';
         }
       },
-      (error) => {
-        console.error('Error fetching route:', error);
+      error: (error) => {
+        console.error('❌ Error fetching route:', error);
         this.errorMessage = 'Error fetching route data. Please try again.';
       }
-    );
-  }
+    });
+}
+
+
   
 
 
@@ -357,49 +332,31 @@ drawRoutePolyline(encodedPolyline: string) {
   }
 }
 
-calculateDynamicPrice(durationInSeconds: number): number {
-  const basePrice = 3; // Base price for the trip
-  const pricePerMinute = 0.2; // Additional price per minute of travel
-  const durationInMinutes = durationInSeconds / 60; // Convert seconds to minutes
+calculateDynamicPrice(distanceKm: number): number {
+  const basePrice = 3; // Base fare (TND)
+  const perKmRate =
+    this.trip.tripType === 'EXPRESS_TRIP' ? 0.35 : 0.25; // Cheaper for long-distance
 
-  // Basic price formula (adjust according to your business logic)
-  return basePrice + (durationInMinutes * pricePerMinute);
+  const total = basePrice + (distanceKm * perKmRate);
+
+  // Round to 2 decimals
+  return Math.round(total * 100) / 100;
 }
 
 
-loadDriversWithRatings() {
+
+loadDrivers() {
   this.driverService.getAvailableDrivers().subscribe(
     (drivers) => {
-      const ratingPromises = drivers.map((driver) => {
-        if (driver.userId) {
-          return this.ratingService.getAverageRating(driver.userId, new HttpHeaders())
-            .toPromise()
-            .then((rating) => {
-              (driver as any).averageRating = rating || 0;  // if no rating, 0
-              return driver;
-            })
-            .catch((error) => {
-              console.error('Error fetching rating for driver', driver.userId, error);
-              (driver as any).averageRating = 0;
-              return driver;
-            });
-        } else {
-          (driver as any).averageRating = 0;
-          return Promise.resolve(driver);
-        }
-      });
-
-      Promise.all(ratingPromises).then((driversWithRatings) => {
-        // Sort drivers by average rating, highest first
-        this.availableDrivers = driversWithRatings.sort((a: any, b: any) => b.averageRating - a.averageRating);
-        console.log('Sorted Drivers:', this.availableDrivers);
-      });
+      this.availableDrivers = drivers;
+      console.log('✅ Loaded Drivers:', this.availableDrivers);
     },
     (error) => {
       this.errorMessage = 'Error fetching drivers. Please try again later.';
-      console.error(error);
+      console.error('❌ Error fetching drivers:', error);
     }
   );
 }
+
 
 }

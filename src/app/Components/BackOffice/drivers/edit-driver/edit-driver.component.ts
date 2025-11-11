@@ -22,24 +22,24 @@ export class EditDriverComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const driverId = this.route.snapshot.paramMap.get('id'); // Get the driverId from the URL
-    if (driverId) {
-      this.loadDriver(driverId); // Load driver data if driverId exists
-    }
+  const driverId = this.route.snapshot.paramMap.get('id');
+  if (driverId) {
+    this.loadDriver(+driverId); // 👈 convert string to number using +
   }
+}
 
-  // Fetch the driver details based on the ID from the route
-  loadDriver(driverId: string): void {
-    this.driverService.getDriverById(driverId).subscribe(
-      (driver) => {
-        this.driver = driver;  // Assign driver details to the form
-      },
-      (error) => {
-        console.error('Error fetching driver:', error);
-        this.errorMessage = 'Failed to load driver data. Please try again later.';
-      }
-    );
-  }
+loadDriver(driverId: number): void { // 👈 Change type to number
+  this.driverService.getDriverById(driverId).subscribe(
+    (driver) => {
+      this.driver = driver;
+    },
+    (error) => {
+      console.error('Error fetching driver:', error);
+      this.errorMessage = 'Failed to load driver data. Please try again later.';
+    }
+  );
+}
+
 
   // Method to update the driver information
   updateDriver(): void {

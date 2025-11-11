@@ -1,80 +1,84 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+
+import { Trip } from 'src/app/Models/trip.model';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class TripService {
+  private readonly baseUrl = 'http://localhost:8090/trip';
 
-  private apiUrl = `http://localhost:8089/examen/trip/`; // Update with correct URL
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
+  // ----------------- BASIC CRUD -----------------
+
+  getAllTrips(headers?: HttpHeaders): Observable<Trip[]> {
+    return this.http.get<Trip[]>(`${this.baseUrl}/getAllTrips`, { headers });
   }
 
-  createTrip(tripData: any, simpleUserId: number, driverId: number, headers: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}createTrip/${simpleUserId}/${driverId}`;
-    return this.http.post(url, tripData, {headers});
+  createTrip(trip: Trip, token: string): Observable<Trip> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<Trip>(`${this.baseUrl}/createTrip`, trip, { headers });
   }
 
-  // Get all trips for a specific user
-  getTripsForUser(userId: number, headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getTripsForUser/${userId}`;
-    return this.http.get<any[]>(url, {headers});
+  updateTrip(tripId: number, trip: Trip, token: string): Observable<Trip> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.put<Trip>(`${this.baseUrl}/updateTrip/${tripId}`, trip, { headers });
   }
 
-  getTripsByVehicle(vehicleId: number, headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getTripsByVehicle/${vehicleId}`; // Remove leading slash
-    return this.http.get<any[]>(url, {headers});
+  deleteTrip(tripId: number, headers?: HttpHeaders): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/deleteTrip/${tripId}`, { headers });
   }
 
-  // Delete a trip by tripId
-  deleteTrip(tripId: number, headers: HttpHeaders): Observable<void> {
-    const url = `${this.apiUrl}deleteTrip/${tripId}`;
-    return this.http.delete<void>(url, {headers});
+  getTripById(tripId: number, headers?: HttpHeaders): Observable<Trip> {
+    return this.http.get<Trip>(`${this.baseUrl}/getTripById/${tripId}`, { headers });
   }
 
-  // Get all trips for a specific driver
-  getTripsForDriver(driverId: number, headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getTripsForDriver/${driverId}`;
-    const token = localStorage.getItem('token');  // Get token from localStorage
-  
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);  // Attach token to the headers
-    }
+  // ----------------- FILTERED QUERIES -----------------
 
-    return this.http.get<any[]>(url, {headers});
+ getTripsForUser(userId: number, headers?: HttpHeaders): Observable<Trip[]> {
+  const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+  const authHeaders = headers || new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.get<Trip[]>(`${this.baseUrl}/getTripsByUser/${userId}`, { headers: authHeaders });
+}
+
+
+  getTripsForDriver(driverId: number, headers?: HttpHeaders): Observable<Trip[]> {
+    return this.http.get<Trip[]>(`${this.baseUrl}/getTripsByDriver/${driverId}`, { headers });
   }
 
-  getAllTrips(headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getAllTrips`;
-    return this.http.get<any[]>(url, {headers});
+  getTripsByVehicle(vehicleId: number, headers?: HttpHeaders): Observable<Trip[]> {
+    return this.http.get<Trip[]>(`${this.baseUrl}/getTripsByVehicle/${vehicleId}`, { headers });
   }
 
-  acceptTrip(tripId: number, headers: HttpHeaders) {
-    return this.http.put<any>(`http://localhost:8089/examen/trip/acceptTrip/${tripId}`, {}, {headers});
+  // ----------------- DRIVER ACTIONS -----------------
+
+  acceptTrip(tripId: number, headers?: HttpHeaders): Observable<Trip> {
+    return this.http.put<Trip>(`${this.baseUrl}/confirmTrip/${tripId}`, {}, { headers });
   }
 
-  refuseTrip(tripId: number, headers: HttpHeaders) {
-    return this.http.put<any>(`http://localhost:8089/examen/trip/refuseTrip/${tripId}`, {}, {headers});
+  refuseTrip(tripId: number, headers?: HttpHeaders): Observable<Trip> {
+    return this.http.put<Trip>(`${this.baseUrl}/declineTrip/${tripId}`, {}, { headers });
   }
 
-  completeTrip(tripId: number, headers: HttpHeaders) {
-    return this.http.put<any>(`http://localhost:8089/examen/trip/completeTrip/${tripId}`, {}, {headers});
+  completeTrip(tripId: number, headers?: HttpHeaders): Observable<Trip> {
+    return this.http.put<Trip>(`${this.baseUrl}/completeTrip/${tripId}`, {}, { headers });
   }
 
-  getTripById(tripId: number, headers: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}getTrip/${tripId}`;
-    return this.http.get<any>(url, {headers});
+  reachNextCheckpoint(vehicleId: number, headers?: HttpHeaders): Observable<any> {
+    return this.http.put(`${this.baseUrl}/reachNextCheckpoint/${vehicleId}`, {}, { headers });
   }
-
-  reachNextCheckpoint(vehicleId: number, headers: HttpHeaders): Observable<any> {
-    return this.http.put(
-      `http://localhost:8089/examen/vehicle/markNextArrived/${vehicleId}`, 
-      {}, 
-      { headers }
-    );
-  }
-  
 }

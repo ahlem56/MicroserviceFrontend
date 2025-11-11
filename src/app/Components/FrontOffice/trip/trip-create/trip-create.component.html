@@ -68,9 +68,10 @@
       <!-- Driver Selection -->
       <div class="form-floating mb-3">
         <select id="driverSelect" [(ngModel)]="selectedDriverId" name="driverId" class="form-select" required>
-          <option *ngFor="let driver of availableDrivers" [value]="driver.userId">
-            {{ driver.firstName + ' ' + driver.lastName + ' - ⭐ ' + (driver.averageRating?.toFixed(1) || '0') }}
-          </option>
+         <option *ngFor="let driver of availableDrivers" [value]="driver.userId">
+  {{ driver.firstName + ' ' + driver.lastName }}
+</option>
+
           
         </select>
         <label for="driverSelect">Select Your Driver</label>

@@ -22,19 +22,19 @@
           <span class="value">{{ driver?.email }}</span>
         </div>
         <div class="detail">
-          <span class="label">Availability:</span>
-          <span class="value">{{ driver?.availabilityD ? 'Not Available' : 'Available' }}</span>
-        </div>
-  
-        <div class="detail">
-          <span class="label">License Number:</span>
-          <span class="value">{{ driver?.licenseNumberD }}</span>
-        </div>
-  
-        <div class="detail">
-          <span class="label">Insurance:</span>
-          <span class="value">{{ driver?.insuranceDetailsD }}</span>
-        </div>
+        <span class="label">Availability:</span>
+        <span class="value">{{ driver?.availability ? 'Available' : 'Not Available' }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="label">License Number:</span>
+        <span class="value">{{ driver?.licenseNumber }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="label">Insurance:</span>
+        <span class="value">{{ driver?.insuranceDetails }}</span>
+      </div>
   
         <!-- Displaying Average Rating with Stars -->
         <div class="detail" *ngIf="averageRating !== undefined">

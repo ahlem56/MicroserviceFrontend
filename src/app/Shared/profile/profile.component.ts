@@ -92,6 +92,7 @@ Object: any;
     this.loadProfileData();
     this.checkAvailability(); // Check availability when the component is initialized
     this.fetchSubscriptionDetails();  // Fetch subscription details
+this.userRole = (localStorage.getItem('userRole') || '').toUpperCase();
 
     if (this.userRole === 'USER') {
       this.subscriptionStartDate = this.user.subscriptionStartDate;
@@ -100,17 +101,18 @@ Object: any;
   
   }
 
-  private loadUserData(): void {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      this.user = JSON.parse(storedUser);
-      this.userRole = localStorage.getItem('userRole');
-      this.profileImageUrl = this.getProfileImage();
-    }
+ private loadUserData(): void {
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    this.user = JSON.parse(storedUser);
+    this.userRole = (localStorage.getItem('userRole') || '').toUpperCase(); // 👈 normalize
+    this.profileImageUrl = this.getProfileImage();
   }
+}
+
 
   private loadProfileData(): void {
-    if (this.userRole !== 'Admin' && this.userRole !== 'Driver') {
+    if (this.userRole !== 'Admin' && this.userRole !== 'DRIVER') {
       this.fetchTrips();
       this.fetchParcels();
       this.fetchPayments();
@@ -161,12 +163,25 @@ Object: any;
   }
 
   fetchTrips(): void {
-    const headers = this.getAuthHeaders();
-    this.tripService.getTripsForUser(this.user.userId, headers).subscribe({
-      next: (trips) => this.trips = trips,
-      error: (error) => console.error('Error fetching trips:', error)
-    });
+  const headers = this.getAuthHeaders();
+  const userId = this.user.userId || this.user.id;
+
+  if (!userId) {
+    console.error('❌ No userId found in localStorage');
+    return;
   }
+
+  this.tripService.getTripsForUser(userId, headers).subscribe({
+    next: (trips) => {
+      console.log('✅ Trips loaded:', trips);
+      this.trips = trips;
+      this.isTripsVisible = true; // 👈 make sure container is "open"
+    },
+    error: (error) => console.error('❌ Error fetching trips:', error)
+  });
+}
+
+
 
   fetchParcels(): void {
     const headers = this.getAuthHeaders();

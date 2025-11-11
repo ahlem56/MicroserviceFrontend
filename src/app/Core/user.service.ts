@@ -54,7 +54,11 @@ const loginData = { username: email, password };
           console.warn('Token format unexpected, using as-is:', token);
         }
         console.log('Storing token:', token);
-        localStorage.setItem('token', token);
+// Replace this
+localStorage.setItem('token', token);
+
+// Add this line too (so all code paths work)
+localStorage.setItem('authToken', token);
 
         let normalizedRole = response.role;
         if (normalizedRole) {
@@ -65,6 +69,7 @@ const loginData = { username: email, password };
         }
         localStorage.setItem('userRole', normalizedRole);
         localStorage.setItem('user', JSON.stringify(response.user));
+
 
         const decoded = parseJwt(token);
         if (decoded.role !== normalizedRole) {
