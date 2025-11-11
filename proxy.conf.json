@@ -13,7 +13,19 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
+  "/vehicule-service/**": {
+    "target": "http://localhost:8090",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
   "/trip/**": {
+    "target": "http://localhost:8090",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/driver-service/**": {
     "target": "http://localhost:8090",
     "secure": false,
     "changeOrigin": true,
