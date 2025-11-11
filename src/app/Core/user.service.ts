@@ -50,10 +50,11 @@ function parseJwt(token: string): JwtPayload {
   providedIn: 'root'
 })
 export class UserService {
-  // Use relative paths so the Angular proxy forwards to API Gateway
+
+  // Use Angular dev proxy for CORS-free calls in dev
   private signinUrl = `/auth/login`;
   private signupUrl = `/auth/register`;
-  // User-service profile endpoints under /api (proxied to gateway)
+  // Symfony user-service exposes profile endpoints under /api
   private apiUrl = `/api`;
 
   constructor(private http: HttpClient) {}

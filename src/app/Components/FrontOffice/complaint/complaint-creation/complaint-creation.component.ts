@@ -42,12 +42,20 @@ export class ComplaintCreationFrontOfficeComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   
-    this.complaintService.addComplaint(this.complaint, this.simpleUserId, headers).subscribe(
+    // Align payload with Reclamation microservice (issueDescription + userId)
+    const todayIso = new Date().toISOString().split('T')[0];
+    const payload = {
+      issueDescription: this.complaint?.complaintDescription ?? '',
+      userId: this.simpleUserId,
+      createdDate: todayIso
+    };
+
+    this.complaintService.addComplaint(payload, this.simpleUserId, headers).subscribe(
       (createdComplaint) => {
         console.log('Complaint Created', createdComplaint);
         this.successMessage = 'Your complaint has been created successfully!';
         this.errorMessage = '';
-        this.severity = createdComplaint.severity; // Store severity
+        this.severity = createdComplaint?.severity; // Store severity if backend computes it
         console.log('Severity:', this.severity);
         // Reset the form after successful creation
         this.complaint = {

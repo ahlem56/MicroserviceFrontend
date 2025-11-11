@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -8,63 +8,68 @@ import { environment } from 'src/environments/environment';
 })
 export class ComplaintService {
 
-  private apiUrl = 'http://localhost:8089/examen/complaints/'; // Remplace par ton URL backend correcte
+  // Direct base for DEV to avoid gateway 401/CORS
+  private readonly baseUrl: string = (environment.reclamationBaseUrl || '').replace(/\/+$/, '');
 
   constructor(private http: HttpClient) {}
 
+  private withBase<T>(path: string, op: (url: string) => Observable<T>): Observable<T> {
+    const base = this.baseUrl;
+    if (!base) {
+      return throwError(() => new Error('Reclamation base URL not configured'));
+    }
+    return op(`${base}${path}`);
+  }
+
   // Ajouter une réclamation
   addComplaint(complaintData: any, simpleUserId: number, headers: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}add/${simpleUserId}`;
-    return this.http.post(url, complaintData, { headers , responseType: 'json'});
+    // Reclamation MS: POST /reclamations
+    return this.withBase('', (url) => this.http.post(url, complaintData, { headers, responseType: 'json' }));
   }
 
   // Mettre à jour une réclamation
   updateComplaint(complaintId: number, simpleUserId: number, updatedComplaint: any, headers: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}update/${complaintId}/${simpleUserId}`;
-    return this.http.put(url, updatedComplaint, { headers });
+    return this.withBase(`/${complaintId}`, (url) => this.http.put(url, updatedComplaint, { headers, responseType: 'json' }));
   }
 
   // Supprimer une réclamation
   deleteComplaint(complaintId: number, simpleUserId: number, headers: HttpHeaders): Observable<void> {
-    const url = `${this.apiUrl}delete/${complaintId}/${simpleUserId}`;
-    return this.http.delete<void>(url, { headers });
+    return this.withBase(`/${complaintId}`, (url) => this.http.delete<void>(url, { headers }));
   }
 
   // Obtenir toutes les réclamations d'un utilisateur spécifique
   getComplaintsByUser(simpleUserId: number, headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}user/${simpleUserId}`;
-    return this.http.get<any[]>(url, { headers });
+    // Reclamation MS doesn't expose user-filtered endpoint; fallback to all
+    return this.withBase('', (url) => this.http.get<any[]>(url, { headers }));
   }
 
   // Répondre à une réclamation (Admin uniquement)
   respondToComplaint(complaintId: number, adminId: number, response: string, headers: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}respond/${complaintId}/${adminId}`;
-    return this.http.post(url, { response }, { headers , responseType: 'json'});
+    // Not supported by Reclamation MS; return error observable
+    throw new Error('respondToComplaint is not supported by the Reclamation microservice.');
   }
 
   // Obtenir toutes les réclamations (Admin uniquement)
   getAllComplaints(headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}`;
-    return this.http.get<any[]>(url, { headers });
+    return this.withBase('', (url) => this.http.get<any[]>(url, { headers }));
   }
 
     // Ignorer une réclamation (Admin uniquement)
     ignoreComplaint(complaintId: number,adminId:number, headers: HttpHeaders): Observable<any> {
-      const url = `${this.apiUrl}${complaintId}/ignore/${adminId}`;
-      return this.http.put(url, {}, { headers });
+      // Not supported by Reclamation MS
+      throw new Error('ignoreComplaint is not supported by the Reclamation microservice.');
     }
 
     getComplaintById(complaintId: number, headers: HttpHeaders): Observable<any> {
-      const url = `${this.apiUrl}${complaintId}`;
-      return this.http.get<any[]>(url, { headers });
+      return this.withBase(`/${complaintId}`, (url) => this.http.get<any[]>(url, { headers }));
     }
     
 
 
     // Obtenir les informations du SimpleUser à partir de l'ID d'une réclamation
     getUserByComplaintId(complaintId: number, headers: HttpHeaders): Observable<any> {
-  const url = `${this.apiUrl}${complaintId}/user`;
-  return this.http.get<any>(url, { headers });
+  // Not supported by Reclamation MS
+  throw new Error('getUserByComplaintId is not supported by the Reclamation microservice.');
 }
 
 }
