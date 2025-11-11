@@ -1,0 +1,105 @@
+
+    /* Conteneur général */
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+  
+    /* Titre de la section */
+    .section-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 15px;
+      animation: slideIn 1s ease-out; /* Animation d'entrée */
+    }
+  
+    /* Effet de dégradé dynamique pour la section */
+    .section-title i {
+      font-size: 30px;
+      transition: transform 0.3s ease;
+    }
+  
+    .section-title:hover i {
+      transform: rotate(15deg); /* Effet de rotation au survol */
+    }
+  
+    .section-title:hover {
+      background: linear-gradient(45deg, #ff6f61, #ffcc00);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+  
+    /* Formulaire de création de colis */
+    .card {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+  
+    /* Effet de transformation au survol de la carte */
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+  
+    /* Champs du formulaire */
+    .form-label {
+      font-weight: bold;
+      color: #333;
+    }
+  
+    .form-control, .form-select {
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+  
+    .form-control:focus, .form-select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    }
+   
+  
+    /* Bouton de soumission */
+    .btn-danger {
+      background-color: #ff4d4d;
+      border-color: #e60000;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+  
+    .btn-danger:hover {
+      background-color: #e60000;
+      border-color: #b30000;
+    }
+  
+    /* Alertes de succès et d'erreur */
+    .alert {
+      border-radius: 8px;
+    }
+  
+    /* Animation de l'alerte de succès et erreur */
+    .alert-success, .alert-danger {
+      animation: fadeIn 0.5s ease-out;
+    }
+  
+   /* Animation Ping-Pong */
+  @keyframes pingPong {
+    0%, 100% {
+      transform: translateX(0); /* Position initiale */
+    }
+    25% {
+      transform: translateX(10px); /* Se déplace vers la droite */
+    }
+    50% {
+      transform: translateX(-10px); /* Se déplace vers la gauche */
+    }
+    75% {
+      transform: translateX(10px); /* Se déplace vers la droite à nouveau */
+    }
+  }

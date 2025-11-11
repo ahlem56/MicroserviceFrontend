@@ -1,0 +1,54 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>Assign Vehicle</h1>
+    <button class="secondary-button" (click)="cancel()">
+      <i class="fas fa-arrow-left"></i> Back to List
+    </button>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i> Loading vehicle details...
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage">
+    <div class="vehicle-info-card">
+      <h3>{{ vehicle.vehicleModel }}</h3>
+      <div class="vehicle-details">
+        <span class="type-badge {{ vehicle.vehicleType.toLowerCase() }}">
+          {{ vehicle.vehicleType }}
+        </span>
+        <span class="detail-item">
+          <i class="fas fa-users"></i> {{ vehicle.vehicleCapacity }} seats
+        </span>
+      </div>
+    </div>
+
+    <form [formGroup]="assignForm" (ngSubmit)="onSubmit()">
+      <div class="form-section">
+        <div class="form-group">
+          <label>Select Driver</label>
+          <select formControlName="userId" class="form-control">
+            <option [value]="null">-- Unassign Driver --</option>
+            <option *ngFor="let driver of drivers" [value]="driver.userId">
+              {{ driver.firstName }} {{ driver.lastName }}
+              <span *ngIf="driver.insuranceDetailsD">- {{ driver.insuranceDetailsD }}</span>
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="primary-button" [disabled]="isLoading">
+          <i class="fas fa-save"></i> {{ isLoading ? 'Saving...' : 'Save Assignment' }}
+        </button>
+        <button type="button" class="secondary-button" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

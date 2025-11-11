@@ -1,0 +1,69 @@
+<div class="simple-users-container">
+    <div class="header">
+      <h1>List of Simple Users</h1>
+      <!-- No "Add Simple User" button for now, unless you want it later -->
+    </div>
+  
+    <!-- Filtres -->
+    <div class="filter-controls">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="applyFilters()" 
+          placeholder="Search simple users..." />
+      </div>
+    </div>
+  
+    <!-- Loading State -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <i class="fas fa-spinner fa-spin"></i> Loading users...
+    </div>
+  
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Simple Users Table -->
+    <div *ngIf="!isLoading && filteredSimpleUsers.length > 0; else noUsers">
+      <table class="driver-table"> <!-- Reuse the SAME driver-table class -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Photo</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredSimpleUsers">
+            <td>{{ user.userId }}</td>
+            <td>
+              <img *ngIf="user.userProfilePhoto; else noPhoto" 
+                   [src]="'assets/FrontOffice/images/bg/' + user.userProfilePhoto" 
+                   alt="User Photo" class="profile-photo" />
+              <ng-template #noPhoto>
+                <span class="no-photo">No Photo</span>
+              </ng-template>
+            </td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.points }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- No Users Found Message -->
+    <ng-template #noUsers>
+      <p class="no-drivers-message">No simple users found.</p> <!-- Reuse the driver "no-drivers-message" class -->
+    </ng-template>
+  </div>
+  

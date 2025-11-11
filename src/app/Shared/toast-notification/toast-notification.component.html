@@ -1,0 +1,15 @@
+<div *ngIf="isVisible" class="toast-notification">
+    <div class="toast-content">
+      <div class="toast-icon">
+        <i class="fas fa-bell"></i> <!-- Notification icon -->
+      </div>
+      <div class="toast-message">
+        <p>{{ message }}</p>
+        <a *ngIf="message.length > 50" (click)="goToNotificationPage()" class="read-more">Read More...</a> <!-- 'Read More' link -->
+      </div>
+      <div class="toast-close" (click)="closeToast()">
+        <i class="fas fa-times"></i> <!-- Close icon -->
+      </div>
+    </div>
+  </div>
+  

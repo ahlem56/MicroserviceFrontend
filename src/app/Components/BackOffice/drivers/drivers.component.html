@@ -1,0 +1,115 @@
+<div class="drivers-list-container">
+  <div class="header">
+    <h1>List of Drivers</h1>
+    <button class="primary-button" (click)="openAddDriverForm()">
+      <i class="fas fa-plus"></i> Add New Driver
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-controls">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" [(ngModel)]="searchTerm"
+             (input)="applyFilters()"
+             placeholder="Search drivers...">
+    </div>
+
+    <div class="filter-select">
+      <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
+        <option *ngFor="let status of driverStatuses" [value]="status.value">
+          {{ status.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- État de chargement -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading drivers...
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Tableau des conducteurs -->
+  <div *ngIf="!isLoading && !errorMessage">
+    <div *ngIf="filteredDrivers && filteredDrivers.length > 0; else noDrivers">
+      <table class="driver-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Photo</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>CIN</th>
+            <th>Availability</th>
+            <th>Vehicle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let driver of filteredDrivers">
+            <td>{{ driver.userId }}</td>
+            <td>
+              <img *ngIf="driver.userProfilePhoto; else noPhoto" 
+     [src]="'assets/FrontOffice/images/bg/' + driver.userProfilePhoto" 
+     alt="Driver Photo" class="profile-photo">
+
+              <ng-template #noPhoto>
+                <span class="no-photo">No Photo</span>
+              </ng-template>
+            </td>
+            <td>{{ driver.lastName }}</td>
+            <td>{{ driver.firstName }}</td>
+            <td>{{ driver.email }}</td>
+            <td>{{ driver.address }}</td>
+            <td>{{ driver.cin }}</td>
+            <td>
+              <span [class.available]="driver.availabilityD" [class.unavailable]="!driver.availabilityD">
+                {{ driver.availabilityD ? 'Available' : 'Unavailable' }}
+              </span>
+            </td>
+            <td>
+              <span *ngIf="driver.vehicle; else noVehicle">
+                {{ driver.vehicle?.vehiculeId }}
+              </span>
+              <ng-template #noVehicle>
+                N/A
+              </ng-template>
+            </td>
+
+
+            <td class="action-buttons">
+              <!-- View Driver Profile -->
+              <button class="icon-button view" (click)="viewDriver(driver.userId)">
+                <i class="fas fa-eye"></i> 
+              </button>
+            
+              <!-- Edit Driver -->
+              <button class="icon-button edit" (click)="editDriver(driver.userId)">
+                <i class="fas fa-edit"></i>
+              </button>
+            
+              <!-- Delete Driver -->
+              <button class="icon-button delete" (click)="deleteDriver(driver.userId)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Message si aucun conducteur n'est trouvé -->
+    <ng-template #noDrivers>
+      <p class="no-drivers-message">No drivers available.</p>
+    </ng-template>
+  </div>
+</div>

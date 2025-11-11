@@ -1,0 +1,211 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h2 class="profile-title">My Profile</h2>
+  </div>
+
+  <div class="profile-card">
+    <div class="profile-photo-container">
+      <img [src]="profileImageUrl" alt="Profile Photo" class="profile-photo" />
+      <input type="file" id="fileInput" (change)="onFileChange($event)" style="display: none" />
+      <button (click)="triggerFileInput()" class="change-photo-btn">Change Photo</button>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail">
+        <span class="label">First Name:</span>
+        <span class="value">{{ user.firstName }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Last Name:</span>
+        <span class="value">{{ user.lastName }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Email:</span>
+        <span class="value">{{ user.email }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Address:</span>
+        <span class="value">{{ user.address }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">CIN:</span>
+        <span class="value">{{ user.cin }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Birth Date:</span>
+        <span class="value">{{ user.birthDate | date }}</span>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="edit-btn" (click)="navigateToEditProfile()">Edit Profile</button>
+    </div>
+
+    <!-- Availability Button (only for drivers) -->
+<!-- Availability Button (only for drivers) -->
+<div *ngIf="userRole === 'DRIVER'" class="availability-section">
+  <h3 class="availability-title">Your Availability</h3>
+  <button (click)="toggleAvailability()" class="availability-btn" [ngClass]="{'available': isAvailable, 'not-available': !isAvailable}">
+    {{ isAvailable ? 'Set as Unavailable' : 'Set as Available' }}
+  </button>
+</div>
+
+
+
+
+    <!-- Trip History Section (Visible only for non-admin and non-driver users) -->
+    <div *ngIf="userRole !== 'ADMIN' && userRole !== 'DRIVER' " class="trip-history">
+      <h3 class="toggle-trip-history" (click)="toggleTripHistory()">
+        My Trip History
+        <span *ngIf="isTripsVisible">▲</span>
+        <span *ngIf="!isTripsVisible">▼</span>
+      </h3>
+      <div [ngClass]="{'trip-cards-container': true, 'open': isTripsVisible}">
+        <div *ngFor="let trip of trips" class="trip-card">
+          <div class="trip-details">
+            <p><strong>Departure:</strong> {{ trip.tripDeparture }}</p>
+            <p><strong>Destination:</strong> {{ trip.tripDestination }}</p>
+            <p><strong>Date:</strong> {{ trip.tripDate | date }}</p>
+            <p><strong>Number Of Passengers:</strong> {{ trip.numberOfPassengers }}</p>
+            <p><strong>Price:</strong> {{ trip.tripPrice }} DT </p>
+            <p><strong>Driver :</strong> {{ trip.driver.firstName }} {{ trip.driver.lastName }}</p>
+            <p><strong>Status:</strong> 
+              <span [ngClass]="{
+                'canceled': trip.reservationStatus === 'CANCELED', 
+                'confirmed': trip.reservationStatus === 'CONFIRMED',
+                'pending': trip.reservationStatus === 'PENDING'
+              }">{{ trip.reservationStatus }}</span>
+            </p>
+          </div>
+          
+  <div *ngIf="trip.reservationStatus !== 'COMPLETED' && trip.reservationStatus !== 'CANCELED'">
+          <button (click)="deleteTrip(trip.tripId)" class="cancel-trip-btn">Cancel Trip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  
+        <!-- Parcel History Section -->
+        <div *ngIf="userRole !== 'ADMIN' && 'DRIVER' " class="parcel-history">
+    
+          <h3 class="toggle-parcel-history" (click)="toggleParcelHistory()">
+            My Parcel History
+            <span *ngIf="isParcelsVisible">▲</span>
+            <span *ngIf="!isParcelsVisible">▼</span>
+          </h3>
+          <div [ngClass]="{'parcel-cards-container': true, 'open': isParcelsVisible}">
+            <div *ngFor="let parcel of parcels" class="parcel-card">
+              <div class="parcel-details">
+                <p><strong>Departure:</strong> {{ parcel.parcelDeparture }}</p>
+                <p><strong>Destination:</strong> {{ parcel.parcelDestination }}</p>
+                <p><strong>Weight:</strong> {{ parcel.parcelWeight }} kg</p>
+                <p><strong>Price:</strong> DT{{ parcel.parcelPrice }}</p>
+                <p><strong>Status:</strong> {{ parcel.status }}</p>
+              </div>
+              <button 
+              [disabled]="parcel.status === 'SHIPPED' || parcel.status === 'DELIVERED'" 
+              [ngClass]="{'disabled-btn': parcel.status === 'SHIPPED' || parcel.status === 'DELIVERED'}"
+              (click)="deleteParcel(parcel.parcelId)" 
+              class="cancel-parcel-btn">
+              Cancel Parcel
+            </button> 
+        <button 
+           *ngIf="parcel.status === 'DELIVERED'"
+           (click)="downloadPdf(parcel.parcelId)" 
+           class="pdf-parcel-btn">
+           PDF
+         </button>   
+     <!-- DAMAGED BUTTON visible uniquement si le colis est livré -->
+
+     <button 
+     *ngIf="parcel.status === 'DELIVERED'" 
+     (click)="openDamageModal(parcel)" 
+     class="damaged-parcel-btn">
+     Reports
+   </button>
+        </div>
+ </div>
+ 
+      <!-- MODAL POUR SIGNLER UN COLIS ENDOMMAGÉ -->
+<div *ngIf="isDamageModalOpen" class="damage-modal">
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeDamageModal()">&times;</span>
+    <h3>Report Damaged Parcel</h3>
+
+    <label>Upload an image:</label>
+    <input type="file" (change)="onDamageFileChange($event)" />
+
+    <label>Description:</label>
+    <textarea [(ngModel)]="damageDescription" rows="4" placeholder="Describe the damage..."></textarea>
+
+    <button (click)="submitDamageReport()" class="submit-damage-btn">Submit</button>
+  </div>
+</div>
+ <!-- Carpool History Section -->
+<div *ngIf="userRole !== 'ADMIN' && 'DRIVER' " class="trip-history">
+  <h3 class="toggle-trip-history" (click)="toggleCarpoolHistory()">
+    My Carpool History
+    <span *ngIf="isCarpoolVisible">▲</span>
+    <span *ngIf="!isCarpoolVisible">▼</span>
+  </h3>
+
+  <div [ngClass]="{'carpool-cards-container': true, 'open': isCarpoolVisible}">
+    <!-- Display carpool history as cards -->
+    <div *ngFor="let offer of carpoolOffers" class="carpool-card">
+      <div class="carpool-details">
+        <p><strong>Departure:</strong> {{ offer.carpoolDeparture }}</p>
+        <p><strong>Destination:</strong> {{ offer.carpoolDestination }}</p>
+        <p><strong>Date:</strong> {{ offer.carpoolDate | date }}</p>
+        <p><strong>Time:</strong> {{ offer.carpoolTime }}</p>
+        <p><strong>Price:</strong> DT{{ offer.carpoolPrice }}</p>
+        <p>
+
+        </p>
+      </div>
+             <!-- Carpool Rating -->
+             <div *ngIf="isCarpoolInPast(offer.carpoolDate, offer.carpoolTime)">
+              <div *ngIf="!hasRatedCarpool(offer.carpoolId)" class="carpool-rating">
+                <p><strong>Did you like this carpool?</strong></p>
+                <button (click)="rateCarpool(offer.carpoolId, true)" class="rate-btn yes-btn">Yes</button>
+                <button (click)="rateCarpool(offer.carpoolId, false)" class="rate-btn no-btn">No</button>
+              </div>
+              <div *ngIf="hasRatedCarpool(offer.carpoolId)" class="carpool-rating-display">
+                <p><strong>Your rating:</strong>
+                  <span *ngFor="let rating of carpoolRatings[offer.carpoolId]">
+                    <ng-container *ngIf="rating[this.user.userId] !== undefined">
+                      {{ rating[this.user.userId] ? '👍 Yes' : '👎 No' }}
+                    </ng-container>
+                  </span>
+                  
+                </p>
+              </div>
+            </div>
+    
+    
+      <!-- Afficher le bouton "Cancel Carpool" uniquement si le covoiturage n'est pas dans le passé -->
+      <button
+        *ngIf="!isCarpoolInPast(offer.carpoolDate, offer.carpoolTime)"
+        (click)="cancelCarpool(offer.carpoolId)"
+        class="cancel-carpool-btn"
+      >
+        Cancel Carpool
+      </button>
+    </div>
+    <!-- Message if no carpool offers -->
+    <p *ngIf="carpoolOffers.length === 0">No carpool history available.</p>
+  </div>
+</div>
+  </div>
+<!-- SOS Button -->
+<div class="sos-container">
+  <input type="email" [(ngModel)]="user.emergencyContactEmail" placeholder="Enter Emergency Contact Email" required>
+  <button (click)="triggerSOS()" class="sos-btn">SOS</button>
+
+</div>
+
+</div>

@@ -1,0 +1,200 @@
+<div class="carpool-detail-container">
+  @if (carpoolDetails) {
+    <h2 class="carpool-title">Carpool Details</h2>
+    <div class="carpool-info">
+      <!-- Carpool Information -->
+      <div class="info-section">
+        <h3 class="section-subtitle">Carpool Information</h3>
+        <div class="info-grid">
+          <p><strong>Departure:</strong> {{ carpoolDetails.carpoolDeparture || 'N/A' }}</p>
+          <p><strong>Destination:</strong> {{ carpoolDetails.carpoolDestination || 'N/A' }}</p>
+          <p><strong>Date:</strong> {{ carpoolDetails.carpoolDate || 'N/A' }}</p>
+          <p><strong>Time:</strong> {{ carpoolDetails.carpoolTime || 'N/A' }}</p>
+          <p><strong>Capacity:</strong> {{ carpoolDetails.carpoolCapacity ?? 'N/A' }}</p>
+          <p><strong>Conditions:</strong> {{ carpoolDetails.carpoolCondition || 'None' }}</p>
+          <p><strong>Price:</strong> {{ carpoolDetails.carpoolPrice ? carpoolDetails.carpoolPrice + ' TND' : 'N/A' }}</p>
+          <p><strong>License Plate:</strong> {{ carpoolDetails.licensePlate || 'N/A' }}</p>
+          <p>
+            <strong>Status:</strong>
+            <span class="{{ carpoolDetails.carpoolStatus === 'available' ? 'status-available' : 'status-unavailable' }}">
+              {{ carpoolDetails.carpoolStatus || 'N/A' }}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Offerer Information -->
+      @if (offererDetails) {
+        <div class="info-section">
+          <h3 class="section-subtitle">Offerer Information</h3>
+          <div class="info-grid">
+            <p><strong>First Name:</strong> {{ offererDetails.firstName }}</p>
+            <p><strong>Last Name:</strong> {{ offererDetails.lastName }}</p>
+            <p>
+              <strong>Profile Photo:</strong>
+              @if (offererDetails.profilePhoto) {
+                <img
+                  [src]="offererDetails.profilePhoto"
+                  alt="Offerer Profile Photo"
+                  class="profile-photo"
+                  (error)="handleImageError($event)"
+                />
+              } @else {
+                <span class="text-muted">This user doesn't have a photo.</span>
+              }
+            </p>
+
+            <p><strong>Rating:</strong> 
+              <ng-container *ngIf="offererDetails.averageRating !== null; else noRatings">
+                <span class="star" *ngFor="let star of ratings(offererDetails.averageRating, true)" [ngClass]="star"></span>
+                <span class="rating-value">{{ (offererDetails.averageRating / 20) | number: '1.1-1' }} / 5</span>
+              </ng-container>
+              <ng-template #noRatings>
+                <span>No ratings yet</span>
+              </ng-template>
+            </p>
+            
+
+
+          </div>
+        </div>
+      }
+
+      <!-- Liste des participants -->
+      @if (carpoolDetails.simpleUserJoin && carpoolDetails.simpleUserJoin.length > 0) {
+        <div class="info-section">
+          <h3 class="section-subtitle">Participants</h3>
+          <ul class="participants-list">
+            @for (user of carpoolDetails.simpleUserJoin ; track user.userId) {
+              <li>{{ user.firstName }} {{ user.lastName }} ({{ user.email }})</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+
+    <!-- Join or Leave Form -->
+  <div class="button-container">
+    @if (!hasJoined) {
+      <form (ngSubmit)="joinCarpool()" class="join-form">
+        <div class="form-group">
+          <label for="numberOfPlaces">Number of people joining this carpool:</label>
+          <input
+            type="number"
+            id="numberOfPlaces"
+            [(ngModel)]="numberOfPlaces"
+            name="numberOfPlaces"
+            min="1"
+            [max]="carpoolDetails.carpoolCapacity"
+            class="form-control"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn btn-join"
+          [disabled]="carpoolDetails.carpoolCapacity <= 0 || numberOfPlaces <= 0 || numberOfPlaces > carpoolDetails.carpoolCapacity"
+        >
+          {{ carpoolDetails.carpoolCapacity <= 0 ? 'Full' : 'Join Carpool' }}
+        </button>
+      </form>
+    } @else {
+      <button class="btn btn-danger" (click)="leaveCarpool()">Leave Carpool</button>
+    }
+  </div>
+
+    <!-- Messages d'erreur et de succès -->
+    @if (errorMessage) {
+      <div class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success">
+        {{ successMessage }}
+      </div>
+    }
+  } @else if (!errorMessage) {
+    <div class="loading">
+      Chargement en cours...
+      <!-- Participants List 
+      @if (joinedUsers && joinedUsers.length > 0) {
+        <div class="info-section">
+          <h3 class="section-subtitle">Participants</h3>
+          <ul class="participants-list">
+            @for (user of joinedUsers; track user.userId) {
+              <li class="d-flex align-items-center">
+                @if (user.profilePhoto) {
+                  <img
+                    [src]="user.profilePhoto"
+                    alt="{{ user.firstName }} {{ user.lastName }} Profile Photo"
+                    class="profile-photo me-2"
+                    (error)="handleImageError($event)"
+                  />
+                } @else {
+                  <span class="text-muted me-2">This user doesn't have a photo.</span>
+                }
+                <span>
+                  {{ user.firstName }} {{ user.lastName }} ({{ user.email }})
+                </span>
+              </li>
+            }
+          </ul>
+        </div>
+      } @else {
+        <div class="info-section">
+          <h3 class="section-subtitle">Participants</h3>
+          <p>No participants yet.</p>
+        </div>
+      }-->
+
+      <!-- Join or Leave Form -->
+      <div class="button-container">
+        @if (!hasJoined) {
+          <form (ngSubmit)="joinCarpool()" class="join-form">
+            <div class="form-group">
+              <label for="numberOfPlaces">Number of people joining this carpool:</label>
+              <input
+                type="number"
+                id="numberOfPlaces"
+                [(ngModel)]="numberOfPlaces"
+                name="numberOfPlaces"
+                min="1"
+                [max]="carpoolDetails.carpoolCapacity"
+                class="form-control"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn btn-join"
+              [disabled]="carpoolDetails.carpoolCapacity <= 0 || numberOfPlaces <= 0 || numberOfPlaces > carpoolDetails.carpoolCapacity"
+            >
+              {{ carpoolDetails.carpoolCapacity <= 0 ? 'Full' : 'Join Carpool' }}
+            </button>
+          </form>
+        } @else {
+          <button class="btn btn-danger" (click)="leaveCarpool()">Leave Carpool</button>
+        }
+      </div>
+
+      <!-- Error and Success Messages -->
+      @if (errorMessage) {
+        <div class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success">
+          {{ successMessage }}
+        </div>
+      }
+    </div>
+  } @else if (!errorMessage) {
+    <div class="loading">
+      Loading...
+    </div>
+  }
+</div>

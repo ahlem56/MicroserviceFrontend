@@ -1,0 +1,54 @@
+<div class="profile-container">
+    <div class="profile-header">
+      <h2 class="profile-title">Driver Profile</h2>
+    </div>
+  
+    <div class="profile-card">
+      <div class="profile-photo-container">
+        <img [src]="driver?.profileImageUrl || 'assets/FrontOffice/images/users/user4.jpg'" alt="Driver Photo" class="profile-photo" />
+      </div>
+  
+      <div class="profile-details">
+        <div class="detail">
+          <span class="label">First Name:</span>
+          <span class="value">{{ driver?.firstName }}</span>
+        </div>
+        <div class="detail">
+          <span class="label">Last Name:</span>
+          <span class="value">{{ driver?.lastName }}</span>
+        </div>
+        <div class="detail">
+          <span class="label">Email:</span>
+          <span class="value">{{ driver?.email }}</span>
+        </div>
+        <div class="detail">
+          <span class="label">Availability:</span>
+          <span class="value">{{ driver?.availabilityD ? 'Not Available' : 'Available' }}</span>
+        </div>
+  
+        <div class="detail">
+          <span class="label">License Number:</span>
+          <span class="value">{{ driver?.licenseNumberD }}</span>
+        </div>
+  
+        <div class="detail">
+          <span class="label">Insurance:</span>
+          <span class="value">{{ driver?.insuranceDetailsD }}</span>
+        </div>
+  
+        <!-- Displaying Average Rating with Stars -->
+        <div class="detail" *ngIf="averageRating !== undefined">
+          <span class="label">Average Rating:</span>
+          <span class="value">
+            <div class="star-rating">
+              <span *ngFor="let star of getStars(averageRating)" class="star" [ngClass]="star"></span>
+            </div>
+          </span>
+          <span class="value">{{ averageRating | number:'1.1-1' }} / 5</span>
+        </div>
+      </div>
+  
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    </div>
+  </div>
+  

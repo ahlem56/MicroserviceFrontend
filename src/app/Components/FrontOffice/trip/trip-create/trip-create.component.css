@@ -1,0 +1,112 @@
+.trip-creation-page {
+    min-height: 100vh;
+    background: linear-gradient(to right, #ffffff, #f2f6f9);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .header-section {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .section-title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+  }
+  
+  .lead {
+    font-size: 1.3rem;
+    color: #6c757d;
+    font-style: italic;
+  }
+  
+  .map-container {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .form-card {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-floating {
+    position: relative;
+  }
+  
+  input, select {
+    border-radius: 12px;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border: 2px solid #dee2e6;
+  }
+  
+  input:focus, select:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 10px rgba(0,123,255,0.3);
+  }
+  
+  .price-estimate {
+    text-align: center;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+    color: #333;
+  }
+  
+  .btn-create-trip {
+    margin-top: 1.5rem;
+    background: linear-gradient(to right, #e63c3c, #aa1111);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 12px;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-create-trip:hover {
+    background: linear-gradient(to right, #ffc933, #f3a126);
+  }
+  
+  .alert {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1.1rem;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .view-profile-btn {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+    text-decoration: underline;
+    color: #007bff;
+  }
+  

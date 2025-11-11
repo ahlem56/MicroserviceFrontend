@@ -1,0 +1,41 @@
+ 
+ 
+ <br>
+ 
+ <div class="carpool-detail-container">
+    <h2 class="carpool-title">Carpooling details</h2>
+  
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading ..</span>
+      </div>
+    </div>
+  
+    <!-- Carpool Details -->
+    <div *ngIf="!isLoading && carpoolDetails">
+      <div class="info-section">
+        <h3 class="section-title">{{ carpoolDetails.carpoolDeparture }} → {{ carpoolDetails.carpoolDestination }}</h3>
+        <div class="info-grid">
+          <p><strong>Date:</strong> {{ carpoolDetails.carpoolDate | date: 'dd/MM/yyyy' }}</p>
+          <p><strong>Time:</strong> {{ carpoolDetails.carpoolTime }}</p>
+          <p><strong>Capacity:</strong> {{ carpoolDetails.carpoolCapacity }}</p>
+          <p><strong>Price:</strong> {{ carpoolDetails.carpoolPrice }} TND</p>
+        </div>
+  
+        <h4 class="section-subtitle">Persons who joined this carpool:</h4>
+        <ul class="participants-list">
+            <li *ngIf="usersJoined.length === 0">No One has joined this carpool.</li>
+          <li *ngFor="let user of usersJoined">
+            {{ user.firstName }} {{ user.lastName }} <br> Cin : {{user.cin}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger text-center">
+      <p>{{ errorMessage }}</p>
+    </div>
+  </div>
+  

@@ -1,0 +1,68 @@
+<div class="create-driver-container">
+  <h2 class="form-title">Create Driver</h2>
+  <form (ngSubmit)="createDriver()" class="driver-form">
+    <div class="form-group">
+      <label for="firstName" class="label">First Name</label>
+      <input id="firstName" [(ngModel)]="driver.firstName" name="firstName" class="input-field" required />
+    </div>
+
+    <div class="form-group">
+      <label for="lastName" class="label">Last Name</label>
+      <input id="lastName" [(ngModel)]="driver.lastName" name="lastName" class="input-field" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="label">Email</label>
+      <input id="email" [(ngModel)]="driver.email" name="email" type="email" class="input-field" required />
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="label">Password</label>
+      <input id="password" [(ngModel)]="driver.password" name="password" type="password" class="input-field" required />
+    </div>
+
+    <div class="form-group">
+      <label for="cin" class="label">CIN</label>
+      <input id="cin" [(ngModel)]="driver.cin" name="cin" class="input-field" required />
+    </div>
+
+    <div class="form-group">
+      <label for="address" class="label">Address</label>
+      <input id="address" [(ngModel)]="driver.address" name="address" class="input-field" required />
+    </div>
+
+    <div class="form-group">
+      <label for="vehicle">Assign Vehicle:</label>
+      <select id="vehicle" [(ngModel)]="driver.vehicle" name="vehicle">
+        <option *ngFor="let vehicle of availableVehicles" [ngValue]="vehicle">{{ vehicle.vehicleModel }}</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="licenseNumberD" class="label">License Number</label>
+      <input id="licenseNumberD" [(ngModel)]="driver.licenseNumberD" name="licenseNumberD" class="input-field" required />
+    </div>
+    
+    <div class="form-group">
+      <label for="insuranceDetailsD" class="label">Insurance Details</label>
+      <input id="insuranceDetailsD" [(ngModel)]="driver.insuranceDetailsD" name="insuranceDetailsD" class="input-field" required />
+    </div>
+    
+
+    <div class="form-group checkbox-group">
+      <label for="availabilityD" class="checkbox-label">Available</label>
+      <input id="availabilityD" type="checkbox" [(ngModel)]="driver.availabilityD" name="availabilityD" class="checkbox-input" />
+    </div>
+    
+
+    <button type="submit" class="submit-button">Create Driver</button>
+  </form>
+
+  <!-- Success or Error Message -->
+  <div *ngIf="successMessage" class="message success-message">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="message error-message">
+    {{ errorMessage }}
+  </div>
+</div>

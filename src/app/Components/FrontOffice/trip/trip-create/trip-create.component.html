@@ -1,0 +1,99 @@
+<div class="trip-creation-page">
+  <div class="header-section">
+    <h2 class="section-title">Create Your Trip with SpeedyGo 🚗💨</h2>
+    <p class="lead">Plan your next adventure easily and quickly! Choose your route, select your driver, and hit the road.</p>
+  </div>
+
+  <!-- Map Section -->
+  <div class="map-container">
+    <label for="map">Choose Your Destination</label>
+    <google-map
+      #googleMapContainer
+      height="450px"
+      width="100%"
+      [center]="mapCenter"
+      [zoom]="mapZoom"
+      (mapClick)="onMapClick($event)">
+      <map-marker [position]="markerPosition"></map-marker>
+    </google-map>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-card">
+    <form>
+
+      <!-- Trip Information -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            <input type="text" id="departure" [(ngModel)]="trip.tripDeparture" name="tripDeparture" class="form-control" placeholder="Departure" required>
+            <label for="departure">Departure Location</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            <input type="text" id="destinationInput" [(ngModel)]="trip.tripDestination" name="tripDestination" class="form-control" placeholder="Destination" required>
+            <label for="destinationInput">Destination Location</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trip Type / Passengers -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            <select id="tripType" [(ngModel)]="trip.tripType" name="tripType" class="form-select" required>
+              <option value="EXPRESS_TRIP">Express Trip</option>
+              <option value="LONG_DISTANCE_TRAVEL">Long Distance Travel</option>
+            </select>
+            <label for="tripType">Trip Type</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            <input type="number" id="numberOfPassengers" [(ngModel)]="trip.numberOfPassengers" name="numberOfPassengers" class="form-control" placeholder="Passengers" min="1" max="4" required>
+            <label for="numberOfPassengers">Number of Passengers</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Departure Date -->
+      <div class="form-floating mb-3">
+        <input type="datetime-local" id="tripDate" [(ngModel)]="trip.tripDate" name="tripDate" class="form-control" [min]="minDate" required>
+        <label for="tripDate">Date of Departure</label>
+      </div>
+
+      <!-- Driver Selection -->
+      <div class="form-floating mb-3">
+        <select id="driverSelect" [(ngModel)]="selectedDriverId" name="driverId" class="form-select" required>
+          <option *ngFor="let driver of availableDrivers" [value]="driver.userId">
+            {{ driver.firstName + ' ' + driver.lastName + ' - ⭐ ' + (driver.averageRating?.toFixed(1) || '0') }}
+          </option>
+          
+        </select>
+        <label for="driverSelect">Select Your Driver</label>
+      </div>
+
+      <div *ngIf="selectedDriverId" class="text-center mt-2">
+        <a [routerLink]="['/driver-profile', selectedDriverId]" class="view-profile-btn">
+          View Driver Profile
+        </a>
+      </div>
+
+      <!-- Estimated Price -->
+      <div class="price-estimate">
+        <strong>Estimated Price: </strong> {{ trip.tripPrice | currency:'TND' }}
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn-create-trip" (click)="createTrip()">Create My Trip</button>
+
+      <!-- Alerts -->
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    </form>
+  </div>
+
+</div>

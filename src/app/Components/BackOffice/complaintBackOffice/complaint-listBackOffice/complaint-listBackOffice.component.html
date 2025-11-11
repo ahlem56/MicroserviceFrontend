@@ -1,0 +1,80 @@
+<div class="complaint-list-container">
+  <div class="header">
+    <h1>Complaints' List</h1>
+  </div>
+
+  <!-- Filter Controls -->
+  <div class="filter-controls">
+    <div class="filter-select">
+      <button class="btn btn-primary" [class.active]="filterType === 'all'" (click)="applyFilter('all')">All</button>
+      <button class="btn btn-warning" [class.active]="filterType === 'pending'" (click)="applyFilter('pending')">Pending</button>
+      <button class="btn btn-danger" [class.active]="filterType === 'ignored'" (click)="applyFilter('ignored')">Ignored</button>
+      <button class="btn btn-success" [class.active]="filterType === 'resolved'" (click)="applyFilter('resolved')">Resolved</button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  @if (isLoading) {
+    <div class="loading-overlay">
+      <i class="fas fa-spinner fa-spin"></i> Loading...
+    </div>
+  }
+
+  <!-- Complaints Table -->
+  @if (!isLoading && filteredComplaints.length > 0) {
+    <div class="complaint-table">
+      <table>
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Description</th>
+            <th>Severity</th>
+            <th>Status</th>
+            @if (filterType === 'resolved') {
+              <th>Admin's Response</th>
+            }
+            @if (filterType === 'pending') {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (complaint of filteredComplaints; track complaint.complaintId) {
+            <tr>
+              <td data-label="First Name">{{ complaint.simpleUser?.firstName || 'N/A' }}</td>
+              <td data-label="Last Name">{{ complaint.simpleUser?.lastName || 'N/A' }}</td>
+              <td data-label="Description">{{ complaint.complaintDescription }}</td>
+              <td data-label="Severity">
+                <div class="severity-dots" [title]="complaint.severity + ' severity'" role="img" [attr.aria-label]="complaint.severity + ' severity'">
+                  <span
+                    *ngFor="let _ of [].constructor(getSeverityDots(complaint.severity))"
+                    class="severity-dot"
+                    [style.backgroundColor]="getSeverityColor(complaint.severity)"
+                  ></span>
+                </div>
+              </td>
+              <td data-label="Status" [ngClass]="{
+                'status-pending': complaint.complaintStatus === 'pending',
+                'status-ignored': complaint.complaintStatus === 'ignored',
+                'status-resolved': complaint.complaintStatus === 'resolved'
+              }">
+                {{ complaint.complaintStatus.charAt(0).toUpperCase() + complaint.complaintStatus.slice(1) }}
+              </td>
+              @if (filterType === 'resolved') {
+                <td data-label="Admin's Response">{{ complaint.response || 'No response available' }}</td>
+              }
+              @if (filterType === 'pending') {
+                <td data-label="Actions">
+                  <button class="btn btn-danger" (click)="viewDetails(complaint.complaintId)">Details</button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else if (!isLoading) {
+    <p class="no-results">There are no complaints.</p>
+  }
+</div>

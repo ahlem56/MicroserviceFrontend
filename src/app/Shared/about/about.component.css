@@ -1,0 +1,171 @@
+/* About Container */
+.about-container {
+    background-color: #f9f9f9;
+    padding: 50px 15px;
+    background: linear-gradient(to right, #f1f1f1, #ffffff); /* Adding subtle background gradient */
+}
+
+/* Section Title */
+.section-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Subheading text */
+.lead {
+    font-size: 1.4rem;
+    color: #555;
+    margin-bottom: 30px;
+    font-style: italic;
+    text-align: center;
+}
+
+/* About Card */
+.about-card {
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    border: none;
+}
+
+/* Card hover effect */
+.about-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Title */
+.card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Card Subtitle */
+.card-subtitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+/* About Text */
+.about-text {
+    flex: 1;
+    padding-right: 20px;
+}
+
+/* Image Styling */
+.custom-img {
+    max-width: 200px; /* Resizing the image */
+    height: auto;
+    border-radius: 12px;
+}
+
+/* About Description */
+.about-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+/* About Image Container */
+.about-image {
+    flex-shrink: 0;
+}
+
+/* Button */
+.btn-primary {
+    background-color: #8e2021;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 8px;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Button hover effect */
+.btn-primary:hover {
+    background-color: #a52a2a;
+    transform: scale(1.05);
+}
+
+/* Features Section */
+.feature-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Feature Cards */
+.feature-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Feature Card Text */
+.feature-card h5 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.feature-card p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .about-container {
+        padding: 30px 15px;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+
+    .lead {
+        font-size: 1.2rem;
+    }
+
+    .feature-card {
+        margin-bottom: 15px;
+    }
+
+    .custom-img {
+        max-width: 120px; /* Ensures the image doesn't take up the whole space */
+    }
+
+    .about-image {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .about-text {
+        padding-right: 0;
+    }
+}

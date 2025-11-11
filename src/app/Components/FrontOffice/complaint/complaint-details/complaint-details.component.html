@@ -1,0 +1,44 @@
+
+<br>
+<div class="container mt-5">
+    <div class="card p-4 shadow-sm">
+      <h2 class="text-center section-title">Complaint Details</h2>
+  
+      @if (complaint) {
+        <div class="complaint-details">
+
+            <p><strong>Description :</strong> {{ complaint.complaintDescription }}</p>
+          <p>
+            <strong>Status :</strong>
+            <span [class]="{
+              'text-success': complaint.complaintStatus === 'resolved',
+              'text-warning': complaint.complaintStatus === 'pending',
+              'text-danger': complaint.complaintStatus === 'rejected'
+            }">
+              {{ complaint.complaintStatus }}
+            </span>
+          </p>
+  
+          @if (complaint.complaintStatus === 'resolved') {
+            <div class="admin-response mt-3">
+              <h4><i class="bi bi-chat-left-text"></i> Admin's Response</h4>
+              <p class="response-text">{{ complaint.response }}</p>
+            </div>
+          }
+        </div>
+      }
+  
+      @if (!complaint) {
+        <div class="alert alert-danger mt-3">
+          <i class="bi bi-exclamation-circle"></i> No details are available
+        </div>
+      }
+  
+      <div class="text-center mt-4">
+        <button class="btn btn-primary"
+                (click)="goToComplaintList()">
+          <i class="bi bi-arrow-left"></i> Go back to Complaints
+        </button>
+      </div>
+    </div>
+  </div>

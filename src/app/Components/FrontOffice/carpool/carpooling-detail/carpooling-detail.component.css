@@ -1,0 +1,208 @@
+/* Conteneur principal */
+.carpool-detail-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre */
+.carpool-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Sections d'informations */
+.info-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+.section-subtitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #8e2021;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+/* Grille d'informations */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.info-grid p {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-grid strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Liste des participants */
+.participants-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.participants-list li {
+  font-size: 1.1rem;
+  color: #555;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.participants-list li:last-child {
+  border-bottom: none;
+}
+
+/* Bouton */
+.button-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn-join {
+  background-color: #8e2021;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-join:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-join:hover:not(:disabled) {
+  background-color: #a52a2a;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Styles pour le statut */
+.status-available {
+  color: #28a745; /* Vert */
+  font-weight: 600;
+}
+
+.status-unavailable {
+  color: #dc3545; /* Rouge */
+  font-weight: 600;
+}
+
+/* Messages d'alerte */
+.alert {
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Chargement */
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  padding: 20px;
+}
+
+/* Photo de profil */
+.profile-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Texte grisé */
+.text-muted {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Espacement */
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+.star {
+  font-size: 20px;
+  color: gold;
+  margin-right: 2px;
+}
+
+.star.full::before {
+  content: '★'; /* étoile pleine */
+}
+
+.star.half::before {
+  content: '⭐'; /* étoile à moitié remplie ou personnalisée */
+}
+
+.star.empty::before {
+  content: '☆'; /* étoile vide */
+}
+
+.rating-value {
+  margin-left: 8px;
+  font-weight: bold;
+  color: #333;
+}

@@ -1,0 +1,87 @@
+<div class="trip-list-container">
+  <div class="header">
+    <h1>Your Trips</h1>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-controls">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" [(ngModel)]="searchTerm"
+             (input)="applyFilters()"
+             placeholder="Search trips...">
+    </div>
+
+    <div class="filter-select">
+      <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
+        <option *ngFor="let status of tripStatuses" [value]="status.value">
+          {{ status.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- État de chargement -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading trips...
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Tableau des voyages -->
+  <div *ngIf="!isLoading && !errorMessage">
+    <div *ngIf="filteredTrips && filteredTrips.length > 0; else noTrips">
+      <table class="trip-table">
+        <thead>
+          <tr>
+            <th>Departure</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let trip of filteredTrips">
+            <td>{{ trip.tripDeparture }}</td>
+            <td>{{ trip.tripDestination }}</td>
+            <td>{{ trip.tripDate | date: 'short' }}</td>
+            <td>{{ trip.tripDuration || 'N/A' }} hrs</td>
+            <td>{{ trip.tripPrice || 'N/A' | currency }}</td>
+            <td>
+              <span class="status-badge" [class.pending]="trip.reservationStatus === 'PENDING'"
+                    [class.confirmed]="trip.reservationStatus === 'CONFIRMED'"
+                    [class.cancelled]="trip.reservationStatus === 'CANCELLED'">
+                {{ trip.reservationStatus }}
+              </span>
+            </td>
+            <td class="action-buttons">
+              <ng-container *ngIf="trip.reservationStatus === 'CONFIRMED'">
+                <button class="complete-btn" (click)="completeTrip(trip)">Complete</button>
+                <button class="checkpoint-btn" (click)="reachNextCheckpoint(trip)">Reach Next Checkpoint</button>
+
+              </ng-container>
+              <ng-container *ngIf="trip.reservationStatus === 'PENDING'">
+
+                <button class="accept-btn" (click)="acceptTrip(trip)">Accept</button>
+                <button class="refuse-btn" (click)="refuseTrip(trip)">Refuse</button>
+              </ng-container>
+              <span *ngIf="trip.reservationStatus === 'CONFIRMED'" class="confirmed-text">Trip Confirmed</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Message si aucun voyage n'est trouvé -->
+    <ng-template #noTrips>
+      <p class="no-trips-message">You have no trips scheduled.</p>
+    </ng-template>
+  </div>
+</div>

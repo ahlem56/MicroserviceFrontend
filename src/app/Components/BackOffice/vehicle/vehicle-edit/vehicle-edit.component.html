@@ -1,0 +1,82 @@
+<div class="form-container">
+  <div class="header">
+    <h1>Edit Vehicle</h1>
+    <button class="back-button" (click)="cancel()">
+      <i class="fas fa-arrow-left"></i> Back to List
+    </button>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading vehicle details...
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <form *ngIf="!isLoading && !errorMessage" [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+    <div class="form-section">
+      <div class="form-group">
+        <label>Vehicle Type</label>
+        <select formControlName="vehicleType" class="form-control">
+          <option *ngFor="let type of vehicleTypes" [value]="type">{{ type }}</option>
+        </select>
+        <div class="error-msg" *ngIf="vehicleForm.get('vehicleType')?.hasError('required') && vehicleForm.get('vehicleType')?.touched">
+          Vehicle type is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Model</label>
+        <input type="text" formControlName="vehicleModel" class="form-control">
+        <div class="error-msg" *ngIf="vehicleForm.get('vehicleModel')?.hasError('required') && vehicleForm.get('vehicleModel')?.touched">
+          Model is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Capacity</label>
+        <input type="number" formControlName="vehicleCapacity" class="form-control">
+        <div class="error-msg" *ngIf="vehicleForm.get('vehicleCapacity')?.hasError('required') && vehicleForm.get('vehicleCapacity')?.touched">
+          Capacity is required
+        </div>
+        <div class="error-msg" *ngIf="vehicleForm.get('vehicleCapacity')?.hasError('min')">
+          Capacity must be at least 1
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-group">
+        <label>Maintenance Date</label>
+        <input type="date" formControlName="vehiculeMaintenanceDate" class="form-control">
+        <div class="error-msg" *ngIf="vehicleForm.get('vehiculeMaintenanceDate')?.hasError('required') && vehicleForm.get('vehiculeMaintenanceDate')?.touched">
+          Maintenance date is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-group">
+          <input type="checkbox" formControlName="vehiculeInsuranceStatus">
+          <span class="checkmark"></span>
+          Insurance Active
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>Insurance Expiry Date</label>
+        <input type="date" formControlName="vehiculeInsuranceDate" class="form-control">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="primary-button" [disabled]="vehicleForm.invalid">
+        <i class="fas fa-save"></i> Save Changes
+      </button>
+      <button type="button" class="delete-button" (click)="deleteVehicle()">
+        <i class="fas fa-trash"></i> Delete Vehicle
+      </button>
+    </div>
+  </form>
+</div>

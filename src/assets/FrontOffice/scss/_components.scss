@@ -1,0 +1,268 @@
+// All the custom components here
+// 
+// accordian
+// 
+.accordion {
+  .card {
+    margin-bottom: 1px;
+  }
+}
+
+// 
+// button
+// 
+.btn-close {
+  background: transparent
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e")
+    center/12px auto no-repeat;
+}
+
+.btn-info,
+.btn-danger,
+.btn-success,
+.btn-warning,
+.btn-info:hover,
+.btn-danger:hover,
+.btn-success:hover,
+.btn-warning:hover,
+.btn-outline-info:hover,
+.btn-outline-danger:hover,
+.btn-outline-success:hover,
+.btn-outline-warning:hover{
+    color: $white;
+}
+
+//
+// Badge
+//
+
+.badge {
+    &.badge-pill {
+      padding: 0.2em 0.6em;
+    }
+  }
+
+//
+// Card
+//
+
+.card {
+  margin-bottom: 30px;
+  .card-subtitle {
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #686868;
+    font-size: 15px;
+  }
+  .card-title {
+    position: relative;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+}
+
+//
+// Table Common
+//
+
+.table thead th,
+.table th {
+  font-weight: 500;
+}
+/* Ensure the image stretches to cover the top of the page */
+.full-image {
+  width: 100%;  
+  height: 100;     /* Stretch to full width */
+  height: 45vh;      /* Set height of the first image */
+  object-fit: cover; /* Ensure the image covers the area */
+  margin-bottom: 30px;  /* Add space between the first image and the content below */
+}
+#trip {
+  width: 150%;        /* Increase the size */
+  height: auto;
+  padding-right: 10px;
+  animation: moveImage 6s ease-in-out infinite; /* Controlled animation */
+}
+
+/* Define the animation */
+@keyframes moveImage {
+  0% {
+    transform: translateX(0);  /* Start position */
+  }
+  50% {
+    transform: translateX(30%); /* Move 30% to the right */
+  }
+  100% {
+    transform: translateX(0);  /* Return to original position */
+  }
+}
+
+.moveImage {
+  width: 100%;   /* You can adjust the size as needed */
+  height: auto;
+  animation: moveUpDown 3s ease-in-out infinite; /* Vertical animation */
+}
+
+/* Define the vertical movement */
+@keyframes moveUpDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px); /* Move 20px upwards */
+  }
+  100% {
+    transform: translateY(0); /* Back to the original position */
+  }
+}
+
+
+
+#carpool {
+  width: 100%;        /* Adjust the size */
+  height: auto;
+  animation: zoomMap 8s ease-in-out infinite; /* Zoom effect for the map */
+}
+
+/* Define the zoom animation for the map */
+@keyframes zoomMap {
+  0% {
+    transform: scale(1);  /* Original size */
+  }
+  50% {
+    transform: scale(1.1); /* Zoom in slightly */
+  }
+  100% {
+    transform: scale(1);  /* Return to original size */
+  }
+}
+
+.section-title {
+  font-size: 2.5rem;        /* Large title */
+  font-weight: 600;         /* Bold title */
+  color: #333;             /* Dark gray color for the title */
+  margin-bottom: 20px;     /* Space below the title */
+}
+
+.lead {
+  font-size: 1.2rem;        /* Slightly larger font for the description */
+  line-height: 1.6;         /* Increase line height for readability */
+  color: #555;              /* Slightly lighter color for the paragraph */
+}
+
+.btn-primary {
+  padding: 12px 30px;       /* Increase padding for better button size */
+  font-size: 1.1rem;        /* Slightly larger text for the button */
+  text-transform: uppercase; /* Uppercase button text for more impact */
+  letter-spacing: 1px;      /* Add a little spacing between letters */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  border-color: #0056b3;     /* Matching border color */
+}
+
+.row.align-items-center {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .full-image {
+    height: 35vh; /* Slightly smaller height on smaller screens */
+  }
+
+  .section-title {
+    font-size: 2rem; /* Smaller title on mobile */
+  }
+}
+
+/* New Section with Red Background */
+.red-background {
+  background-color: #8e2021;  /* Red background color */
+  color: white;               /* Set text color to white for contrast */
+  padding: 40px 0;            /* Add vertical padding */
+}
+
+/* Optional: Adjust the color of the button in this section */
+.red-background .btn-light {
+  background-color: white;
+  color: #8e2021;  /* Make the button text match the background color */
+  border: 2px solid #8e2021;  /* Add a border that matches the background color */
+}
+
+.red-background .btn-light:hover {
+  background-color: #8e2021;  /* On hover, change the background to red */
+  color: white;                /* Make the button text white */
+}
+
+/* Styling for text elements */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: white;  /* Title text is white */
+  margin-bottom: 20px;
+}
+.section-titlee {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: rgb(54, 47, 47);  /* Title text is white */
+  margin-bottom: 20px;
+}
+
+.lead {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: white;  /* Paragraph text is white */
+}
+
+// **************************** Trip Interface Styling ************************
+/* Styling the form */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input, select {
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+#map {
+  width: 100%;
+  height: 400px;
+  border: 1px solid #ccc;
+  margin-top: 30px;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .col-md-6 {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+.profile-img {
+  width: 45px; /* Bigger size */
+  height: 45px; /* Maintain aspect ratio */
+  border-radius: 50%; /* Ensures it remains round */
+  object-fit: cover; /* Prevents stretching */
+  border: 1px solid #a59b9b; /* Optional: White border for a clean look */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds subtle shadow */
+}
+
+

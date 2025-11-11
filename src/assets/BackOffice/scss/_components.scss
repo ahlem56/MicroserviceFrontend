@@ -1,0 +1,168 @@
+// All the custom components here
+// 
+// accordian
+// 
+.accordion {
+  .card {
+    margin-bottom: 1px;
+  }
+}
+
+// 
+// button
+// 
+.btn-close {
+  background: transparent
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e")
+    center/12px auto no-repeat;
+}
+
+.btn-info,
+.btn-danger,
+.btn-success,
+.btn-warning,
+.btn-info:hover,
+.btn-danger:hover,
+.btn-success:hover,
+.btn-warning:hover,
+.btn-outline-info:hover,
+.btn-outline-danger:hover,
+.btn-outline-success:hover,
+.btn-outline-warning:hover{
+    color: $white;
+}
+
+//
+// Badge
+//
+
+.badge {
+    &.badge-pill {
+      padding: 0.2em 0.6em;
+    }
+  }
+
+//
+// Card
+//
+
+.card {
+  margin-bottom: 30px;
+  .card-subtitle {
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #686868;
+    font-size: 15px;
+  }
+  .card-title {
+    position: relative;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+}
+
+//
+// Table Common
+//
+
+.table thead th,
+.table th {
+  font-weight: 500;
+}
+/* Ensure the image stretches to cover the top of the page */
+.full-image {
+  width: 100%;       /* Stretch to full width */
+  height: 45vh;      /* Set height of the first image */
+  object-fit: cover; /* Ensure the image covers the area */
+  margin-bottom: 30px;  /* Add space between the first image and the content below */
+}
+#trip {
+  width: 70%;       /* Set width to 80% of the container width */
+  height: auto;  /* Maintain the image's aspect ratio */
+}
+
+
+.section-title {
+  font-size: 2.5rem;        /* Large title */
+  font-weight: 600;         /* Bold title */
+  color: #333;             /* Dark gray color for the title */
+  margin-bottom: 20px;     /* Space below the title */
+}
+
+.lead {
+  font-size: 1.2rem;        /* Slightly larger font for the description */
+  line-height: 1.6;         /* Increase line height for readability */
+  color: #555;              /* Slightly lighter color for the paragraph */
+}
+
+.btn-primary {
+  padding: 12px 30px;       /* Increase padding for better button size */
+  font-size: 1.1rem;        /* Slightly larger text for the button */
+  text-transform: uppercase; /* Uppercase button text for more impact */
+  letter-spacing: 1px;      /* Add a little spacing between letters */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  border-color: #0056b3;     /* Matching border color */
+}
+
+.row.align-items-center {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .full-image {
+    height: 35vh; /* Slightly smaller height on smaller screens */
+  }
+
+  .section-title {
+    font-size: 2rem; /* Smaller title on mobile */
+  }
+}
+
+/* New Section with Red Background */
+.red-background {
+  background-color: #8e2021;  /* Red background color */
+  color: white;               /* Set text color to white for contrast */
+  padding: 40px 0;            /* Add vertical padding */
+}
+
+/* Optional: Adjust the color of the button in this section */
+.red-background .btn-light {
+  background-color: white;
+  color: #8e2021;  /* Make the button text match the background color */
+  border: 2px solid #8e2021;  /* Add a border that matches the background color */
+}
+
+.red-background .btn-light:hover {
+  background-color: #8e2021;  /* On hover, change the background to red */
+  color: white;                /* Make the button text white */
+}
+
+/* Styling for text elements */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: white;  /* Title text is white */
+  margin-bottom: 20px;
+}
+.section-titlee {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: rgb(54, 47, 47);  /* Title text is white */
+  margin-bottom: 20px;
+}
+
+.lead {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: rgb(51, 49, 49);  /* Paragraph text is white */
+}
+

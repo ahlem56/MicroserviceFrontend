@@ -1,0 +1,75 @@
+/* Style général pour les cartes */
+.card {
+    background-color: #fff;
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Style pour le titre de la section */
+  .section-title {
+    margin-top: 30px;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style pour les boutons */
+  .btn {
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  .btn-info {
+    background-color: #17a2b8;
+    color: #fff;
+  }
+  
+  .btn-warning {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  /* Style pour le texte du statut */
+  .text-success {
+    color: #28a745;
+  }
+  
+  .text-warning {
+    color: #ffc107;
+  }
+  
+  .text-danger {
+    color: #dc3545;
+  }
+  
+  /* Espacement entre les éléments */
+  .d-flex.gap-2 {
+    gap: 10px;
+  }
+  
+  /* Style pour les icônes */
+  .bi {
+    margin-right: 5px;
+  }

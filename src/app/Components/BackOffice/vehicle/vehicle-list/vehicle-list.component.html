@@ -1,0 +1,81 @@
+<div class="vehicle-list-container">
+  <div class="header">
+    <h1>Vehicle Management</h1>
+    <button class="primary-button" routerLink="/back-office/vehicles/create">
+      <i class="fas fa-plus"></i> Add New Vehicle
+    </button>
+  </div>
+
+  <div class="filter-controls">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()"
+             placeholder="Search vehicles...">
+    </div>
+    <div class="filter-select">
+      <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
+        <option *ngFor="let type of vehicleTypes" [value]="type.value">
+          {{ type.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading vehicles...
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="vehicle-table" *ngIf="!isLoading && !errorMessage">
+    <table>
+      <thead>
+      <tr>
+        <th>Model</th>
+        <th>Type</th>
+        <th>Capacity</th>
+        <th>Insurance Status</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let vehicle of filteredVehicles">
+        <td data-label="Model">{{ vehicle.vehicleModel }}</td>
+        <td data-label="Type">
+            <span class="type-badge {{ vehicle.vehicleType.toLowerCase() }}">
+              {{ vehicle.vehicleType }}
+            </span>
+        </td>
+        <td data-label="Capacity">{{ vehicle.vehicleCapacity }} seats</td>
+        <td data-label="Insurance">
+            <span class="status-badge" [class.insured]="vehicle.vehiculeInsuranceStatus">
+              {{ vehicle.vehiculeInsuranceStatus ? 'Insured' : 'Uninsured' }}
+            </span>
+        </td>
+        <td class="actions">
+          <button class="icon-button edit" (click)="editVehicle(vehicle.vehiculeId!)" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="icon-button location" (click)="MapVehicle(vehicle.vehiculeId!)" title="Localiser">
+            <i class="fas fa-map-marker-alt"></i>
+          </button>
+          <!-- Bouton pour consulter l'historique du trajet -->
+          <button class="icon-button history" (click)="consultTravelHistory(vehicle.vehiculeId!)" title="Historique de trajet">
+            <i class="fas fa-history"></i>
+          </button>
+          <button class="icon-button delete" (click)="deleteVehicle(vehicle.vehiculeId!)" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="no-results" *ngIf="filteredVehicles.length === 0">
+      No vehicles found matching your criteria
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h2 class="section-title">Post your complaint here <i class="bi bi-arrow-down"></i></h2>
+    </div>
+  </div>
+  <div class="col-md-6" style="margin-left: 280px;">
+    <div class="card p-4 shadow-sm">
+      <h2 class="text-center">Description</h2>
+      <form (ngSubmit)="createComplaint()">
+        <div class="mb-3">
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="complaintDescription"
+            [(ngModel)]="complaint.complaintDescription"
+            name="complaintDescription"
+            placeholder="Describe your problem"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      <div *ngIf="successMessage" class="alert alert-success mt-3">
+        {{ successMessage }}
+        <!-- Severity Dots -->
+        <div *ngIf="severity" class="severity-dots mt-2">
+          <span
+            *ngFor="let _ of [].constructor(getSeverityDots())"
+            class="severity-dot"
+            [style.backgroundColor]="getSeverityColor()"
+          ></span>
+        </div>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+    </div>
+    <button type="button" class="btn btn-secondary mt-2" (click)="goToComplaintList()">
+      View My Complaints
+    </button>
+  </div>
+</div>

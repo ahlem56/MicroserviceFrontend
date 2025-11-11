@@ -1,0 +1,48 @@
+<div class="settings-container">
+  <h2>Account Settings</h2>
+
+  <!-- Profile Section (Not Editable here) -->
+  <div class="settings-section">
+    <h3>Profile</h3>
+    <p><strong>Name:</strong> {{ name }}</p>
+    <p><strong>Email:</strong> {{ email }}</p>
+  </div>
+
+  <!-- Preferences Section -->
+  <div class="settings-section">
+    <h3>Preferences</h3>
+    <label class="toggle">
+      <input type="checkbox" [(ngModel)]="darkMode" (change)="toggleDarkMode()" />
+      <span class="slider"></span> Dark Mode
+    </label>
+
+    <label class="toggle">
+      <input type="checkbox" [(ngModel)]="notifications" (change)="toggleNotifications()" />
+      <span class="slider"></span> Enable Notifications
+    </label>
+
+    <!-- Additional Preference: Language -->
+    <label for="language">Language:</label>
+    <select id="language" [(ngModel)]="language" (change)="changeLanguage()">
+      <option value="en">English</option>
+      <option value="es">Spanish</option>
+      <option value="fr">French</option>
+    </select>
+  </div>
+
+  <!-- Security Section -->
+  <div class="settings-section">
+    <h3>Security</h3>
+    <label for="newPassword">New Password:</label>
+    <input type="password" id="newPassword" [(ngModel)]="newPassword" placeholder="Enter new password" />
+
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" placeholder="Confirm new password" />
+    
+    <div *ngIf="passwordMismatch" class="error-message">
+      Passwords do not match!
+    </div>
+  </div>
+
+  <button class="save-btn" (click)="saveSettings()">Save Changes</button>
+</div>

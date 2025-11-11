@@ -1,0 +1,18 @@
+.max-width {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+html, body {
+  height: 100%; /* Ensure the entire viewport is used */
+  margin: 0;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Make sure the page covers the entire viewport */
+}
+
+.container-fluid {
+  flex: 1; /* This ensures the content expands, pushing the footer to the bottom */
+}

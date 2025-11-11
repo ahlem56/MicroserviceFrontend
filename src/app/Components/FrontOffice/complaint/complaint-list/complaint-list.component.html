@@ -1,0 +1,48 @@
+<div class="container-fluid">
+  <h2 class="section-title">your list of complaints </h2>
+
+  <div class="row">
+    @for (complaint of complaints; track complaint.complaintId) {
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ complaint.complaintDescription }}</h5>
+            <p class="card-text">
+              <strong>status :</strong>
+              <span [class]="{
+                'text-success': complaint.complaintStatus === 'resolved',
+                'text-warning': complaint.complaintStatus === 'pending',
+                'text-danger': complaint.complaintStatus === 'ignored'
+              }">
+                {{ complaint.complaintStatus }}
+              </span>
+            </p>
+
+            <div class="d-flex gap-2">
+              <!-- Bouton Détails (si résolu) -->
+              @if (complaint.complaintStatus === 'resolved') {
+                <button class="btn btn-info"
+                        (click)="goToComplaintDetail(complaint.complaintId)">
+                  <i class="bi bi-eye"></i> Details
+                </button>
+              }
+
+              <!-- Boutons Modifier et Supprimer (si en attente) -->
+              @if (complaint.complaintStatus === 'pending') {
+                <button class="btn btn-warning"
+                        (click)="editComplaint(complaint)">
+                  <i class="bi bi-pencil"></i> Update
+                </button>
+
+                <button class="btn btn-danger"
+                        (click)="deleteComplaint(complaint.complaintId)">
+                  <i class="bi bi-trash"></i> Delete
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

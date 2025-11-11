@@ -1,0 +1,391 @@
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: 
+    linear-gradient(to right, rgba(61, 8, 11, 0.85), rgba(59, 13, 5, 0.85)),
+    url('/assets/FrontOffice/images/bg/delivery1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .tagline {
+    font-size: 1.8rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  }
+
+  .subtagline {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  }
+}
+
+
+/* Text Gradient Effect */
+.text-gradient {
+  background: linear-gradient(90deg, #ffffff, #ffffff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass Card Search */
+.search-bar {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50px;
+  padding: 8px 15px;
+  display: flex;
+  max-width: 500px;
+  margin: 0 auto;
+
+  .glass-input {
+    background: transparent;
+    border: none;
+    flex-grow: 1;
+    color: white;
+    padding: 10px 15px;
+    &::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+  }
+
+  .glow-effect {
+    background: linear-gradient(90deg, #FF4D4D, #F9CB28);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    color: white;
+    
+    transition: all 0.3s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+/* Live Counters */
+.live-counters {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+
+  .counter-item {
+    text-align: center;
+    
+    .counter-number {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #FF4D4D, #F9CB28);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1;
+    }
+
+    .counter-label {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.8;
+    }
+  }
+}
+
+/* 3D Service Cards */
+.service-selector {
+  padding: 80px 0;
+  background: #f8f9fa;
+
+  .service-card {
+    perspective: 1000px;
+    height: 300px;
+    margin: 15px;
+
+    /* Card faces */
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      transition: transform 0.6s ease-in-out;
+      border-radius: 15px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      
+      &.front {
+        background: white;
+        transform: rotateY(0deg);
+        
+        /* Image positioning and responsiveness */
+        img {
+          width: 100%;
+          height: 180px;
+          object-fit: cover; /* Maintain aspect ratio */
+          margin-bottom: 20px;
+          border-radius: 8px;
+        }
+        
+        h3 {
+          font-size: 1.5rem;
+          color: #333;
+          font-weight: 500;
+        }
+      }
+      
+      &.back {
+        background: linear-gradient(135deg, #6b0303, #af2828);
+        transform: rotateY(180deg);
+        color: white;
+        
+        p {
+          text-align: center;
+          font-size: 1rem;
+          margin-bottom: 20px;
+        }
+        
+        a {
+          padding: 10px 20px;
+          background-color: #fff;
+          color: #333;
+          text-transform: uppercase;
+          border-radius: 25px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            background-color: #FF4D4D;
+            color: white;
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+
+    &:hover .front {
+      transform: rotateY(180deg);
+    }
+
+    &:hover .back {
+      transform: rotateY(360deg);
+    }
+  }
+}
+
+/* Additional Styles for Responsiveness */
+@media (max-width: 768px) {
+  .service-selector {
+    padding: 40px 0;
+  }
+
+  .service-card {
+    height: 250px;
+  }
+
+  .card-face {
+    padding: 1.5rem;
+  }
+
+  .card-face img {
+    height: 120px;
+  }
+
+  .card-face h3 {
+    font-size: 1.3rem;
+  }
+
+  .card-face p {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+/* Testimonials */
+.testimonials {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #6b0303, #6b0303);
+
+  .testimonial-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 15px;
+    padding: 30px;
+    height: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    transition: all 0.3s;
+    
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    
+    .profile-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      display: block;
+      margin: 0 auto 15px;
+    }
+    
+    .stars {
+      color: #F9CB28;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    
+    p {
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .user-info {
+      text-align: center;
+      
+      strong {
+        display: block;
+        font-weight: 600;
+      }
+      
+      small {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+/* Cityscape CTA */
+.cityscape-cta {
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f7f7, #f8f7f7);
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: src('assets/FrontOffice/images/bg/cityscape2.jpg') repeat-x;
+    background-size: contain;
+    animation: cityscapeMove 30s linear infinite;
+  }
+  
+  .cta-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+  }
+
+  @keyframes cityscapeMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+/* 3D Button Effect */
+.btn-3d {
+  position: relative;
+  display: inline-block;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #FF4D4D, #F9CB28);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 5px 15px rgba(255,77,77,0.4);
+  transition: all 0.3s;
+  transform-style: preserve-3d;
+  
+  &:hover {
+    transform: translateY(-3px) rotateX(15deg);
+    box-shadow: 0 8px 25px rgba(255,77,77,0.6);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+  
+  i {
+    transition: transform 0.3s;
+  }
+  
+  &:hover i {
+    transform: translateX(5px);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero-section {
+    height: auto;
+    padding: 100px 0;
+    
+    .hero-content {
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+  }
+  
+  .live-counters {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .service-card {
+    height: 250px;
+  }
+  
+  .route-visualization {
+    .row > div {
+      margin-bottom: 40px;
+    }
+  }
+}

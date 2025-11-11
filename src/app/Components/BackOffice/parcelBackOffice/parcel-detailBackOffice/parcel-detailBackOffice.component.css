@@ -1,0 +1,152 @@
+/* Conteneur de cartes alignées en grille */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  /* Style pour les cartes de colis */
+  .card {
+    border: none;
+    width: 100%;  /* La largeur des cartes sera ajustée en fonction de la taille de la colonne */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition fluide pour les effets de survol */
+  }
+  
+  .card:hover {
+    transform: translateY(-10px); /* Effet de levée survol */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Ombre subtile lors du survol */
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  .chart-container h4 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-top: 20px;
+  }
+  
+  .image-container {
+    width: 100%;
+    height: 150px; /* Hauteur de l'image réduite pour s'adapter à la taille de la carte */
+    overflow: hidden; /* Cache tout dépassement de l'image */
+    border-radius: 10px; /* Bords arrondis */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .image-container img {
+    object-fit: cover; /* Assure que l'image couvre complètement l'espace sans déformation */
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease; /* Transition fluide au survol */
+  }
+  
+  .image-container img:hover {
+    transform: scale(1.1); /* Effet de zoom lors du survol */
+  }
+  
+  /* Description du colis */
+  .description p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .description strong {
+    color: #333;
+  }
+  
+  /* Style pour le graphique circulaire */
+  .circle-chart {
+    border-radius: 50%; /* Rendre le fond circulaire */
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%; /* Assure que le gradient prend toute la surface */
+    position: relative;
+    transition: background 1s ease, transform 1s ease; /* Transition fluide pour l'effet de rotation */
+  }
+  
+  /* Style du texte affiché au centre du cercle */
+  .percentage {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #391010; /* Couleur du texte (optionnel, tu peux changer selon ton design) */
+  }
+  
+  /* Animation de rotation dynamique (ajustée pour être plus lente) */
+  .circle-chart {
+    animation: rotateGraph 10s linear infinite; /* Durée augmentée à 10s pour ralentir la rotation */
+  }
+  
+  /* Définition de l'animation de rotation */
+  @keyframes rotateGraph {
+    0% {
+      transform: rotate(0deg); /* Début de la rotation à 0 degré */
+    }
+    50% {
+      transform: rotate(180deg); /* La moitié du chemin, rotation à 180 degrés */
+    }
+    100% {
+      transform: rotate(360deg); /* Fin de l'animation avec une rotation complète à 360 degrés */
+    }
+  }
+  
+  /* Espacement du bouton */
+  .chart-container button {
+    margin-bottom: 20px; /* Espacement sous le bouton */
+  }
+  
+  /* Conteneur du graphique, centrage des éléments */
+  .chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Style personnalisé pour le bouton */
+.styled-button {
+    padding: 10px 20px; /* Augmente la taille du bouton pour le rendre plus visible */
+    font-size: 1.2rem; /* Augmente la taille de la police */
+    border-radius: 25px; /* Bords arrondis */
+    text-transform: uppercase; /* Transforme le texte en majuscules */
+    letter-spacing: 1px; /* Espacement des lettres */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre autour du bouton */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* Ajoute des transitions pour un effet fluide */
+  }
+  
+  .styled-button:hover {
+    transform: translateY(-3px); /* Effet de levée du bouton au survol */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Ombre plus marquée */
+    background-color: #1565c0; /* Changement de couleur au survol */
+  }
+  
+  .styled-button:active {
+    transform: translateY(1px); /* Effet d'enfoncement lors du clic */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ombre légère lors du clic */
+  }
+  
+  .styled-button:focus {
+    outline: none; /* Retirer l'effet de focus par défaut */
+  }
+  /* Style personnalisé pour le titre h2 */
+.styled-header {
+    font-size: 2.5rem; /* Augmente la taille du texte */
+    font-weight: bold; /* Rend le texte en gras */
+    color: #2c3e50; /* Couleur sombre pour un contraste agréable */
+    letter-spacing: 2px; /* Espacement des lettres */
+    text-transform: uppercase; /* Transforme le texte en majuscules */
+    border-bottom: 4px solid #e74c3c; /* Ajoute une barre sous le texte avec une couleur accrocheuse */
+    display: inline-block; /* Permet au titre de ne pas prendre toute la largeur */
+    padding-bottom: 10px; /* Espace entre le texte et la ligne en dessous */
+    margin-bottom: 20px; /* Espace sous le titre */
+    transition: all 0.3s ease; /* Transition fluide pour les changements */
+  }
+  
+  .styled-header:hover {
+    color: #e74c3c; /* Change la couleur du texte au survol */
+    border-bottom: 4px solid #2ecc71; /* Change la couleur de la ligne au survol */
+    transform: translateY(-5px); /* Effet de levée lors du survol */
+  }
+  
+  

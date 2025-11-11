@@ -1,0 +1,158 @@
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+/* Boutons de filtre */
+.btn-filter {
+  background-color: #007bff; /* Couleur bleue moderne */
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-filter:hover {
+  background-color: #0056b3; /* Couleur bleue plus foncée au survol */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-filter:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+}
+
+/* Icônes dans les boutons */
+.btn-filter i {
+  margin-right: 8px;
+}
+
+/* Entrées de recherche */
+.search-container {
+  width: 100%;
+  max-width: 300px;
+}
+
+.search-input {
+  padding: 10px 20px;
+  border: 2px solid #ddd;
+  border-radius: 30px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+}
+
+/* Container des éléments */
+.mb-4 {
+  margin-bottom: 30px;
+}
+
+/* Ajouter de l'espacement entre les éléments */
+.d-flex.justify-content-center {
+  display: flex;
+  justify-content: center;
+}
+
+.d-flex.justify-content-center .gap-3 {
+  gap: 20px;
+}
+
+
+.title {
+  font-size: 26px;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 30px;
+}
+/* Force chaque colonne à avoir la même hauteur */
+.row > [class*="col-"] {
+  display: flex;
+  flex-direction: column;
+}
+.card.parcel-card {
+  height: 100%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.parcel-card {
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #dee2e6;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.parcel-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.parcel-info li {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.no-data {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.btn {
+  text-transform: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-accent {
+  background-color: #54819b;
+  color: white;
+  border: none;
+}
+
+.btn-accent:hover {
+  background-color: #042135;
+}
+
+.btn-primary {
+  background-color: #5aa43f;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #295d11;
+}
+
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.material-icons {
+  font-size: 18px;
+}

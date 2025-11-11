@@ -1,0 +1,22 @@
+.view-toggle .btn {
+    margin-left: 5px;
+  }
+  
+  .date-selector .form-label {
+    font-weight: 500;
+    color: #1e293b;
+  }
+  
+  .form-control {
+    max-width: 200px;
+  }
+  
+  @media (max-width: 576px) {
+    .view-toggle {
+      margin-top: 10px;
+    }
+  
+    .form-control {
+      max-width: 100%;
+    }
+  }

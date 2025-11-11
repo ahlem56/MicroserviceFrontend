@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Front Office</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        .chat-container {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 700px;
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: auto;
+        }
+
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #ccc transparent;
+        }
+
+        /* Messages */
+        .message {
+            display: flex;
+            flex-direction: column;
+            padding: 14px;
+            border-radius: 20px;
+            max-width: 75%;
+            word-wrap: break-word;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .sent {
+            background: #007bff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 10px;
+        }
+
+        .received {
+            background: #f1f1f1;
+            color: black;
+            align-self: flex-start;
+            border-bottom-left-radius: 10px;
+        }
+
+        /* Effet au survol */
+        .message:hover {
+            transform: scale(1.03);
+        }
+
+        /* Header du message */
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Profil + Nom */
+        .sender-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .profile-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Bouton Like et Suppression */
+        .message-actions {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .like-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s;
+            color: red;
+        }
+
+        .like-button:hover {
+            transform: scale(1.2);
+        }
+
+        .delete-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #f9f5f5;
+        }
+
+        /* Barre de saisie */
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-top: 1px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            gap: 12px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            background: #f1f1f1;
+            outline: none;
+        }
+
+        .send-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #007bff;
+            transition: transform 0.2s;
+        }
+
+        .send-button:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <!-- Chat Box -->
+        <div class="chat-box">
+            <div *ngFor="let msg of messages" 
+                class="message" 
+                [ngClass]="{'sent': msg.userId === userId, 'received': msg.userId !== userId}">
+                
+                <div class="message-header">
+                    <div class="sender-info">
+                        <img *ngIf="msg.userProfilePhoto" [src]="msg.userProfilePhoto" alt="Profile Photo" class="profile-photo" />
+                        <strong>{{ msg.sender }}</strong>
+                    </div>
+                    <span class="message-time">{{ msg.time }}</span>
+                </div>
+
+                <div class="message-content">
+                    {{ msg.content }}
+                </div>
+
+                <div class="message-actions">
+                    <button (click)="likeMessage(msg)" class="like-button">
+                        ❤️ {{ msg.likes || 0 }}
+                    </button>
+                    <button *ngIf="msg.userId === userId" (click)="deleteMessage(msg)" class="delete-button">
+                        <i class="bi bi-trash"></i> <!-- Icône Bootstrap Trash -->
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre de saisie -->
+        <div class="chat-input">
+            <input type="text" [(ngModel)]="messageContent" placeholder="Write a message..." (keyup.enter)="sendMessage()" />
+            <button (click)="sendMessage()" class="send-button">
+                <i class="material-icons">send</i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Votre code TypeScript ici, incluant la logique de suppression, envoi et gestion des messages.
+    </script>
+</body>
+
+</html>

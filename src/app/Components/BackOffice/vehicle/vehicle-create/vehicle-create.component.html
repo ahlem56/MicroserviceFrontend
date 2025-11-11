@@ -1,0 +1,136 @@
+<div class="form-container">
+  <h1>Create New Vehicle</h1>
+
+  <form #vehicleForm="ngForm" (ngSubmit)="onSubmit(vehicleForm)">
+
+    <div class="form-grid">
+      <!-- Vehicle Type -->
+      <div class="form-group">
+        <label for="vehicleType">Vehicle Type *</label>
+        <select id="vehicleType"
+                [(ngModel)]="vehicle.vehicleType"
+                name="vehicleType"
+                required
+                #vehicleType="ngModel">
+          <option value="CAR">Car</option>
+          <option value="TRUCK">Truck</option>
+          <option value="VAN">Van</option>
+        </select>
+        <div *ngIf="vehicleType.invalid && vehicleType.touched" class="error-message">
+          Vehicle type is required.
+        </div>
+      </div>
+
+      <!-- Model -->
+      <div class="form-group">
+        <label for="model">Model *</label>
+        <input type="text"
+               id="model"
+               [(ngModel)]="vehicle.vehicleModel"
+               name="vehicleModel"
+               required
+               minlength="2"
+               maxlength="50"
+               #vehicleModel="ngModel">
+        <div *ngIf="vehicleModel.invalid && vehicleModel.touched" class="error-message">
+          Model must be between 2 and 50 characters.
+        </div>
+      </div>
+
+      <!-- Capacity -->
+      <div class="form-group">
+        <label for="capacity">Seating Capacity (1-4) *</label>
+        <input type="number"
+               id="capacity"
+               [(ngModel)]="vehicle.vehicleCapacity"
+               name="vehicleCapacity"
+               required
+               min="1"
+               max="4"
+               #vehicleCapacity="ngModel">
+        <div *ngIf="vehicleCapacity.invalid && vehicleCapacity.touched" class="error-message">
+          Capacity must be between 1 and 4.
+        </div>
+      </div>
+
+      <!-- Serial Number (now unlimited digits) -->
+      <div class="form-group">
+        <label for="serial">Serial Number *</label>
+        <input type="text"
+               id="serial"
+               inputmode="numeric"
+               pattern="\d*"
+               [(ngModel)]="vehicle.vehicleSerialNumber"
+               name="vehicleSerialNumber"
+               required
+               #vehicleSerialNumber="ngModel">
+        <div *ngIf="vehicleSerialNumber.invalid && vehicleSerialNumber.touched" class="error-message">
+          Serial number is required
+        </div>
+      </div>
+
+      <!-- Maintenance Date -->
+      <div class="form-group">
+        <label for="maintenance">Maintenance Date *</label>
+        <input type="date"
+               id="maintenance"
+               [(ngModel)]="vehicle.vehiculeMaintenanceDate"
+               name="vehiculeMaintenanceDate"
+               [max]="minDate"
+               required
+               #vehiculeMaintenanceDate="ngModel">
+        <div *ngIf="vehiculeMaintenanceDate.invalid && vehiculeMaintenanceDate.touched" class="error-message">
+          Maintenance date must be today or earlier.
+        </div>
+      </div>
+
+      <!-- Insurance Status -->
+      <div class="form-group insurance-group">
+        <label>Insurance Status</label>
+        <div class="toggle-switch">
+          <input type="checkbox"
+                 id="insuranceStatus"
+                 [(ngModel)]="vehicle.vehiculeInsuranceStatus"
+                 name="vehiculeInsuranceStatus">
+          <label for="insuranceStatus" class="slider"></label>
+          <span class="status-label">
+            {{ vehicle.vehiculeInsuranceStatus ? 'Insured' : 'Uninsured' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Insurance Date (only if insured) -->
+      <div class="form-group" *ngIf="vehicle.vehiculeInsuranceStatus">
+        <label for="insuranceDate">Insurance Expiry Date *</label>
+        <input type="date"
+               id="insuranceDate"
+               [(ngModel)]="vehicle.vehiculeInsuranceDate"
+               name="vehiculeInsuranceDate"
+               [min]="minDate"
+               required
+               #vehiculeInsuranceDate="ngModel">
+        <div *ngIf="vehiculeInsuranceDate.invalid && vehiculeInsuranceDate.touched" class="error-message">
+          Insurance expiry date is required when insured.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="submit" [disabled]="vehicleForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Create Vehicle</span>
+        <span *ngIf="isLoading">Creating...</span>
+      </button>
+      <button type="button" (click)="router.navigate(['/back-office/vehicles'])">
+        Cancel
+      </button>
+    </div>
+
+    <!-- General Error Message -->
+    <div class="error-message" *ngIf="errorMessage">
+      <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+    </div>
+
+  </form>
+</div>

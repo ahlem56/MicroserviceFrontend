@@ -1,0 +1,52 @@
+<div class="card">
+    <div class="card-body">
+      <div class="d-md-flex align-items-center justify-content-between mb-3">
+        <div>
+          <h4 class="card-title">{{ viewMode === 'monthly' ? 'Monthly Revenue Summary' : 'Daily Revenue Summary' }}</h4>
+          <h5 class="card-subtitle">Actual Payment Revenue {{ viewMode === 'monthly' ? 'for the Year' : 'for Selected Month' }}</h5>
+        </div>
+        <div class="view-toggle">
+          <button class="btn" [ngClass]="{'btn-primary': viewMode === 'monthly', 'btn-outline-primary': viewMode !== 'monthly'}" (click)="toggleView('monthly')">Monthly</button>
+          <button class="btn" [ngClass]="{'btn-primary': viewMode === 'daily', 'btn-outline-primary': viewMode !== 'daily'}" (click)="toggleView('daily')">Daily</button>
+        </div>
+      </div>
+  
+      <div *ngIf="viewMode === 'daily'" class="date-selector mb-3">
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <label for="monthSelect" class="form-label">Month:</label>
+            <select id="monthSelect" class="form-control" [(ngModel)]="selectedMonth" (ngModelChange)="onDateChange()">
+              <option *ngFor="let month of months" [value]="month.value">{{ month.name }}</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label for="yearSelect" class="form-label">Year:</label>
+            <select id="yearSelect" class="form-control" [(ngModel)]="selectedYear" (ngModelChange)="onDateChange()">
+              <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="d-flex flex-column w-100">
+            <apx-chart
+              #chart
+              [series]="salesChartOptions.series"
+              [chart]="salesChartOptions.chart"
+              [xaxis]="salesChartOptions.xaxis"
+              [yaxis]="salesChartOptions.yaxis"
+              [grid]="salesChartOptions.grid"
+              [stroke]="salesChartOptions.stroke"
+              [tooltip]="salesChartOptions.tooltip"
+              [dataLabels]="salesChartOptions.dataLabels"
+              [legend]="salesChartOptions.legend"
+              [colors]="salesChartOptions.colors"
+              [markers]="salesChartOptions.markers">
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

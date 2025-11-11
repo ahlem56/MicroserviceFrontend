@@ -1,0 +1,161 @@
+<!-- src/app/FrontOffice/event-list.component.html -->
+<section class="page-hero" *ngIf="!error">
+  <div class="hero-content">
+    <p class="eyebrow">Discover · Participate · Grow</p>
+    <h1>Events crafted for the SpeedyGo community</h1>
+    <p class="subtitle">
+      Explore upcoming gatherings, training sessions, and celebrations curated to keep our travelers and drivers connected.
+    </p>
+    <div class="hero-actions">
+      <button class="hero-btn primary" (click)="viewMode = 'grid'">Explore events</button>
+      <button class="hero-btn secondary" (click)="viewMode = 'list'">Switch view</button>
+    </div>
+  </div>
+  <div class="hero-illustration" aria-hidden="true">
+    <img src="assets/FrontOffice/images/bg/events-hero.svg" alt="" />
+  </div>
+</section>
+
+<section class="filter-bar" *ngIf="!loading && !error">
+  <div class="filter-group search">
+    <label for="search">Looking for something specific?</label>
+    <div class="search-field">
+      <i class="fas fa-search"></i>
+      <input
+        id="search"
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+        placeholder="Search by keyword or location"
+      />
+    </div>
+  </div>
+
+  <div class="filter-group month">
+    <label for="month">Filter by month</label>
+    <select
+      id="month"
+      [(ngModel)]="selectedMonth"
+      (change)="onMonthChange($event)"
+    >
+      <option *ngFor="let month of months" [value]="month.value">{{ month.label }}</option>
+    </select>
+  </div>
+
+  <div class="filter-group view-toggle">
+    <label>View</label>
+    <div class="toggle-buttons">
+      <button type="button" [class.active]="viewMode === 'grid'" (click)="toggleView('grid')">
+        <i class="fas fa-th"></i>
+      </button>
+      <button type="button" [class.active]="viewMode === 'list'" (click)="toggleView('list')">
+        <i class="fas fa-list"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section *ngIf="loading" class="loading-block">
+  <span class="spinner"></span>
+  Loading events…
+</section>
+
+<section *ngIf="error" class="error-block">
+  <i class="fas fa-exclamation-circle"></i>
+  {{ error }}
+</section>
+
+<section *ngIf="!loading && !error">
+  <ng-container *ngIf="filteredEvents.length; else emptyState">
+    <div [ngClass]="{ 'events-grid': viewMode === 'grid', 'events-list': viewMode === 'list' }">
+      <article
+        class="event-card"
+        *ngFor="let evt of filteredEvents; trackBy: trackByEventId"
+      >
+        <div class="event-cover" [ngClass]="{ 'has-photo': !!evt.photo }">
+          <img *ngIf="evt.photo; else placeholderPhoto" [src]="evt.photo" alt="Event cover" />
+          <ng-template #placeholderPhoto>
+            <div class="placeholder">
+              <i class="fas fa-calendar-day"></i>
+              <span>No cover yet</span>
+            </div>
+          </ng-template>
+          <span class="event-status" [class.live]="evt.published" [class.draft]="!evt.published">
+            {{ evt.published ? 'Published' : 'Draft' }}
+          </span>
+        </div>
+
+        <div class="event-info">
+          <div class="event-meta">
+            <div class="date-chip">
+              <span class="month">{{ evt.startDate | date: 'MMM' }}</span>
+              <span class="day">{{ evt.startDate | date: 'd' }}</span>
+            </div>
+            <div class="details">
+              <h3>{{ evt.title || evt.description }}</h3>
+              <p class="time-range">
+                <i class="fas fa-clock"></i>
+                {{ evt.startDate | date: 'shortTime' }}
+                <span *ngIf="evt.endDate">– {{ evt.endDate | date: 'shortTime' }}</span>
+              </p>
+              <p class="location"><i class="fas fa-map-marker-alt"></i> {{ evt.location }}</p>
+            </div>
+          </div>
+
+          <p class="description">
+            {{ evt.description || 'Details will be announced shortly. Stay tuned!' }}
+          </p>
+
+          <div class="event-actions">
+            <div class="capacity" *ngIf="evt.maxParticipants !== undefined">
+              <i class="fas fa-users"></i>
+              <span>{{ evt.currentParticipants || 0 }}/{{ evt.maxParticipants }} spots</span>
+            </div>
+
+            <button
+              class="btn-primary"
+              *ngIf="!
+                evt.registered &&
+                evt.maxParticipants !== undefined &&
+                evt.currentParticipants !== undefined &&
+                evt.currentParticipants < evt.maxParticipants
+              "
+              (click)="join(evt)"
+            >
+              Join now
+            </button>
+
+            <button
+              class="btn-secondary"
+              *ngIf="evt.registered"
+              (click)="leave(evt)"
+            >
+              Leave event
+            </button>
+
+            <button
+              class="btn-disabled"
+              *ngIf="!
+                evt.registered &&
+                evt.maxParticipants !== undefined &&
+                evt.currentParticipants !== undefined &&
+                evt.currentParticipants >= evt.maxParticipants
+              "
+              disabled
+            >
+              Fully booked
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <i class="fas fa-calendar-plus"></i>
+      <h3>No events yet</h3>
+      <p>Keep an eye on this space—new experiences are being planned for the SpeedyGo community.</p>
+    </div>
+  </ng-template>
+</section>

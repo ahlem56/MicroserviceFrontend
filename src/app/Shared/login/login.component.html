@@ -1,0 +1,65 @@
+<div class="login-page">
+  <div class="illustration" aria-hidden="true">
+    <img src="assets/FrontOffice/images/bg/back.png" alt="" />
+  </div>
+
+  <div class="form-wrapper">
+    <div class="form-card">
+      <a routerLink="/landingPage" class="brand">
+        <img src="assets/FrontOffice/images/logos/logoSpeedy.png" alt="SpeedyGo Logo" />
+      </a>
+
+      <h1>Welcome back</h1>
+      <p>Sign in to access your personalized SpeedyGo experience.</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+        <div class="input-group" [class.invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          <label for="email">Email address</label>
+          <div class="input-shell">
+            <i class="fas fa-envelope"></i>
+            <input id="email" formControlName="email" type="email" placeholder="name@example.com" />
+          </div>
+          <div class="errors" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
+          </div>
+        </div>
+
+        <div class="input-group" [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          <label for="password">Password</label>
+          <div class="input-shell">
+            <i class="fas fa-lock"></i>
+            <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+          </div>
+          <div class="errors" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">At least 6 characters required.</span>
+          </div>
+        </div>
+
+        <div class="utility-row">
+          <label class="remember">
+            <input type="checkbox" />
+            Remember me
+          </label>
+          <a routerLink="/forgot-password">Forgot password?</a>
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid || submitting" class="submit-button">
+          <span *ngIf="submitting" class="spinner"></span>
+          <span>{{ submitting ? 'Signing in…' : 'Sign in' }}</span>
+        </button>
+
+        <div class="error-banner" *ngIf="errorMessage">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+
+        <p class="signup-message">
+          New to SpeedyGo?
+          <a routerLink="/signup">Create an account</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

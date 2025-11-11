@@ -1,0 +1,139 @@
+<div class="container">
+  <h2><i class="bi bi-car-front"></i> My Carpool Offers <i class="bi bi-car-front"></i></h2>
+  <!-- Display average rating -->
+  <div class="average-rating" *ngIf="averageRating !== null; else noRatings">
+    <p><strong>Your Rating:</strong> 
+      <span *ngFor="let star of ratings(averageRating, true)" [ngClass]="star"></span>
+      <span class="rating-value">{{ (averageRating / 20) | number: '1.1-1' }} / 5</span>
+    </p>
+  </div>
+  
+  <ng-template #noRatings>
+    <p class="average-rating no-ratings">No ratings yet</p>
+  </ng-template>
+  <br>
+  
+  <!-- Button to toggle between upcoming and past carpools -->
+  <button class="btn btn-primary mb-3" style="margin-left: 400px;" (click)="togglePastCarpools()">
+    {{ showPastCarpools ? 'View Upcoming Carpools' : 'View Carpool History' }}
+  </button>
+  <br><br>
+  <!-- Carpool List -->
+  @if (filteredCarpools.length > 0) {
+    <div class="row">
+      @for (carpool of filteredCarpools; track carpool.carpoolId) {
+        <div class="col-md-4 mb-3">
+          <div class="card border-danger mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+              <h3><i class="bi bi-geo"></i> {{ carpool.carpoolDeparture }} <i class="bi bi-arrow-right"></i> {{ carpool.carpoolDestination }}</h3>
+            </div>
+            <div class="card-body text-danger">
+              <!-- Display carpool details -->
+              <p><strong><i class="bi bi-calendar-check"></i> Date:</strong> {{ carpool.carpoolDate }}</p>
+              <p><strong><i class="bi bi-stopwatch"></i> Time:</strong> {{ carpool.carpoolTime }}</p>
+              <p><strong><i class="bi bi-people"></i> Capacity:</strong> {{ carpool.carpoolCapacity }}</p>
+              <p><strong><i class="bi bi-cash"></i> Price:</strong> {{ carpool.carpoolPrice }} TND</p>
+              <p><strong><i class="bi bi-file-text"></i> Conditions:</strong> {{ carpool.carpoolCondition }}</p>
+
+              <!-- Display user rating for past carpools -->
+              @if (showPastCarpools && userId && hasRatedCarpool(carpool.carpoolId)) {
+                <p class="carpool-rating"><strong>Your rating:</strong>
+                  <ng-container *ngFor="let rating of carpoolRatings[carpool.carpoolId]">
+                    <span *ngIf="rating[userId.toString()] !== undefined">
+                      {{ rating[userId.toString()] ? '👍 Yes' : '👎 No' }}
+                    </span>
+                  </ng-container>
+                </p>
+              }
+
+              <!-- Update and Delete buttons (only for upcoming carpools) -->
+              @if (!showPastCarpools) {
+                <div class="d-flex gap-2">
+                  <button class="btn btn-warning" (click)="startEditing(carpool.carpoolId)">
+                    <i class="bi bi-pencil"></i> Update
+                  </button>
+                  <button class="btn btn-danger" (click)="deleteCarpool(carpool.carpoolId)">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </div>
+              }<br>
+              <button class="btn btn-danger" (click)="getUsers(carpool.carpoolId)">
+                <i class="bi bi-people"></i> View Users
+              </button>
+              <!-- Display users who joined the carpool -->
+              @if (getUsersCarpoolId === carpool.carpoolId) {
+                @if (isLoading) {
+                  <p>Loading users...</p>
+                } @else {
+                  @if (usersWhoJoined.length > 0) {
+                    <h5><i class="bi bi-people"></i> Users Who Joined This Carpool</h5>
+                    <ul class="list-group">
+                      @for (user of usersWhoJoined; track user.userId) {
+                        <li class="list-group-item">
+                          <strong>{{ user.numberOfPlaces }} Place(s):</strong> {{ user.firstName }} {{ user.lastName }} ({{ user.email }})
+                        </li>
+                      }
+                    </ul>
+                  } @else {
+                    <p>{{ noUsersMessage }}</p>
+                  }
+                }
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="text-center">No carpool offers found.</p>
+  }
+
+  <!-- Edit Form (shown only when editing) -->
+  @if (editingCarpoolId !== null) {
+    <div class="card border-primary mt-3">
+      <div class="card-header">
+        <h3><i class="bi bi-pencil"></i> Update Your Carpool</h3>
+      </div>
+      <div class="card-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-geo"></i> Departure</label>
+            <input class="form-control" [value]="updatedCarpool.carpoolDeparture" (input)="updateField('carpoolDeparture', $event)" placeholder="Departure" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-geo"></i> Destination</label>
+            <input class="form-control" [value]="updatedCarpool.carpoolDestination" (input)="updateField('carpoolDestination', $event)" placeholder="Destination" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-calendar-check"></i> Date</label>
+            <input class="form-control" [value]="updatedCarpool.carpoolDate" (input)="updateField('carpoolDate', $event)" type="date" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-stopwatch"></i> Time</label>
+            <input class="form-control" [value]="updatedCarpool.carpoolTime" (input)="updateField('carpoolTime', $event)" type="time" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-people"></i> Capacity</label>
+            <input class="form-control" [value]="updatedCarpool.carpoolCapacity" (input)="updateField('carpoolCapacity', $event)" type="number" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-file-text"></i> Conditions</label>
+            <input class="form-control" [value]="updatedCarpool.carpoolCondition" (input)="updateField('carpoolCondition', $event)" type="text" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-cash"></i> Price</label>
+            <input class="form-control" [value]="updatedCarpool.carpoolPrice" (input)="updateField('carpoolPrice', $event)" type="number" />
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-success" (click)="updateCarpool(editingCarpoolId, updatedCarpool)">
+              <i class="bi bi-check"></i> Save
+            </button>
+            <button class="btn btn-secondary" (click)="cancelEditing()">
+              <i class="bi bi-x"></i> Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

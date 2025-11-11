@@ -1,0 +1,59 @@
+<div class="vehicle-list-container">
+  <div class="header">
+    <h1>Carpooling List</h1>
+  </div>
+
+  <!-- Filter controls -->
+  <div class="filter-controls">
+    <div class="filter-select">
+      <button class="btn btn-primary" (click)="applyFilter('all')" [ngClass]="{'active': filterType === 'all'}">All carpools</button>
+      <button class="btn btn-success" (click)="applyFilter('future')" [ngClass]="{'active': filterType === 'future'}">Future Capools</button>
+      <button class="btn btn-warning" (click)="applyFilter('past')" [ngClass]="{'active': filterType === 'past'}">Old carpools</button>
+    </div>
+  </div>
+
+  <!-- Loading and Error States -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i> Loading ...
+  </div>
+
+  <!-- Table with Carpool Information -->
+  <div class="vehicle-table" *ngIf="!isLoading && filteredCarpools.length > 0; else noCarpools">
+    <table>
+      <thead>
+        <tr>
+          <th>Departure -> Destination</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Capacity</th>
+          <th>Price</th>
+          <th>Offerer's informations</th>
+          <th>Offerer's licensePlate</th>
+
+          <th>More details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let carpool of filteredCarpools">
+          <td data-label="Départ → Destination">{{ carpool.carpoolDeparture }} → {{ carpool.carpoolDestination }}</td>
+          <td data-label="Date">{{ carpool.carpoolDate | date: 'dd/MM/yyyy' }}</td>
+          <td data-label="Heure">{{ carpool.carpoolTime }}</td>
+          <td data-label="Places">{{ carpool.carpoolCapacity }}</td>
+          <td data-label="Prix">{{ carpool.carpoolPrice }}TND</td>
+          <td data-label="Offreur">
+            <span class="type-badge">{{ carpool.simpleUserOffer.firstName }} {{ carpool.simpleUserOffer.lastName }}</span>
+          </td>
+          <td data-label="licensePlate">{{ carpool.licensePlate }}</td>
+
+          <td><button class="btn btn-danger"(click)="viewCarpoolDetails(carpool.carpoolId)">Details</button></td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- No Results Found -->
+  <ng-template #noCarpools>
+    <p class="no-results">Aucun covoiturage trouvé.</p>
+  </ng-template>
+</div>

@@ -1,0 +1,320 @@
+<!-- ============================================================== -->
+<!-- Modern Dashboard Layout -->
+<!-- ============================================================== -->
+<div class="dashboard-container">
+  <!-- ============================================================== -->
+  <!-- Hero Section with Overview Cards -->
+  <!-- ============================================================== -->
+  <section class="dashboard-hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Transport Management Dashboard</h1>
+      <p class="hero-subtitle">Real-time insights & analytics</p>
+    </div>
+    <app-top-cards [totalUsers]="totalUsers" [totalTrips]="totalTrips" [totalParcels]="totalParcels" [totalCarpools]="totalCarpools" class="floating-cards"></app-top-cards>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Interactive Map Section -->
+  <!-- ============================================================== -->
+  <section class="map-section">
+    <div class="section-header">
+      <h2 class="section-title">Most Visited Locations</h2>
+    </div>
+    <div class="map-container">
+      <google-map width="100%" height="500px" [center]="center" [zoom]="zoom" [options]="mapOptions">
+        <map-marker *ngFor="let trip of trips" [position]="{ lat: trip.latitude, lng: trip.longitude }">
+          <map-info-window class="custom-infowindow">
+            <div class="infowindow-content">
+              <h4>{{ trip.location }}</h4>
+              <p><i class="fas fa-tripadvisor"></i> Trips: {{ trip.tripCount }}</p>
+            </div>
+          </map-info-window>
+        </map-marker>
+      </google-map>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Enhanced Parcel Statistics Section -->
+  <!-- ============================================================== -->
+  <section class="metrics-section">
+    <div class="metrics-card">
+      <div class="metrics-card-header">
+        <div class="header-content">
+          <h3 class="section-title"><i class="fas fa-truck"></i> Parcel Delivery Analytics</h3>
+          <div class="date-filter">
+            <span class="filter-label">Showing data for:</span>
+            <span class="current-date">{{ currentDate | date:'fullDate' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <!-- Today's Deliveries -->
+        <div class="stat-item today">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+            <h4>Today's Performance</h4>
+          </div>
+          <div class="stat-main">
+            <p class="stat-value">{{ totalDeliveredToday }}</p>
+            <p class="stat-label">Parcels Delivered</p>
+          </div>
+          <div class="stat-footer">
+            <div class="progress-container">
+              <div class="progress-bar" [style.width.%]="(totalDeliveredToday / (totalDeliveredToday + 5)) * 100"></div>
+            </div>
+            <span class="progress-text">
+              <span *ngIf="totalDeliveredToday > 0; else noDeliveries">{{ (totalDeliveredToday / (totalDeliveredToday + 5)) * 100 | number:'1.0-0' }}% of daily target</span>
+              <ng-template #noDeliveries>No deliveries yet today</ng-template>
+            </span>
+          </div>
+        </div>
+        <!-- Weekly Deliveries -->
+        <div class="stat-item week">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+            <h4>Weekly Summary</h4>
+          </div>
+          <div class="stat-main">
+            <p class="stat-value">{{ totalDeliveredThisWeek }}</p>
+            <p class="stat-label">Total This Week</p>
+          </div>
+          <div class="stat-footer">
+            <div class="comparison">
+              <i class="fas" [ngClass]="totalDeliveredThisWeek >= 10 ? 'fa-arrow-up text-success' : 'fa-arrow-down text-warning'"></i>
+              <span>Compared to last week</span>
+            </div>
+          </div>
+        </div>
+        <!-- Monthly Deliveries -->
+        <div class="stat-item month">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <h4>Monthly Overview</h4>
+          </div>
+          <div class="stat-main">
+            <p class="stat-value">{{ totalDeliveredThisMonth }}</p>
+            <p class="stat-label">Total This Month</p>
+          </div>
+          <div class="stat-footer">
+            <div class="completion">
+              <div class="completion-bar">
+                <div class="fill" [style.width.%]="(totalDeliveredThisMonth / 50) * 100"></div>
+              </div>
+              <span class="completion-text">{{ (totalDeliveredThisMonth / 50) * 100 | number:'1.0-0' }}% of monthly goal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Event with Most Participants Section -->
+  <!-- ============================================================== -->
+  <section class="subscription-event-container">
+    <!-- Event with Most Participants Section -->
+    <div class="event-section">
+      <section class="metrics-section">
+        <div class="metrics-card">
+          <div class="metrics-card-header">
+            <h3>Upcoming Event Spotlight</h3>
+          </div>
+          <div class="event-container">
+            <div *ngIf="featuredEvent; else noEvents" class="event-card">
+              <div class="event-image-container">
+                <img [src]="featuredEvent.photo || 'assets/default-event-photo.jpg'" alt="Event Image" class="event-image">
+              </div>
+              <div class="event-details">
+                <h4>{{ featuredEvent.title || featuredEvent.description }}</h4>
+                <p><strong>Location:</strong> {{ featuredEvent.location || '—' }}</p>
+                <p *ngIf="featuredEvent.startDate"><strong>Happening:</strong> {{ featuredEvent.startDate | date: 'medium' }}</p>
+                <p *ngIf="featuredEvent.endDate"><strong>Ends:</strong> {{ featuredEvent.endDate | date: 'medium' }}</p>
+                <p *ngIf="featuredEvent.currentParticipants !== undefined">
+                  <strong>Registrations:</strong> {{ featuredEvent.currentParticipants }}
+                </p>
+                <p><strong>Status:</strong> {{ featuredEvent.published ? 'Published' : 'Draft' }}</p>
+              </div>
+            </div>
+            <ng-template #noEvents>
+              <div class="empty-event">
+                <i class="fas fa-calendar-times"></i>
+                <p>No events available yet. Start by creating a new event.</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Events Calendar -->
+  <!-- ============================================================== -->
+  <section class="calendar-section">
+    <div class="metrics-card">
+      <div class="metrics-card-header calendar-header">
+        <h3>Events Calendar</h3>
+        <div class="calendar-toolbar">
+          <button type="button" class="calendar-btn" (click)="previousMonth()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button type="button" class="calendar-btn" (click)="goToToday()">Today</button>
+          <button type="button" class="calendar-btn" (click)="nextMonth()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <span class="calendar-current-month">{{ viewDate | date: 'MMMM yyyy' }}</span>
+        </div>
+      </div>
+
+      <div class="calendar-wrapper">
+        <mwl-calendar-month-view
+          [viewDate]="viewDate"
+          [events]="calendarEvents"
+          [activeDayIsOpen]="activeDayIsOpen"
+          [refresh]="calendarRefresh"
+          (dayClicked)="dayClicked($event.day)"
+          (eventClicked)="eventClicked($event.event)"
+        >
+        </mwl-calendar-month-view>
+      </div>
+
+      <div class="day-events" *ngIf="selectedDate">
+        <h4>{{ selectedDate | date: 'fullDate' }}</h4>
+        <ng-container *ngIf="selectedDayEvents.length; else noDayEvents">
+          <div class="day-event-card" *ngFor="let event of selectedDayEvents">
+            <div class="day-event-header">
+              <h5>{{ event.title }}</h5>
+              <span class="badge" [class.badge-live]="event.meta?.published" [class.badge-draft]="!event.meta?.published">
+                {{ event.meta?.published ? 'Published' : 'Draft' }}
+              </span>
+            </div>
+            <p class="day-event-time">
+              <i class="fas fa-clock"></i>
+              {{ event.start | date: 'shortTime' }}
+              <span *ngIf="event.end"> - {{ event.end | date: 'shortTime' }}</span>
+            </p>
+            <p class="day-event-location" *ngIf="event.meta?.location">
+              <i class="fas fa-map-marker-alt"></i>
+              {{ event.meta?.location }}
+            </p>
+            <p class="day-event-description" *ngIf="event.meta?.description">
+              {{ event.meta?.description }}
+            </p>
+          </div>
+        </ng-container>
+        <ng-template #noDayEvents>
+          <p class="no-day-events">No events scheduled for this day.</p>
+        </ng-template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Top Rated Users Section -->
+  <!-- ============================================================== -->
+  <section class="metrics-section">
+    <div class="metrics-card">
+      <div class="metrics-card-header">
+        <h3>Top Rated Carpool Offerers</h3>
+      </div>
+      <div class="offerers-container">
+        <div class="offerer-profile" *ngFor="let offerer of topRatedOfferers">
+          <div class="offerer-avatar">
+            <img [src]="'http://localhost:8089/examen/user/profile-photo/' + offerer.userProfilePhoto" [alt]="offerer.firstName + ' ' + offerer.lastName" class="profile-photo" (error)="handleImageError($event)" />
+          </div>
+          <div class="offerer-info">
+            <h4>{{ offerer.firstName }} {{ offerer.lastName }}</h4>
+            <div class="offerer-rating">
+              <div class="stars">
+                <span *ngFor="let star of ratings(offerer.averageRating, true)" [ngClass]="star"></span>
+              </div>
+              <span class="rating-value">{{ (offerer.averageRating / 20) | number: '1.1-1' }} / 5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Top Rated Drivers Section -->
+  <!-- ============================================================== -->
+  <section class="metrics-section">
+    <div class="metrics-card">
+      <div class="metrics-card-header">
+        <h3>Top Rated Drivers</h3>
+      </div>
+      <div class="drivers-container">
+        <div class="driver-profile" *ngFor="let driver of topRatedDrivers">
+          <div class="driver-avatar">
+            <img [src]="'http://localhost:8089/examen/user/profile-photo/' + driver.userProfilePhoto" alt="{{ driver.firstName }} {{ driver.lastName }}">
+            <div class="availability-badge" [ngClass]="{'available': driver.availabilityD, 'unavailable': !driver.availabilityD}">
+              <i class="fas" [ngClass]="{'fa-check': driver.availabilityD, 'fa-times': !driver.availabilityD}"></i>
+            </div>
+          </div>
+          <div class="driver-info">
+            <h4>{{ driver.firstName }} {{ driver.lastName }}</h4>
+            <div class="driver-rating">
+              <div class="stars">
+                <span *ngFor="let star of getStars(driver.performanceRatingD)" [ngClass]="star"></span>
+              </div>
+              <span class="rating-value">{{ driver.performanceRatingD | number: '1.1-1' }} / 5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Vehicles with Expired Insurance Section -->
+  <!-- ============================================================== -->
+  <section class="metrics-section">
+    <div class="metrics-card">
+      <div class="metrics-card-header">
+        <h3>Vehicles with Expired Insurance</h3>
+      </div>
+      <div class="vehicles-container">
+        <div class="vehicle-card" *ngFor="let vehicle of vehiclesWithExpiredInsurance">
+          <div class="vehicle-image">
+            <img src="assets/FrontOffice/images/bg/car.png" alt="{{ vehicle.vehicleModel }}">
+            <div class="status-indicator" [ngClass]="{'expired': !vehicle.vehiculeInsuranceStatus, 'active': vehicle.vehiculeInsuranceStatus}"></div>
+          </div>
+          <div class="vehicle-details">
+            <h4>{{ vehicle.vehicleModel }}</h4>
+            <div class="detail-row">
+              <span class="detail-label">Insurance:</span>
+              <span class="detail-value" [ngClass]="{'active': vehicle.vehiculeInsuranceStatus, 'expired': !vehicle.vehiculeInsuranceStatus}">
+                {{ vehicle.vehiculeInsuranceStatus ? 'Active' : 'Expired' }}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Expires:</span>
+              <span class="detail-value">{{ vehicle.vehiculeInsuranceDate | date: 'shortDate' }}</span>
+            </div>
+            <button class="action-btn" [ngClass]="{'warning': !vehicle.vehiculeInsuranceStatus, 'info': vehicle.vehiculeInsuranceStatus}">
+              {{ !vehicle.vehiculeInsuranceStatus ? 'Renew Now' : 'View Details' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Revenue Analytics Section -->
+  <!-- ============================================================== -->
+  <section class="analytics-section">
+    <div class="analytics-card">
+      <div class="card-header">
+        <h3>Revenue Analytics</h3>
+      </div>
+      <app-sales-summary></app-sales-summary>
+    </div>
+  </section>
+
+ 
+<style>
+/* [Previous styles remain unchanged] */
+</style>

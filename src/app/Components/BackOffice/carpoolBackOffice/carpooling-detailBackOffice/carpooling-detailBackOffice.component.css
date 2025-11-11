@@ -1,0 +1,114 @@
+/* Main Container */
+.carpool-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title */
+.carpool-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+/* Loading Spinner */
+.loading {
+    margin: 30px auto;
+}
+
+/* Carpool Info Section */
+.info-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.section-subtitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #8e2021;
+    margin-top: 20px;
+}
+
+/* Information Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    text-align: left;
+}
+
+.info-grid p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.info-grid strong {
+    color: #333;
+    font-weight: 600;
+}
+
+/* Participants List */
+.participants-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.participants-list li {
+    font-size: 1.2rem;
+    color: #555;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.participants-list li:last-child {
+    border-bottom: none;
+}
+
+/* Error Message */
+.alert {
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #f8d7da;
+    color: #721c24;
+    font-size: 1.1rem;
+}
+
+/* Button styles (if you add any) */
+.button-container {
+    margin-top: 20px;
+}
+
+.button-container button {
+    background-color: #8e2021;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #a52a2a;
+}

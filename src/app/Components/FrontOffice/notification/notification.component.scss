@@ -1,0 +1,273 @@
+/* Main Container */
+.notifications-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e1e1e1;
+  
+  h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    
+    i {
+      margin-right: 10px;
+      color: #3498db;
+    }
+  }
+}
+
+/* Toggle Button */
+.toggle-btn {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  
+  i {
+    margin-right: 8px;
+  }
+  
+  &:hover {
+    background: #e9ecef;
+  }
+  
+  &.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+  }
+}
+
+/* Error Message */
+.notification-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  
+  i {
+    margin-right: 10px;
+  }
+}
+
+/* Notification Sections */
+.notification-section {
+  margin-bottom: 30px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid;
+  
+  h3 {
+    margin: 0 0 0 10px;
+    font-size: 18px;
+    color: #2c3e50;
+  }
+  
+  i {
+    font-size: 20px;
+  }
+}
+
+/* Section Header Colors */
+.trip-header {
+  border-color: #3498db;
+  
+  i {
+    color: #3498db;
+  }
+}
+
+.carpool-header {
+  border-color: #2ecc71;
+  
+  i {
+    color: #2ecc71;
+  }
+}
+
+.recommended-header {
+  border-color: #f39c12;
+  
+  i {
+    color: #f39c12;
+  }
+}
+
+.other-header {
+  border-color: #9b59b6;
+  
+  i {
+    color: #9b59b6;
+  }
+}
+
+/* Notification Items */
+.notification {
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 15px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.notification-badge {
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+.notification-content {
+  flex: 1;
+  padding: 15px;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  
+  h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.notification-body {
+  p {
+    margin: 0 0 10px 0;
+    color: #34495e;
+    line-height: 1.5;
+  }
+}
+
+.trip-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  
+  i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+    color: #7f8c8d;
+  }
+}
+
+/* Notification Type Colors */
+.notification.acceptance .notification-badge {
+  background: #2ecc71;
+}
+
+.notification.refusal .notification-badge {
+  background: #e74c3c;
+}
+
+.notification.event .notification-badge {
+  background: #3498db;
+}
+
+.notification.parcel .notification-badge {
+  background: #b66759;
+}
+
+.notification.carpool-joined .notification-badge {
+  background: #27ae60;
+}
+
+.notification.carpool-left .notification-badge {
+  background: #f39c12;
+}
+
+.notification.carpool-deleted .notification-badge {
+  background: #e74c3c;
+}
+
+.notification.recommended .notification-badge {
+  background: #f1c40f;
+  color: #2c3e50;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #7f8c8d;
+  
+  i {
+    font-size: 50px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+  
+  h4 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.parcel-header {
+  border-color: #b66759; // Purple (to match the parcel notification badge)
+  
+  i {
+    color: #b66759;
+  }
+}

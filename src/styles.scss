@@ -1,0 +1,66 @@
+/* You can add global styles to this file, and also import other style files */
+// dark mode 
+/* Global Styles */
+/* Global Styles for Dark Mode */
+@import "angular-calendar/scss/angular-calendar";
+/* Dark Mode for the whole body */
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Apply dark mode to general elements like navbar, footer, etc. */
+body.dark-mode .navbar,
+body.dark-mode .footer,
+body.dark-mode .card,
+body.dark-mode .table,
+body.dark-mode .btn,
+body.dark-mode .sidebar,
+body.dark-mode .toggle .slider {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Dark Mode Toggle slider */
+body.dark-mode .toggle .slider {
+  background: #4c4c4c;
+}
+
+body.dark-mode .toggle input:checked + .slider {
+  background: #007bff;
+}
+
+body.dark-mode .toggle .slider::before {
+  background: #ffffff;
+}
+
+/* Style buttons in dark mode */
+body.dark-mode .btn {
+  background-color: #0056b3;
+  color: #ffffff;
+}
+
+/* Error message color in dark mode */
+body.dark-mode .error-message {
+  color: #ff4d4d;
+}
+
+
+  .toast-bottom-right {
+    bottom: 20px !important;
+    right: 20px !important;
+  }
+  
+  .toast {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+  }
+  
+  .toast-success {
+    background-color: #4caf50 !important;
+  }
+  
+  .toast-error {
+    background-color: #f44336 !important;
+  }
+  

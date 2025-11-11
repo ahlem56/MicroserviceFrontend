@@ -1,0 +1,78 @@
+// 
+// Xtreme Angular
+// 
+
+//(Required file)
+@import "variable";
+
+// Import Bootstrap source files (Required file)
+@import "../../../../node_modules/bootstrap/scss/bootstrap";
+@import "../../../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
+
+//This is for the components (Required file)
+@import "core/core";
+@import "scafholdings";
+@import "components";
+
+//This is for the responsive (Required file)
+@import "responsive";
+
+//In This scss you can write your scss
+@import "custom";
+
+
+/* Global Dark Mode Styles */
+
+/* Apply dark mode globally */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  /* Apply to all containers and sections */
+  body.dark-mode .settings-container,
+  body.dark-mode .settings-section,
+  body.dark-mode .card,
+  body.dark-mode .btn,
+  body.dark-mode .table,
+  body.dark-mode .navbar,
+  body.dark-mode .footer {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  
+  /* Specific elements for dark mode */
+  body.dark-mode .toggle .slider {
+    background: #4c4c4c;
+  }
+  
+  body.dark-mode .toggle input:checked + .slider {
+    background: #007bff;
+  }
+  
+  body.dark-mode .toggle .slider::before {
+    background: #ffffff;
+  }
+  
+  body.dark-mode .save-btn {
+    background: #0056b3;
+  }
+  
+  body.dark-mode .error-message {
+    color: #ff4d4d;
+  }
+  
+  body.dark-mode .navbar {
+    background-color: #2b2b2b;
+  }
+  
+  body.dark-mode .table th, body.dark-mode .table td {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  
+  body.dark-mode .footer {
+    background-color: #2b2b2b;
+    color: #ffffff;
+  }
+  

@@ -1,0 +1,125 @@
+<div class="container-fluid px-0">
+   <!-- Hero Section with Static Background -->
+   <div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content text-center">
+      <h1 class="display-3 fw-bold mb-4"><span class="text-gradient">SpeedyGo</span></h1>
+      <p class="tagline">Delivering More Than Just Parcels</p>
+      <p class="subtagline">We Deliver Experiences!</p>
+      
+      <div class="search-bar glass-card">
+        <input type="text" placeholder="Where to?" class="glass-input">
+        <button class="glow-effect btn-3d" routerLink="/trips/create">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      
+      <div class="live-counters mt-5">
+        <div class="counter-item">
+          <div class="counter-number">1,247</div>
+          <div class="counter-label">Drivers Nearby</div>
+        </div>
+        <div class="counter-item">
+          <div class="counter-number">8,392</div>
+          <div class="counter-label">Successful Deliveries</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Static Service Cards -->
+  <div class="service-selector py-5">
+    <div class="row justify-content-center g-4">
+      <div class="col-md-4">
+        <div class="service-card">
+          <div class="card-face front">
+            <img src="assets/FrontOffice/images/bg/trip.png" alt="Trips">
+            <h3>Trip Services</h3>
+          </div>
+          <div class="card-face back">
+            <p>Enjoy a safe and comfortable journey with Speedy Go. Our professional drivers and modern vehicles ensure you reach your destination hassle-free.</p>
+            <a routerLink="/trips/create" class="btn-3d">Book Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-card">
+          <div class="card-face front">
+            <img src="assets/FrontOffice/images/bg/parcel.png" alt="Parcels">
+            <h3>Parcel Services</h3>
+          </div>
+          <div class="card-face back">
+            <p>Experience fast and reliable parcel delivery with Speedy Go. We handle your packages with utmost care and security, ensuring they arrive safely and on time, every time.</p>
+            <a routerLink="/parcels/create" class="btn-3d">Send Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-card">
+          <div class="card-face front">
+            <img src="assets/FrontOffice/images/bg/carpool.png" alt="Carpool">
+            <h3>Carpool Services</h3>
+          </div>
+          <div class="card-face back">
+            <p>Join our secure carpooling network and share rides with trusted drivers and fellow travelers. Save money and travel safely with SpeedyGo.</p>
+            <a routerLink="/carpooling/create" class="btn-3d">Join Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+  <!-- Static Testimonials -->
+  <div class="testimonials py-5 red-background">
+    <h2 class="text-center mb-5 section-title">What Our Users Say</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-4 mb-4">
+        <div class="glass-card testimonial-card">
+          <img src="assets/FrontOffice/images/users/user1.jpg" class="profile-img">
+          <div class="stars mb-2">★★★★★</div>
+          <p class="mb-3">"Saved me 2 hours every week on my commute!"</p>
+          <div class="user-info">
+            <strong>Sarah Johnson</strong>
+            <small>New York</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="glass-card testimonial-card">
+          <img src="assets/FrontOffice/images/users/user2.jpg" class="profile-img">
+          <div class="stars mb-2">★★★★★</div>
+          <p class="mb-3">"My packages arrive faster than with any other service."</p>
+          <div class="user-info">
+            <strong>Michael Chen</strong>
+            <small>San Francisco</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="glass-card testimonial-card">
+          <img src="assets/FrontOffice/images/users/user3.jpg" class="profile-img">
+          <div class="stars mb-2">★★★★☆</div>
+          <p class="mb-3">"The carpool feature cut my transportation costs in half."</p>
+          <div class="user-info">
+            <strong>David Wilson</strong>
+            <small>Chicago</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Static Cityscape CTA -->
+  <div class="cityscape-cta">
+    <div class="cta-content">
+      <h2 class="mb-4">Ready to Experience SpeedyGo?</h2>
+      <a routerLink="/login" class="btn btn-primary btn-lg btn-3d glow-effect">
+        Get Started Now
+        <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</div>

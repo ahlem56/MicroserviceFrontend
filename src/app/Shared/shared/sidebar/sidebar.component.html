@@ -1,0 +1,27 @@
+<nav class="sidebar-nav">
+    <ul id="sidebarnav">
+      <!-- Debug info -->
+      <li class="sidebar-item" *ngIf="sidebarnavItems.length === 0">
+        <div class="nav-small-cap">No menu items available</div>
+        <div class="sidebar-link">User role: {{userRole}}</div>
+      </li>
+      
+      <!-- First level menu -->
+      <li class="sidebar-item" [class.active]="showMenu === sidebarnavItem.title" *ngFor="let sidebarnavItem of sidebarnavItems"
+          [routerLinkActive]="sidebarnavItem.submenu.length != 0 ? '' : 'active'">
+        <div class="nav-small-cap" *ngIf="sidebarnavItem.extralink === true">{{sidebarnavItem.title}}</div>
+        <a class="sidebar-link waves-effect waves-dark" 
+           [routerLink]="sidebarnavItem.class === '' ? [sidebarnavItem.path] : null"
+           [ngClass]="[sidebarnavItem.class]" *ngIf="!sidebarnavItem.extralink;" 
+           (click)="handleSidebarItemClick(sidebarnavItem.path)"
+           [routerLinkActive]="sidebarnavItem.submenu.length != 0 ? '' : 'active'">
+          <i [ngClass]="[sidebarnavItem.icon]"></i>
+          <span class="hide-menu">{{sidebarnavItem.title}}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <!-- Modal for login popup -->
+  <app-login-popup *ngIf="showModal" [message]="'Please log in or sign up to access this page.'"></app-login-popup>
+  

@@ -1,0 +1,28 @@
+
+<br>
+<div class="complaint-container">
+
+
+
+@if (isLoading) {
+  <div>
+    <p>Chargement en cours...</p>
+  </div>
+} @else if (complaint) {
+  <div>
+    <h2 class="complaint-title" >Détails de la Réclamation</h2>
+    <p><strong>Prénom:</strong> {{ complaint.simpleUser?.firstName }}</p>
+    <p><strong>Nom:</strong> {{ complaint.simpleUser?.lastName }}</p>
+    <p><strong>Description:</strong> {{ complaint.complaintDescription }}</p>
+
+    <div>
+      <textarea #responseInput placeholder="Entrez votre réponse ici"></textarea>
+      <button (click)="respondComplaint(responseInput.value)" class="btn btn-success">
+        Répondre
+      </button>
+      <button (click)="ignoreComplaint()" class="btn btn-danger">
+        Ignorer
+      </button>
+    </div>
+  </div>
+}

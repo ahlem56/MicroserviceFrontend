@@ -1,0 +1,125 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2 class="section-title">Join or create your carpool offer with SpeedyGo</h2>
+        </div>
+    </div>
+
+    <!-- Buttons Section -->
+    <div class="col-md-5 text-center">
+        <button class="btn btn-lg btn-primary" (click)="joinCarpool()">
+            <i class="fas fa-paper-plane"></i> Join carpool
+        </button><br>
+        <button class="btn btn-lg btn-primary" (click)="displayForm()">
+            <i class="fas fa-plus"></i> Create carpool
+        </button><br><br>
+        <button class="btn btn-lg btn-primary" (click)="showMyCarpools()">
+            <i class="fas fa-car"></i> My current carpools
+        </button>
+    </div>
+
+    <!-- Create Carpool Form -->
+    <div *ngIf="showForm" class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+                <h4 class="text-center">Enter your carpool Details</h4>
+                <form [formGroup]="carpoolForm" (ngSubmit)="createCarpool()">
+                    <div class="mb-3">
+                        <label for="departure" class="form-label">Departure Location</label>
+                        <input type="text" class="form-control form-control-lg" id="departure" formControlName="carpoolDeparture" placeholder="Enter departure location">
+                        <div *ngIf="carpoolForm.get('carpoolDeparture')?.touched && carpoolForm.get('carpoolDeparture')?.invalid">
+                            <small class="text-danger">Departure location is required</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="destination" class="form-label">Destination Location</label>
+                        <input type="text" class="form-control form-control-lg" id="destination" formControlName="carpoolDestination" placeholder="Enter destination location">
+                        <div *ngIf="carpoolForm.get('carpoolDestination')?.touched && carpoolForm.get('carpoolDestination')?.invalid">
+                            <small class="text-danger">Destination location is required</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numSeats" class="form-label">Number of Available Seats</label>
+                        <input type="number" class="form-control form-control-lg" id="numSeats" formControlName="carpoolCapacity" min="1" max="10" placeholder="Enter number of available seats">
+                        <div *ngIf="carpoolForm.get('carpoolCapacity')?.touched && carpoolForm.get('carpoolCapacity')?.invalid">
+                            <small class="text-danger">Number of seats must be between 1 and 10</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="carpoolDate" class="form-label">Date of Departure</label>
+                        <input
+                          type="date"
+                          class="form-control form-control-lg"
+                          id="carpoolDate"
+                          formControlName="carpoolDate"
+                          [min]="getCurrentDate()"
+                          required
+                        >
+                        <div *ngIf="carpoolForm.get('carpoolDate')?.touched && carpoolForm.get('carpoolDate')?.invalid">
+                          <small class="text-danger">Date is required and must be in the future.</small>
+                        </div>
+                      </div>
+                    <div class="mb-3">
+                        <label for="carpoolTime" class="form-label">Time of Departure</label>
+                        <input type="time" class="form-control form-control-lg" id="carpoolTime" formControlName="carpoolTime">
+                        <div *ngIf="carpoolForm.get('carpoolTime')?.touched && carpoolForm.get('carpoolTime')?.invalid">
+                            <small class="text-danger">Time is required</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="licensePlate" class="form-label">License Plate</label>
+                        <input type="text" class="form-control form-control-lg" id="licensePlate" formControlName="licensePlate">
+                        <div *ngIf="carpoolForm.get('licensePlate')?.touched && carpoolForm.get('licensePlate')?.invalid">
+                            <small class="text-danger">License plate is required</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control form-control-lg" id="price" formControlName="carpoolPrice">
+                        <div *ngIf="carpoolForm.get('carpoolPrice')?.touched && carpoolForm.get('carpoolPrice')?.invalid">
+                            <small class="text-danger">Price must be a positive number</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Conditions</label>
+                        <input type="text" class="form-control form-control-lg" id="carpoolConditions" formControlName="carpoolCondition">
+                    </div>
+                    <button class="btn btn-danger w-100" type="submit" [disabled]="carpoolForm.invalid">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+        <strong>Success!</strong> {{ successMessage }}
+        <button type="button" class="close" (click)="successMessage = ''" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+        <strong>Error!</strong> {{ errorMessage }} <a href="/subscribe" class="alert-link">you have to Subscribe </a>.
+        <button type="button" class="close" (click)="errorMessage = ''" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+
+    <!-- Display Future Joined Carpools -->
+    <div *ngIf="filteredCarpools.length > 0" class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+                <h4 class="text-center">My Future Joined Carpools</h4>
+                <ul class="list-group">
+                    <li *ngFor="let carpool of filteredCarpools" class="list-group-item">
+                        <strong>{{ carpool.carpoolDeparture }} - {{ carpool.carpoolDestination }}</strong><br>
+                        <small>Date: {{ carpool.carpoolDate }} | Time: {{ carpool.carpoolTime }}</small><br>
+                        <small>Price: {{ carpool.carpoolPrice }} TND</small><br>
+                        <button class="btn btn-info mt-2" (click)="viewCarpoolDetails(carpool.carpoolId)">Detail</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

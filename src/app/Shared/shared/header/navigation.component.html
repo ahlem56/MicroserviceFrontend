@@ -1,0 +1,65 @@
+<!-- Right side toggle and nav items -->
+<ul class="navbar-nav float-end">
+  <!-- ============================================================== -->
+  <!-- Notification icon (Only shown when logged in) -->
+  <!-- ============================================================== -->
+  <ul class="navbar-nav float-end">
+    <li class="nav-item" *ngIf="isLoggedIn">
+      <a class="nav-link waves-effect waves-dark" [routerLink]="'/notifications'">
+        <div class="notification-container">
+          <i class="bi bi-bell fs-4"
+             [ngClass]="{
+               'text-danger': hasNewNotification,  
+               'bi-bell': !hasNewNotification,     
+               'bi-bell-fill': hasNewNotification   
+             }">
+          </i>
+          <span *ngIf="hasNewNotification" class="notification-badge"></span> <!-- Badge next to the bell -->
+        </div>
+      </a>
+    </li>
+    
+    <!-- Other code for user profile and login/signup -->
+  </ul>
+  
+  
+
+  <!-- ============================================================== -->
+  <!-- User profile (Only shown when logged in) -->
+  <!-- ============================================================== -->
+  <li class="nav-item" ngbDropdown placement="bottom-end" *ngIf="isLoggedIn">
+    <a
+      ngbDropdownToggle
+      class="nav-link waves-effect waves-dark pro-pic"
+      href="javascript:void(0)"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+    <img
+    [src]="profileImageUrl || 'assets/FrontOffice/images/users/user4.jpg'"
+    alt="user"
+    class="profile-img"
+  />
+  
+
+      <span class="ms-2">{{ username }}</span>
+    </a>
+    <div class="dropdown-menu-right" ngbDropdownMenu>
+      <a class="dropdown-item" [routerLink]="'/profile'">My Profile</a> <!-- Added routerLink for profile -->
+      <a class="dropdown-item" [routerLink]="'/chat'">Chat</a>
+      <a class="dropdown-item" [routerLink]="'/settings'">Settings</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">Logout</a>
+    </div>
+  </li>
+
+  <!-- ============================================================== -->
+  <!-- Login and Signup (Only shown when logged out) -->
+  <!-- ============================================================== -->
+  <li class="nav-item" *ngIf="!isLoggedIn">
+    <a class="nav-link" [routerLink]="'/login'">Login</a>
+  </li>
+  <li class="nav-item" *ngIf="!isLoggedIn">
+    <a class="nav-link" [routerLink]="'/signup'">Signup</a>
+  </li>
+</ul>

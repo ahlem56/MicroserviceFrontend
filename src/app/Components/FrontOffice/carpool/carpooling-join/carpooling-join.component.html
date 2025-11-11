@@ -1,0 +1,6 @@
+<div class="container"><br>
+  <h2>You have joined this carpool successfully.<br> If you want to leave, press:</h2><br>
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+  <button (click)="leaveCarpool()" class="btn btn-danger">Leave</button>
+</div>

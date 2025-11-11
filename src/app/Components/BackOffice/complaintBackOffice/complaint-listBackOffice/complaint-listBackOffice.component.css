@@ -1,0 +1,373 @@
+/* General container for the complaint list */
+.complaint-list-container {
+    padding: 2rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem;
+    color: #2d3748;
+    margin: 0;
+  }
+  
+  /* Button styles */
+  .btn {
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .btn-primary {
+    background-color: #667eea;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #5a6fd1;
+  }
+  
+  .btn-success {
+    background-color: #10b981;
+    color: white;
+  }
+  
+  .btn-success:hover {
+    background-color: #0ea472;
+  }
+  
+  .btn-warning {
+    background-color: #f59e0b;
+    color: white;
+  }
+  
+  .btn-warning:hover {
+    background-color: #e58e0b;
+  }
+  
+  .btn-danger {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .btn-danger:hover {
+    background-color: #dc2626;
+  }
+  
+  /* Active filter button */
+  .filter-select button.active {
+    background-color: #4c51bf;
+    color: white;
+  }
+  
+  /* Filter controls */
+  .filter-controls {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Table styles */
+  .complaint-table {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  tr:hover td {
+    background-color: #f8fafc;
+  }
+  
+  /* Responsive table */
+  @media (max-width: 768px) {
+    td {
+      display: block;
+      text-align: right;
+      padding-left: 50%;
+      position: relative;
+    }
+  
+    td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 0;
+      width: 50%;
+      padding-left: 1rem;
+      font-weight: 600;
+      text-align: left;
+    }
+  }
+  
+  /* Loading and Error States */
+  .loading-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem;
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+  .filter-select {
+    display: flex;
+    gap: 0.8rem; /* Ajoute un espace de 0.8rem entre les boutons */
+  }
+  
+  .no-results {
+    padding: 2.5rem;
+    text-align: center;
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+  /* Styles pour le statut "Pending" */
+.status.pending {
+    color: #f59e0b; /* Jaune */
+    font-weight: 600;
+  }
+  
+  /* Styles pour le statut "Ignored" */
+  .status-ignored {
+    color: #ef4444; /* Rouge */
+    font-weight: 600;
+  }
+  
+  /* Styles pour le statut "Resolved" */
+  .status-resolved {
+    color: #10b981; /* Vert */
+    font-weight: 600;
+  }
+/* General container for the complaint list */
+.complaint-list-container {
+  padding: 2rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin: 0;
+}
+
+/* Button styles */
+.btn {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #667eea;
+  color: white;
+}
+
+.btn-primary:hover,
+.btn-primary.active {
+  background-color: #5a6fd1;
+}
+
+.btn-success {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-success:hover,
+.btn-success.active {
+  background-color: #0ea472;
+}
+
+.btn-warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn-warning:hover,
+.btn-warning.active {
+  background-color: #e58e0b;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover,
+.btn-danger.active {
+  background-color: #dc2626;
+}
+
+/* Filter controls */
+.filter-controls {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.filter-select {
+  display: flex;
+  gap: 0.8rem;
+}
+
+/* Table styles */
+.complaint-table {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+tr:hover td {
+  background-color: #f8fafc;
+}
+
+/* Severity dots */
+.severity-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.severity-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Status styles */
+.status-pending {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.status-ignored {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.status-resolved {
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Loading and Error States */
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.no-results {
+  padding: 2.5rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  td {
+    display: block;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 1rem;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .severity-dot {
+    width: 10px;
+    height: 10px;
+  }
+}

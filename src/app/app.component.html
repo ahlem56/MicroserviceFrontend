@@ -1,0 +1,12 @@
+<router-outlet></router-outlet>
+<!-- Display the toast notification in the app -->
+<app-toast-notification
+  *ngFor="let notification of notifications"
+  [message]="notification"
+  [duration]="5000">
+</app-toast-notification>
+
+<!-- Other content goes here -->
+
+<app-footer></app-footer>
+

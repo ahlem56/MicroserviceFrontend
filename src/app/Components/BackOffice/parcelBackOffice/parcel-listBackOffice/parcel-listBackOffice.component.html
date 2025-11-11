@@ -1,0 +1,83 @@
+<div class="filter-container">
+    <h2 class="title">Parcels Management</h2>
+    <a href="/back-office/parcels/damage" class="damaged-link">
+        <button class="damaged-btn">DAMAGED</button>
+      </a>
+    <div class="filter-container">
+        <select id="status" [(ngModel)]="statusFilter" (change)="filterByStatus()">
+          <option value="">All</option>
+          <option value="PENDING">Pending</option>
+          <option value="DELIVERED">Delivered</option>
+          <option value="SHIPPED">Shipped</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
+      </div>
+    <div class="filter-box">
+        <label for="afterDate" class="filter-label">After Date</label>
+        <input type="date" id="afterDate" [(ngModel)]="afterDate" (change)="filterParcels()" class="filter-input">
+    </div>
+
+    <div class="filter-box">
+        <label for="beforeDate" class="filter-label">Before Date</label>
+        <input type="date" id="beforeDate" [(ngModel)]="beforeDate" (change)="filterParcels()" class="filter-input">
+    </div>
+</div>
+
+<div class="parcel-list">
+    <div class="table-container"> <!-- Table wrapper for scroll -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category</th>
+                    <th>Departure</th>
+                    <th>Destination</th>
+                    <th>Weight (kg)</th>
+                    <th>Price (DT)</th>
+                    <th>Sender</th>
+                    <th>Recipient</th>
+                    <th>Driver</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let parcel of parcels">
+                    <td>{{ parcel.parcelId }}</td>
+                    <td>{{ parcel.parcelCategory }}</td>
+                    <td>{{ parcel.parcelDeparture }}</td>
+                    <td>{{ parcel.parcelDestination }}</td>
+                    <td>{{ parcel.parcelWeight }}</td>
+                    <td>{{ parcel.parcelPrice | number:'1.2-2' }}</td>
+                    <td>{{ parcel.simpleUser?.email }}</td>
+                    <td>{{ parcel.recepeientPhoneNumber }}</td>
+
+                    <!-- Driver selection column -->
+                   <td>
+  <ng-container *ngIf="parcel.driver == null">
+    <select [(ngModel)]="selectedDrivers[parcel.parcelId]" (change)="assignParcel(parcel.parcelId)">
+        <option [value]="null" disabled>Select a driver</option>
+        <option *ngFor="let driver of drivers" [value]="driver.userId">
+            {{ driver.firstName }} {{ driver.lastName }}
+        </option>
+    </select>
+  </ng-container>
+
+  <ng-container *ngIf="parcel.driver != null">
+    {{ parcel.driver.firstName }} {{ parcel.driver.lastName }}
+  </ng-container>
+</td>
+
+
+                    <td class="actions">
+                        <button class="btn btn-assign" (click)="assignParcel(parcel.parcelId)">
+                            <i class="fa fa-user-plus"></i> 
+                        </button>
+                        <button class="btn btn-delete" (click)="deleteParcel(parcel.parcelId)">
+                            <i class="fa fa-trash"></i> 
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

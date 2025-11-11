@@ -1,0 +1,76 @@
+<div class="container mt-4">
+  <h2 class="title text-center">📦Parcels to deliver</h2>
+<!-- Filter by status -->
+<div class="d-flex justify-content-center mb-4 gap-3">
+  <button class="btn btn-filter " (click)="changeStatusFilter('PENDING')">
+    <i class="bi bi-box-arrow-down"></i> PENDING
+  </button>
+
+  <button class="btn btn-filter me-2" (click)="changeStatusFilter('SHIPPED')">
+    <i class="bi bi-box-arrow-up"></i> SHIPPED
+  </button>
+  <button class="btn btn-filter" (click)="changeStatusFilter('DELIVERED')">
+    <i class="bi bi-box-arrow-down"></i> DELIVERED
+  </button>
+  <button class="btn btn-filter ms-2" (click)="changeStatusFilter('ALL')">
+    <i class="bi bi-box"></i> ALL
+  </button>
+</div>
+
+<!-- Search inputs for departure and destination -->
+<div class="mb-4 d-flex justify-content-center gap-3">
+  <div class="search-container">
+    <input type="text" class="form-control search-input" [(ngModel)]="searchDeparture" (input)="filterParcels()" placeholder="Search Departure">
+  </div>
+  <div class="search-container">
+    <input type="text" class="form-control search-input" [(ngModel)]="searchDestination" (input)="filterParcels()" placeholder="Search Destination">
+  </div>
+</div>
+
+  <div *ngIf="parcels && parcels.length > 0; else noParcels">
+    <div class="row">
+      <div class="col-md-4 mb-4"  *ngFor="let parcel of filteredParcels">
+        <div class="card parcel-card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Parcel {{ parcel.parcelId }}</h5>
+            <ul class="list-unstyled parcel-info">
+              <li><strong><mat-icon>directions_car</mat-icon> Departure:</strong> {{ parcel.parcelDeparture }}</li>
+  <li><strong><mat-icon>location_on</mat-icon> Destination:</strong> {{ parcel.parcelDestination }}</li>
+  <li><strong><mat-icon>category</mat-icon> Category:</strong> {{ parcel.parcelCategory }}</li>
+  <li><strong><mat-icon>phone_in_talk</mat-icon> Sender:</strong> {{ parcel.senderPhoneNumber }}</li>
+  <li><strong><mat-icon>phone</mat-icon> Recipient:</strong> {{ parcel.recepeientPhoneNumber }}</li>
+  <li><strong><mat-icon>scale</mat-icon> Weight:</strong> {{ parcel.parcelWeight }} kg</li>
+  <li><strong><mat-icon>calendar_today</mat-icon> Date:</strong> {{ parcel.parcelDate | date:'dd/MM/yyyy HH:mm' }}</li>
+  <li><strong><mat-icon>attach_money</mat-icon> Price:</strong> {{ parcel.parcelPrice | currency:'TND' }}</li>
+            </ul>
+
+            <div class="card-body d-flex flex-column">
+              <!-- ... infos du colis ... -->
+            
+              <div class="mt-auto d-flex justify-content-end gap-2">
+                <button class="btn btn-accent"
+                        (click)="markAsShipped(parcel.parcelId)"
+                        [disabled]="parcel.status === 'SHIPPED' || parcel.status === 'DELIVERED'">
+                  <span class="material-icons align-middle me-1">local_shipping</span> SHIPPED
+                </button>
+            
+                <button class="btn btn-primary"
+                        (click)="markParcelAsDelivered(parcel.parcelId)"
+                        [disabled]="parcel.status === 'DELIVERED'">
+                  <span class="material-icons align-middle me-1">check_circle</span> DELIVERED
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noParcels>
+    <div class="text-center mt-5">
+      <p class="alert alert-warning no-data">🚚 No parcels assigned to your account at the moment.</p>
+    </div>
+  </ng-template>
+</div>

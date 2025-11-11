@@ -1,0 +1,838 @@
+/* Profile Container */
+.profile-container {
+  background: #f9f9f9; /* Lighter background */
+  padding: 40px 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  background-image: linear-gradient(135deg, #f8d3a8, #f5ede7); /* Soft gradient background */
+}
+
+/* Profile Header */
+.profile-header {
+  margin-bottom: 20px;
+}
+
+.profile-title {
+  font-size: 38px;
+  color: #2e3b45;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+/* Profile Card */
+.profile-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Profile Photo */
+.profile-photo-container {
+  margin-bottom: 30px;
+}
+
+.profile-photo {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #ad1d1d;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.profile-photo:hover {
+  transform: scale(1.1);
+}
+
+.change-photo-btn {
+  margin-left: 50px;
+  background: #ffb85a;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.change-photo-btn:hover {
+  background-color: #e04d49;
+}
+
+/* Profile Details */
+.profile-details {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.detail {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+  font-size: 16px;
+  color: #34495e;
+}
+
+.label {
+  font-weight: 600;
+  color: #2e3b45;
+}
+
+.value {
+  color: #7f8c8d;
+  font-weight: 400;
+  word-break: break-word;
+}
+
+/* Profile Actions */
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.edit-btn {
+  position : center;
+  background: #ad1d1d;
+  color: #fff;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 48%;
+}
+
+.edit-btn:hover, .change-password-btn:hover {
+  background-color: #e04d49;
+}
+
+/* Trip History Section */
+.trip-history {
+  margin-top: 40px;
+  width: 100%;
+  text-align: left;
+}
+
+.toggle-trip-history {
+  font-size: 28px;
+  color: #2e3b45;
+  margin-bottom: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.toggle-trip-history:hover {
+  color: #e74c3c;
+}
+
+.trip-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto; /* Make the container scrollable */
+  max-height: 0;
+  transition: max-height 0.4s ease-out;
+}
+
+.trip-cards-container.open {
+  max-height: 500px; /* Adjust based on the content, or make it dynamic */
+}
+
+.trip-card {
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.trip-details p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.cancel-trip-btn {
+  background-color: #ffb85a;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-trip-btn:hover {
+  background-color: #e74c3c;
+}
+
+/* Trip Status Colors */
+.canceled {
+  color: #e74c3c; /* Red color for canceled status */
+  font-weight: bold;
+}
+ /* Parcel History Section */
+ .parcel-history {
+  margin-top: 40px;
+  width: 100%;
+  text-align: left;
+}
+
+.toggle-parcel-history {
+  font-size: 28px;
+  color: #2e3b45;
+  margin-bottom: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.toggle-parcel-history:hover {
+  color: #e74c3c;
+}
+
+.parcel-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto; /* Make the container scrollable */
+  max-height: 0; /* Par défaut, la hauteur est 0 (masqué) */
+  transition: max-height 0.4s ease-out; /* Animation pour l'ouverture/fermeture */
+}
+
+.parcel-cards-container.open {
+  max-height: 500px; /* Ajustez cette valeur en fonction de votre contenu */
+}
+.parcel-cards-container:not(.open) {
+  display: none; /* Masque la section par défaut */
+}
+.parcel-card {
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.parcel-details p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Styling for the Cancel Parcel button */
+.cancel-parcel-btn {
+  background-color: #ff4c4c; /* Red color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.pdf-parcel-btn {
+  margin-left: 10px;
+  background-color: #407be1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.pdf-parcel-btn:hover {
+  background-color: #0056b3;
+}
+
+.damaged-parcel-btn {
+  background-color: #405f78
+  ; /* Red color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.cancel-parcel-btn:hover {
+  background-color: #e00000; /* Darker red */
+}
+.damaged-parcel-btn:hover{
+  background-color: #3943a0; /* Darker red */
+}
+.submit-damage-btn {
+  background-color: #7b1212; /* Green color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+/* Modal Background */
+.rating-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeInBackground 0.4s ease forwards;
+}
+
+@keyframes fadeInBackground {
+  from { background: rgba(0, 0, 0, 0); }
+  to { background: rgba(0, 0, 0, 0.7); }
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Modal Title */
+.modal-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #7f8c8d;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #e74c3c;
+}
+
+/* Star Rating */
+.star-rating {
+  font-size: 36px;
+  margin: 20px 0;
+}
+
+.star {
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+  color: #ddd;
+}
+
+.star.filled,
+.star:hover {
+  color: #ffc107;
+  transform: scale(1.2);
+}
+
+/* Rating Summary */
+.rating-summary {
+  margin: 10px 0 20px;
+  font-size: 16px;
+  color: #34495e;
+}
+
+/* Review Textarea */
+.review-textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.review-textarea:focus {
+  border-color: #3498db;
+}
+
+/* Submit Button */
+.submit-btn {
+  background: linear-gradient(to right, #3498db, #2980b9);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(to right, #2980b9, #3498db);
+}
+
+
+/* Modal Textarea */
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  transition: border 0.3s ease;
+}
+
+textarea:focus {
+  border-color: #ffb85a; /* Soft yellow border when focused */
+}
+
+/* Availability Button */
+.availability-btn {
+  background-color: #4CAF50; /* Green for available */
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.availability-btn:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+/* Disabled button styling */
+.cancel-parcel-btn:disabled {
+  background-color: #ccc; /* Grey color for disabled state */
+  cursor: not-allowed;
+}
+
+
+/* Additional class to apply when status is SHIPPED */
+.disabled-btn {
+  background-color: #ccc; /* Grey out button */
+  color: #666; /* Light grey text */
+  cursor: not-allowed;
+}
+
+.canceled {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.confirmed {
+  color: #2ecc71; /* Green color for confirmed status */
+  font-weight: bold;
+}
+
+.pending {
+  color: #f39c12; /* Yellow color for pending status */
+  font-weight: bold;
+}
+
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px;
+  }
+
+  .profile-title {
+    font-size: 30px;
+  }
+
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .detail {
+    font-size: 14px;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .edit-btn, .change-password-btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .trip-card {
+    padding: 15px;
+  }
+
+
+@media (max-width: 768px) {
+  .parcel-history {
+    padding: 20px;
+  }
+
+  .toggle-parcel-history {
+    font-size: 24px;
+  }
+
+  .parcel-card {
+    padding: 15px;
+  }
+
+  .cancel-parcel-btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+}}
+
+/* Styles for the carpool history section */
+.carpool-history {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.toggle-carpool-history {
+  cursor: pointer;
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.carpool-cards-container {
+  display: none;
+  margin-top: 10px;
+}
+
+.carpool-cards-container.open {
+  display: block;
+}
+
+.carpool-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carpool-details p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.cancel-carpool-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.cancel-carpool-btn:hover {
+  background-color: #c82333;
+}
+
+/* Rating Section - Matching Trip History Style */
+.rating-subsection {
+  margin-bottom: 25px;
+}
+
+/* Style for the 'Rate Trip' button */
+.rate-button {
+  background-color: #007bff; /* Blue background */
+  color: white;              /* White text */
+  border: none;              /* No border */
+  border-radius: 5px;        /* Rounded corners */
+  padding: 10px 20px;        /* Padding for size */
+  font-size: 16px;           /* Font size */
+  cursor: pointer;          /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.rate-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: scale(1.05);     /* Slight scale effect on hover */
+}
+
+.rate-button:active {
+  background-color: #004085; /* Even darker blue when clicked */
+  transform: scale(1);       /* Reset scale when clicked */
+}
+
+.rating-subsection h4 {
+  font-size: 20px;
+  color: #2e3b45;
+  margin: 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.star-rating {
+  display: inline-block;
+  font-size: 18px;
+  line-height: 1;
+  margin-left: 5px;
+}
+
+.star {
+  color: #ddd;
+  display: inline-block;
+}
+
+.star.filled {
+  color: #ffb85a; /* Matching your button color */
+}
+
+
+.no-history-message {
+  color: #7f8c8d;
+  font-style: italic;
+  padding: 15px;
+  text-align: center;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+}
+
+.rating-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.star-rating {
+  font-size: 30px;
+  color: #ffd700;
+  cursor: pointer;
+}
+
+.star {
+  margin: 0 5px;
+}
+
+.star.filled {
+  color: gold;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Availability Section */
+.availability-section {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.availability-title {
+  font-size: 22px;
+  color: #2e3b45;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* Availability Button */
+.availability-btn {
+  background-color: #4CAF50; /* Green for available */
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px; /* Rounded corners */
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 200px;
+  margin: 0 auto;
+}
+
+.availability-btn:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+  transform: scale(1.05); /* Slight grow effect on hover */
+}
+
+.availability-btn.not-available {
+  background-color: #e74c3c; /* Red for not available */
+}
+
+.availability-btn.not-available:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Media Queries for smaller screens */
+@media (max-width: 768px) {
+  .availability-btn {
+    width: 100%; /* Full width on small screens */
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .availability-title {
+    font-size: 20px;
+  }
+}
+
+
+.sos-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.sos-btn {
+  background-color: red;
+  color: white;
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top : 10px;
+}
+
+.sos-btn:hover {
+  background-color: darkred;
+}
+.star-rating {
+  display: flex;
+  font-size: 2em;
+  color: #d3d3d3;
+  cursor: pointer;
+}
+
+.star-rating .star.filled {
+  color: #ff9900; /* Gold color for filled stars */
+}
+
+.star-rating .star:hover {
+  color: #ffaa00; /* Slightly different color on hover */
+}
+
+.rating-info {
+  font-size: 1.2em;
+  color: #555;
+  margin-top: 10px;
+}
+
+.carpool-rating {
+  margin-top: 10px;
+}
+
+.rate-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.yes-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.no-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.carpool-rating-display {
+  margin-top: 10px;
+}
+
+.star-rating {
+  display: inline-block;
+  font-size: 1.4rem;
+  color: #ccc; /* Unfilled star color */
+}
+
+.star-rating .star {
+  cursor: pointer;
+  margin-right: 2px;
+}
+
+.star-rating .star.filled {
+  color: gold; /* Filled star color */
+}
+
+.rating-score-text {
+  margin-left: 8px;
+  font-weight: bold;
+  color: #555;
+}

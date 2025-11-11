@@ -1,0 +1,144 @@
+<div class="container py-5">
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-8 text-center">
+        <h2 class="section-title text-primary fw-bold">
+          <i class="fas fa-box-open me-2"></i> 📦 Send Your Parcel
+        </h2>
+        <p class="lead text-muted">Fill out the form below to create a parcel for shipment. We ensure secure delivery!</p>
+      </div>
+    </div>
+  
+    <div class="card shadow-lg p-4 border-0 rounded-4 bg-light">
+      <div class="card-body">
+        <form #parcelForm="ngForm">
+          <div class="row g-4 mt-2">
+            <div class="col-md-6">
+              <label for="parcelDeparture" class="form-label">
+                <i class="fas fa-map-marker-alt me-2"></i> Parcel Departure
+              </label>
+              <input type="text" class="form-control form-control-lg rounded-3" id="parcelDeparture"
+                [(ngModel)]="parcel.parcelDeparture" name="parcelDeparture" required
+                #parcelDeparture="ngModel" placeholder="e.g. Av Bourguiba, Tunis">
+              <div class="text-danger" *ngIf="parcelDeparture.invalid && parcelDeparture.touched">
+                Departure is required.
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="parcelDestination" class="form-label">
+                <i class="fas fa-map-marked-alt me-2"></i> Parcel Destination
+              </label>
+              <input type="text" class="form-control form-control-lg rounded-3" id="parcelDestination"
+                [(ngModel)]="parcel.parcelDestination" name="parcelDestination" required
+                #parcelDestination="ngModel" placeholder="e.g. Av Bourguiba, Tunis">
+              <div class="text-danger" *ngIf="parcelDestination.invalid && parcelDestination.touched">
+                Destination is required.
+              </div>
+            </div>
+          </div>
+  
+          <div class="row g-4 mt-2">
+            <div class="col-md-6">
+              <label for="recepeientPhoneNumber" class="form-label">
+                <i class="fas fa-phone-alt me-2"></i> Recipient's Phone Number
+              </label>
+              <input type="tel" class="form-control form-control-lg rounded-3" id="recepeientPhoneNumber"
+                [(ngModel)]="parcel.recepeientPhoneNumber" name="recepeientPhoneNumber" required
+                pattern="^\d{8,}$" #recepeientPhoneNumber="ngModel"
+                (keypress)="onKeyPress($event)">
+              <div class="text-danger" *ngIf="recepeientPhoneNumber.invalid && recepeientPhoneNumber.touched">
+                <div *ngIf="recepeientPhoneNumber.errors?.['required']">
+                  Phone number is required.
+                </div>
+                <div *ngIf="recepeientPhoneNumber.errors?.['pattern']">
+                  Phone must contain at least 8 digits.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="senderPhoneNumber" class="form-label">
+                <i class="fas fa-phone me-2"></i> Sender's Phone Number
+              </label>
+              <input type="tel" class="form-control form-control-lg rounded-3" id="senderPhoneNumber"
+                [(ngModel)]="parcel.senderPhoneNumber" name="senderPhoneNumber" required
+                pattern="^\d{8,}$" #senderPhoneNumber="ngModel"
+                (keypress)="onKeyPress($event)">
+              <div class="text-danger" *ngIf="senderPhoneNumber.invalid && senderPhoneNumber.touched">
+                <div *ngIf="senderPhoneNumber.errors?.['required']">
+                  Phone number is required.
+                </div>
+                <div *ngIf="senderPhoneNumber.errors?.['pattern']">
+                  Phone must contain at least 8 digits.
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label for="parcelWeight" class="form-label">
+                <i class="fas fa-weight-hanging me-2"></i> Parcel Weight (kg)
+              </label>
+              <input type="number" class="form-control form-control-lg rounded-3" id="parcelWeight"
+                [(ngModel)]="parcel.parcelWeight" name="parcelWeight" required min="0.1"
+                #parcelWeight="ngModel" (ngModelChange)="estimateParcelPrice()">
+              <div class="text-danger" *ngIf="parcelWeight.invalid && parcelWeight.touched">
+                Weight must be a positive number.
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="parcelCategory" class="form-label">
+                <i class="fas fa-tags me-2"></i> Parcel Category
+              </label>
+              <select class="form-select form-select-lg rounded-3" id="parcelCategory"
+                [(ngModel)]="parcel.parcelCategory" name="parcelCategory" required
+                #parcelCategory="ngModel" (ngModelChange)="estimateParcelPrice()">
+                <option value="" disabled selected>Select a category</option>
+                <option value="FOOD">🍕 Food</option>
+                <option value="CLOTHING">👕 Clothing</option>
+                <option value="FRAGILE">❄️ Fragile</option>
+                <option value="EXPRESS">⚡ EXPRESS</option>
+                <option value="LARGE">🚚 LARGE</option>
+              </select>
+              <div class="text-danger" *ngIf="parcelCategory.invalid && parcelCategory.touched">
+                Please select a category.
+              </div>
+            </div>
+          </div>
+  
+          <div class="row g-4 mt-2">
+            <div class="col-md-6">
+              <label for="parcelPrice" class="form-label">
+                <i class="fas fa-dollar-sign me-2"></i> Estimated price (DT)
+              </label>
+              <input type="number" class="form-control form-control-lg rounded-3" id="parcelPrice"
+                [(ngModel)]="parcel.parcelPrice" name="parcelPrice" required min="1" disabled
+                #parcelPrice="ngModel">
+              <div class="text-danger" *ngIf="parcelPrice.invalid && parcelPrice.touched">
+                Price must be at least 1DT.
+              </div>
+            </div>
+          </div>
+  
+          <div class="row justify-content-center mt-4">
+            <div class="col-md-6 d-grid">
+              <button class="btn btn-danger btn-lg rounded-3 shadow-sm" type="button"
+                [disabled]="parcelForm.invalid" (click)="createParcel()">
+                <i class="fas fa-paper-plane me-2"></i> Send Parcel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+      <strong><i class="fas fa-check-circle me-2"></i> Success!</strong> {{ successMessage }}
+      <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Close"></button>
+    </div>
+  
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+      <strong><i class="fas fa-exclamation-circle me-2"></i> Error!</strong> {{ errorMessage }}
+      <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+    </div>
+  </div>
+  

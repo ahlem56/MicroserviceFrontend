@@ -1,0 +1,78 @@
+<div class="trip-list-container">
+  <div class="header">
+    <h1>Trip Management</h1>
+  </div>
+
+  <div class="filter-controls">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" [(ngModel)]="searchTerm"
+             (input)="applyFilters()"
+             placeholder="Search trips...">
+    </div>
+
+    <div class="filter-select">
+      <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
+        <option *ngFor="let status of tripStatuses" [value]="status.value">
+          {{ status.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading trips...
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="trip-table" *ngIf="!isLoading && !errorMessage">
+    <table>
+      <thead>
+        <tr>
+          <th>Departure</th>
+          <th>Destination</th>
+          <th>Date</th>
+          <th>Duration</th>
+          <th>Passenger</th>
+          <th>Driver</th>
+          <th>Number Of Passengers</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let trip of filteredTrips">
+          <td data-label="Departure">{{ trip.tripDeparture }}</td>
+          <td data-label="Destination">{{ trip.tripDestination }}</td>
+          <td data-label="Date">{{ trip.tripDate | date: 'short' }}</td>
+          <td data-label="Duration">{{ trip.tripDuration || 'N/A' }} hrs</td>
+          <td data-label="Passenger">{{ trip.simpleUser?.userId || 'N/A' }}</td>
+    <td data-label="Driver">{{ trip.driver?.userId || 'N/A' }}</td>
+          <td data-label="Passengers">{{ trip.numberOfPassengers || 'N/A' }}</td>
+          <td data-label="Price">{{ trip.tripPrice | currency:'USD' }}</td>
+          <td data-label="Status">
+            <span class="status-badge" [class.pending]="trip.reservationStatus === 'PENDING'"
+                  [class.confirmed]="trip.reservationStatus === 'CONFIRMED'"
+                  [class.cancelled]="trip.reservationStatus === 'CANCELLED'">
+              {{ trip.reservationStatus }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="icon-button delete" (click)="deleteTrip(trip.tripId)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="no-results" *ngIf="filteredTrips.length === 0">
+      No trips found matching your criteria
+    </div>
+  </div>
+</div>
