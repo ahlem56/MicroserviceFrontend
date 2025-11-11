@@ -1,45 +1,103 @@
-<div class="actions-bar">
+<section class="page-hero">
+  <div class="hero-text">
+    <p class="eyebrow">Operations · Events</p>
+    <h1>Coordinate every gathering with confidence</h1>
+    <p class="subtitle">
+      Stay ahead of your launch calendar, craft engaging experiences, and keep your community informed—all from one place.
+    </p>
+  </div>
   <button class="create-event-btn" (click)="navigateToCreate()">
-    <i class="fas fa-plus"></i> Create Event
+    <span class="btn-icon">
+      <i class="fas fa-plus"></i>
+    </span>
+    Create a new event
   </button>
-</div>
-<div class="backoffice-container">
+</section>
 
-  <div class="events-grid">
+<section class="stats-strip" *ngIf="events.length">
+  <div class="stat-card">
+    <p class="stat-label">Total events</p>
+    <p class="stat-value">{{ totalEvents }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Published</p>
+    <p class="stat-value">{{ publishedCount }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Drafts</p>
+    <p class="stat-value">{{ draftCount }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Upcoming</p>
+    <p class="stat-value">{{ upcomingCount }}</p>
+  </div>
+</section>
+
+<div class="backoffice-container">
+  <div class="empty-state" *ngIf="!filteredEvents.length">
+    <div class="empty-illustration" aria-hidden="true">
+      <i class="fas fa-calendar-alt"></i>
+    </div>
+    <h2>No events yet</h2>
+    <p>
+      Start by creating your first event to energize the community. You can publish it immediately or keep it as a draft.
+    </p>
+    <button class="create-event-btn outline" (click)="navigateToCreate()">
+      <i class="fas fa-plus"></i> Create your first event
+    </button>
+  </div>
+
+  <div class="events-grid" *ngIf="filteredEvents.length">
     <div *ngFor="let event of filteredEvents" class="event-card">
-      <!-- Photo Section -->
-      <div class="event-photo" *ngIf="event.photo">
+      <div class="event-photo" *ngIf="event.photo; else noPhoto">
         <img [src]="event.photo" alt="Event photo" class="event-image">
       </div>
-      <div class="no-photo" *ngIf="!event.photo">
-        <i class="fas fa-image"></i>
-      </div>
+      <ng-template #noPhoto>
+        <div class="no-photo">
+          <i class="fas fa-image"></i>
+        </div>
+      </ng-template>
 
-      <!-- Event Details -->
       <div class="event-content">
-        <h3 class="event-title">{{ event.eventDescription }}</h3>
+        <div class="event-header">
+          <div class="title-group">
+            <h3 class="event-title">{{ event.title || event.description }}</h3>
+            <span class="badge" [class.badge-live]="event.published" [class.badge-draft]="!event.published">
+              {{ event.published ? 'Published' : 'Draft' }}
+            </span>
+          </div>
+          <button class="edit-icon" (click)="navigateToEdit(event.id)" aria-label="Edit event">
+            <i class="fas fa-pen"></i>
+          </button>
+        </div>
+
+        <p class="event-description" *ngIf="event.description">
+          {{ event.description }}
+        </p>
 
         <div class="event-meta">
           <div class="meta-item">
             <i class="fas fa-calendar-alt"></i>
-            {{ formatDate(event.eventDate) }}
+            {{ formatDate(event.startDate) }}
+            <span *ngIf="event.endDate"> – {{ formatDate(event.endDate) }}</span>
           </div>
           <div class="meta-item">
             <i class="fas fa-map-marker-alt"></i>
-            {{ event.eventLocation }}
+            {{ event.location }}
           </div>
-          <div class="meta-item">
+          <div class="meta-item" *ngIf="event.maxParticipants !== undefined">
             <i class="fas fa-users"></i>
-            {{ event.simpleUsers.length || 0 }}/{{ event.maxParticipants }}
+            {{ (event.simpleUsers?.length || 0) }}/{{ event.maxParticipants }} seats
           </div>
         </div>
 
         <div class="event-actions">
-          <button class="edit-btn" (click)="navigateToEdit(event.eventId)">
-            <i class="fas fa-edit"></i> Edit
+          <button class="ghost-btn" (click)="navigateToEdit(event.id)">
+            Edit details
           </button>
-          <button class="delete-btn" (click)="deleteEvent(event.eventId)">
-            <i class="fas fa-trash"></i> Delete
+          <button class="danger-btn" (click)="openDeleteModal(event)">
+            <i class="fas fa-trash"></i>
+            Delete
           </button>
         </div>
       </div>
@@ -47,3 +105,46 @@
   </div>
 </div>
 
+<div class="modal-backdrop" *ngIf="showDeleteModal">
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <button class="modal-close" type="button" (click)="cancelDelete()" [disabled]="deleting" aria-label="Close dialog">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="modal-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h2 id="deleteModalTitle">Delete this event?</h2>
+    <p class="modal-message">
+      You're about to permanently remove
+      <strong>{{ eventPendingDelete?.title || eventPendingDelete?.description || 'this event' }}</strong>.
+      This action can't be undone.
+    </p>
+
+    <div class="modal-event-details" *ngIf="eventPendingDelete">
+      <div class="detail-row">
+        <i class="fas fa-calendar-day"></i>
+        <span>{{ formatDate(eventPendingDelete.startDate) }}</span>
+      </div>
+      <div class="detail-row" *ngIf="eventPendingDelete.location">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>{{ eventPendingDelete.location }}</span>
+      </div>
+    </div>
+
+    <p class="modal-error" *ngIf="deleteError">{{ deleteError }}</p>
+
+    <div class="modal-actions">
+      <button type="button" class="modal-btn outline" (click)="cancelDelete()" [disabled]="deleting">
+        Keep event
+      </button>
+      <button type="button" class="modal-btn danger" (click)="confirmDelete()" [disabled]="deleting">
+        <span *ngIf="!deleting">Delete event</span>
+        <span *ngIf="deleting" class="loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          Deleting…
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

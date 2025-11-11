@@ -3,6 +3,7 @@ import { ParcelService } from 'src/app/Core/parcel.service';
 import { TripService } from 'src/app/Core/trip.service';
 import { CommonModule } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
+import { UserService } from 'src/app/Core/user.service';
 
 @Component({
   selector: 'app-schedule',
@@ -12,9 +13,16 @@ import { HttpHeaders } from '@angular/common/http';
 })
 export class ScheduleDriverInterfaceComponent {
   groupedTasks: { [date: string]: any[] } = {};
-  constructor(private parcelService: ParcelService, private tripService: TripService) {}
+  constructor(
+    private parcelService: ParcelService,
+    private tripService: TripService,
+    private userService: UserService
+  ) {}
   ngOnInit(): void {
-    this.loadTasks();
+    this.userService.refreshUserProfile().subscribe({
+      next: () => this.loadTasks(),
+      error: () => this.loadTasks()
+    });
   }
   
 
@@ -26,15 +34,16 @@ export class ScheduleDriverInterfaceComponent {
     }
   
     const user = JSON.parse(userStr);
-    const driverId = user.userId;
-  
-    if (!driverId || isNaN(driverId)) {
+    const rawDriverId = user.driverId ?? user.userId ?? user.id;
+    const driverId = rawDriverId !== undefined ? Number(rawDriverId) : NaN;
+
+    if (!driverId || Number.isNaN(driverId)) {
       alert('ID du conducteur invalide !');
       return;
     }
   
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      Authorization: `Bearer ${localStorage.getItem('token')}`
     });
   
     this.parcelService.getParcelForDriver(driverId, headers).subscribe(

@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { DriverService } from 'src/app/Core/driver.service';
-import { RatingService } from 'src/app/Core/rating.service'; // Import RatingService
 import { Driver } from 'src/app/Core/driver.service';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -20,8 +19,7 @@ export class DriverProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private driverService: DriverService,
-    private ratingService: RatingService // Inject RatingService
+    private driverService: DriverService
   ) {}
 
   ngOnInit(): void {
@@ -30,15 +28,8 @@ export class DriverProfileComponent implements OnInit {
       this.driverService.getDriverProfile(+driverId).subscribe(
         (driver) => {
           this.driver = driver;
-          // Fetch the average rating for the driver
-          this.ratingService.getAverageRating(+driverId, new HttpHeaders()).subscribe(
-            (averageRating) => {
-              this.averageRating = averageRating;
-            },
-            (error) => {
-              console.error('Error fetching average rating:', error);
-            }
-          );
+          // Rating service removed - average rating no longer available
+          this.averageRating = undefined;
         },
         (error) => {
           this.errorMessage = 'Failed to load driver profile.';

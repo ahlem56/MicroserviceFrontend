@@ -57,10 +57,7 @@ export class SidebarComponent implements OnInit {
           sidebarnavItem.path === 'back-office/parcels' ||
           sidebarnavItem.path === 'back-office/rules/create' ||
           sidebarnavItem.path === 'back-office/complaints' ||
-          sidebarnavItem.path === 'back-office/events/list' ||
-          sidebarnavItem.path === 'back-office/subscriptions' ||
-          sidebarnavItem.path === 'back-office/partners' ||
-          sidebarnavItem.path === 'back-office/commissions'
+          sidebarnavItem.path === 'back-office/events/list'
            
 
         );
@@ -79,7 +76,6 @@ export class SidebarComponent implements OnInit {
           sidebarnavItem.path === 'offer' ||
           sidebarnavItem.path === 'parcels/create' ||
           sidebarnavItem.path === 'events' ||
-          sidebarnavItem.path === '/subscriptions/create' ||
           sidebarnavItem.path === 'complaints/create' ||
           sidebarnavItem.path === '/about'
         );

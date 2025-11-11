@@ -50,10 +50,9 @@ export class NavigationComponent implements OnInit {
       this.isLoggedIn = true;
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user) {
-        this.username = `${user.firstName} ${user.lastName}`;
-        this.profileImageUrl = user.userProfilePhoto
-          ? `http://localhost:8089/examen/user/profile-photo/${user.userProfilePhoto}`
-          : 'assets/FrontOffice/images/users/user4.jpg';
+        const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
+        this.username = fullName || user.email || user.preferred_username || '';
+        this.profileImageUrl = this.resolveProfileImage(user.userProfilePhoto);
       }
     } else {
       this.isLoggedIn = false;
@@ -65,9 +64,28 @@ export class NavigationComponent implements OnInit {
   // ✅ Update Profile Picture When User Uploads New One
   updateProfileImage() {
     const updatedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    this.profileImageUrl = updatedUser.userProfilePhoto
-      ? `http://localhost:8089/examen/user/profile-photo/${updatedUser.userProfilePhoto}`
-      : 'assets/FrontOffice/images/users/user4.jpg';
+    this.profileImageUrl = this.resolveProfileImage(updatedUser.userProfilePhoto);
+  }
+
+  private resolveProfileImage(photo: string | null | undefined): string {
+    if (!photo) {
+      return 'assets/FrontOffice/images/users/user4.jpg';
+    }
+    if (typeof photo !== 'string' || photo === 'null') {
+      return 'assets/FrontOffice/images/users/user4.jpg';
+    }
+    if (photo.startsWith('data:image')) {
+      return photo;
+    }
+    if (photo.startsWith('http')) {
+      return photo;
+    }
+    const base64Pattern = /^[A-Za-z0-9+/=]+$/;
+    const sanitized = photo.replace(/\s/g, '');
+    if (base64Pattern.test(sanitized)) {
+      return `data:image/jpeg;base64,${sanitized}`;
+    }
+    return 'assets/FrontOffice/images/users/user4.jpg';
   }
 
   // ✅ Logout Method

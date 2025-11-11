@@ -10,6 +10,8 @@ import { TopCardsComponent } from "./dashboard-components/top-cards/top-cards.co
 import { BlogCardsComponent } from "./dashboard-components/blog-cards/blog-cards.component";
 import { GoogleMapsModule } from "@angular/google-maps";
 import { SalesSummaryComponent } from "./dashboard-components/sales-summary/sales-summary.component"; // Import standalone component
+import { CalendarModule, DateAdapter } from "angular-calendar";
+import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 
 const routes: Routes = [
   {
@@ -30,6 +32,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NgApexchartsModule,
     GoogleMapsModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     SalesSummaryComponent // Import the standalone component
   ],
   declarations: [

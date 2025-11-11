@@ -401,16 +401,143 @@
     flex-wrap: wrap;
   }
   
-  .chart-wrapper {
-    flex: 1;
-    min-width: 400px;
-  }
-  
-  .chart-container {
-    width: 100%;
-    height: 300px;
-  }
-  
+.chart-wrapper {
+  flex: 1;
+  min-width: 400px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+}
+
+/* Calendar Section */
+.calendar-section .metrics-card {
+  overflow: hidden;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.calendar-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.calendar-btn {
+  border: none;
+  background: #f1f5f9;
+  color: #1f2937;
+  padding: 0.45rem 0.9rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.calendar-btn:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.calendar-current-month {
+  font-weight: 600;
+  color: #1e293b;
+  margin-left: 0.5rem;
+}
+
+.calendar-wrapper {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.15);
+}
+
+mwl-calendar-month-view {
+  display: block;
+  border-radius: 12px;
+  background: white;
+  overflow: hidden;
+  box-shadow: 0 4px 8px -6px rgba(15, 23, 42, 0.15);
+}
+
+mwl-calendar-month-view .cal-cell {
+  cursor: pointer;
+}
+
+.cal-day-badge {
+  background: linear-gradient(135deg, #b91c1c, #f97316);
+  border: none;
+}
+
+.day-events {
+  margin-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+
+.day-events h4 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.day-event-card {
+  background: #fff7ed;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 8px 18px -14px rgba(120, 53, 15, 0.6);
+}
+
+.day-event-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.day-event-header h5 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #7f1d1d;
+}
+
+.day-event-time,
+.day-event-location,
+.day-event-description {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: #5b4036;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.day-event-description {
+  margin-top: 0.75rem;
+  line-height: 1.4;
+}
+
+.no-day-events {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
   /* Bottom Section */
   .bottom-section {
     margin-top: 40px;
@@ -755,19 +882,19 @@
     background-color: #2563eb;
   }
   
-  /* Subscription and Event with Most Participants */
-  .subscription-event-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-  }
-  
-  .subscription-section {
-    flex: 1;
-    min-width: 48%;
-  }
+  /* Event with Most Participants */
+.subscription-event-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.subscription-event-container .metrics-card {
+  flex: 1;
+  min-width: 48%;
+}
   
   .event-section {
     flex: 1;
@@ -861,7 +988,6 @@
       flex-direction: column;
     }
   
-    .subscription-section,
     .event-section {
       min-width: 100%;
     }
@@ -894,8 +1020,8 @@
     margin: 0 auto;
   }
   
-  #subscriptionChart {
-    max-width: 250px;
-    max-height: 250px;
-    margin: 0 auto;
-  }
+.chart-container canvas {
+  max-width: 250px;
+  max-height: 250px;
+  margin: 0 auto;
+}

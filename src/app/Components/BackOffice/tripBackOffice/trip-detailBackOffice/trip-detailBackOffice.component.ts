@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-trip-detail',
+    selector: 'app-backoffice-trip-detail',
     templateUrl: './trip-detailBackOffice.component.html',
     styleUrls: ['./trip-detailBackOffice.component.css'],
     standalone: false

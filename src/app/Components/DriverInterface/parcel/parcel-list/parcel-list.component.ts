@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ParcelService } from 'src/app/Core/parcel.service';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from 'src/app/Core/user.service';
 
 @Component({
     selector: 'app-parcel-list',
@@ -17,10 +18,18 @@ export class ParcelListDriverInterfaceComponent {
   filteredParcels: any[] = []; // Liste filtrée
   selectedStatus: string = 'ALL'; // Statut sélectionné pour le filtre (ALL, SHIPPED, DELIVERED)
 
-  constructor(private parcelService: ParcelService, private router: Router,private http: HttpClient) {}
+  constructor(
+    private parcelService: ParcelService,
+    private router: Router,
+    private http: HttpClient,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.loadParcels();  // Charger les colis au démarrage du composant
+    this.userService.refreshUserProfile().subscribe({
+      next: () => this.loadParcels(),
+      error: () => this.loadParcels()
+    });
   }
 
   loadParcels(): void {
@@ -33,11 +42,12 @@ export class ParcelListDriverInterfaceComponent {
     }
 
     const user = JSON.parse(userStr);  // Analyser l'objet utilisateur depuis la chaîne
-    const driverId = user.userId; // Extraire l'ID du conducteur
+    const rawDriverId = user.driverId ?? user.userId ?? user.id; // Extraire l'ID du conducteur
+    const driverId = rawDriverId !== undefined ? Number(rawDriverId) : NaN;
 
     console.log('ID du conducteur:', driverId);  // Afficher l'ID pour vérifier sa validité
 
-    if (!driverId || isNaN(driverId)) {  // Vérifier si l'ID est valide
+    if (!driverId || Number.isNaN(driverId)) {  // Vérifier si l'ID est valide
       alert('ID du conducteur invalide !');
       return;
     }

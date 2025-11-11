@@ -6,6 +6,7 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VehicleService } from 'src/app/Core/vehicle.service';
 import { Subscription } from 'rxjs';
+import { UserService } from 'src/app/Core/user.service';
 
 
 @Component({
@@ -43,10 +44,19 @@ private directionsService!: google.maps.DirectionsService;
     { value: 'CANCELLED', label: 'Cancelled' }
   ];
 
-  constructor(private tripService: TripService, private router: Router, private vehicleService : VehicleService) {}
+  constructor(
+    private tripService: TripService,
+    private router: Router,
+    private vehicleService: VehicleService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.loadTrips();
+    this.userService.refreshUserProfile().subscribe({
+      next: () => this.loadTrips(),
+      error: () => this.loadTrips(),
+      complete: () => {}
+    });
   }
 
   // Charger les voyages depuis le backend
@@ -61,11 +71,12 @@ private directionsService!: google.maps.DirectionsService;
     }
 
     const user = JSON.parse(userStr);  // Parser l'objet utilisateur
-    const driverId = user.userId;  // Extraire l'ID du conducteur
+    const rawDriverId = user.driverId ?? user.userId ?? user.id;
+    const driverId = rawDriverId !== undefined ? Number(rawDriverId) : NaN;
 
     console.log('Driver ID:', driverId);  // Log l'ID du conducteur pour vérification
 
-    if (!driverId || isNaN(driverId)) {  // Vérifier si l'ID est valide
+    if (!driverId || Number.isNaN(driverId)) {  // Vérifier si l'ID est valide
       this.errorMessage = 'Invalid driver ID!';
       this.isLoading = false;
       return;
