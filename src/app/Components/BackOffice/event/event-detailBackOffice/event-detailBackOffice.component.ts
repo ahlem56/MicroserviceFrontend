@@ -1,7 +1,7 @@
 // src/app/BackOffice/event-detailBackOffice.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventService, AppEvent } from 'src/app/Core/event.service';
+import { EventService, EventPayload } from 'src/app/Core/event.service';
 import {
   FormBuilder,
   FormGroup,
@@ -20,16 +20,17 @@ import { of } from 'rxjs';
   imports: [
     CommonModule,
     ReactiveFormsModule
-  ]
+  ],
+  providers: [DatePipe]
 })
 export class EventDetailBackOfficeComponent implements OnInit {
   eventForm: FormGroup;
   eventId!: number;
   loading = true;
   submitting = false;
+  submitted = false;
   error: string | null = null;
   photoPreview: string | null = null;
-  private existingParticipants: { userId: number }[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -39,10 +40,12 @@ export class EventDetailBackOfficeComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.eventForm = this.fb.group({
-      eventDate:   ['', [Validators.required]],
-      eventDescription: ['', [Validators.required, Validators.maxLength(500)]],
-      eventLocation:    ['', [Validators.required, Validators.maxLength(100)]],
-      maxParticipants:  [1,  [Validators.required, Validators.min(1)]],
+      title:            ['', [Validators.required, Validators.maxLength(200)]],
+      description:      ['', [Validators.required, Validators.maxLength(500)]],
+      location:         ['', [Validators.required, Validators.maxLength(100)]],
+      startDate:        ['', [Validators.required]],
+      endDate:          [''],
+      published:        [false],
       photo:            [null]
     });
   }
@@ -55,21 +58,18 @@ export class EventDetailBackOfficeComponent implements OnInit {
   private loadEventDetails(): void {
     this.eventService.getEventById(this.eventId).subscribe({
       next: event => {
-        const formattedDate = this.datePipe.transform(
-          new Date(event.eventDate),
-          'yyyy-MM-ddTHH:mm'
-        )!;
+        const startDate = this.datePipe.transform(event.startDate, 'yyyy-MM-ddTHH:mm');
+        const endDate = event.endDate ? this.datePipe.transform(event.endDate, 'yyyy-MM-ddTHH:mm') : '';
         this.eventForm.patchValue({
-          eventDate: formattedDate,
-          eventDescription: event.eventDescription,
-          eventLocation:    event.eventLocation,
-          maxParticipants:  event.maxParticipants,
-          photo:            event.photo
+          title:            event.title,
+          description:      event.description,
+          location:         event.location,
+          startDate:        startDate || '',
+          endDate:          endDate || '',
+          published:        event.published ?? false,
+          photo:            event.photo ?? null
         });
-        this.existingParticipants = event.simpleUsers ?? [];
-        if (event.photo) {
-          this.photoPreview = event.photo;
-        }
+        this.photoPreview = event.photo ?? null;
         this.loading = false;
       },
       error: err => {
@@ -81,6 +81,13 @@ export class EventDetailBackOfficeComponent implements OnInit {
 
   get f() {
     return this.eventForm.controls as { [key: string]: any };
+  }
+
+  private toApiDate(value: string): string {
+    if (!value) {
+      return value;
+    }
+    return value.length === 16 ? `${value}:00` : value;
   }
 
   onFileChange(ev: Event): void {
@@ -95,22 +102,26 @@ export class EventDetailBackOfficeComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  clearPhoto(): void {
+    this.photoPreview = null;
+    this.eventForm.patchValue({ photo: null });
+  }
+
   onSubmit(): void {
+    this.submitted = true;
     if (this.eventForm.invalid) return;
     this.submitting = true;
     this.error = null;
 
     const vals = this.eventForm.value;
-    const updatedEvent: AppEvent = {
-      eventId:          this.eventId,
-      eventDate:        vals.eventDate,
-      eventDescription: vals.eventDescription,
-      eventLocation:    vals.eventLocation,
-      maxParticipants:  vals.maxParticipants,
-      photo:            vals.photo,
-      simpleUsers:      this.existingParticipants,
-      currentParticipants: this.existingParticipants.length,
-      registered:       this.existingParticipants.some(u => u.userId === /* current user? */ 0)
+    const updatedEvent: EventPayload = {
+      title:             vals.title?.trim(),
+      description:       vals.description?.trim(),
+      location:          vals.location?.trim(),
+      startDate:         this.toApiDate(vals.startDate),
+      endDate:           this.toApiDate(vals.endDate || vals.startDate),
+      published:         vals.published ?? false,
+      photo:             vals.photo ?? null
     };
 
     this.eventService.updateEvent(this.eventId, updatedEvent)

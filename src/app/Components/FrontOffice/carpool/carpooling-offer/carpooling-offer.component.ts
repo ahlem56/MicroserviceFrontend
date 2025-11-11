@@ -4,8 +4,6 @@ import { HttpHeaders } from '@angular/common/http';
 import { UserService } from 'src/app/Core/user.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Import CommonModule
-import { RatingService } from 'src/app/Core/rating.service';
-
 @Component({
   selector: 'app-carpooling-offer',
   templateUrl: './carpooling-offer.component.html',
@@ -30,8 +28,7 @@ export class CarpoolingOfferFrontOfficeComponent implements OnInit {
   constructor(
     private carpoolService: CarpoolService,
     private userService: UserService,
-    private router: Router,
-    private ratingService: RatingService
+    private router: Router
 
   ) {}
 

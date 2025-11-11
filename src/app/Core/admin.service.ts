@@ -48,16 +48,4 @@ export class AdminService {
       );
     }
 
-    // Fetch subscription statistics (number of users for each subscription type)
-  getSubscriptionStats(): Observable<any> {
-    const url = `http://localhost:8089/examen/Admin/subscriptionStats`;  // The endpoint to fetch subscription stats
-    return this.http.get<any>(url).pipe(
-      tap((data) => console.log("📥 Subscription Stats:", data)),
-      catchError(error => {
-        console.error("Error fetching subscription stats", error);
-        return throwError(() => error);
-      })
-    );
-  }
-  
 }

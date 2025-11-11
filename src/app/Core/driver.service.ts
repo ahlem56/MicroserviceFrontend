@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {Vehicle} from "./vehicle.service";
 
 // Define the Driver interface
@@ -21,55 +22,99 @@ export interface Driver {
 
 
 }
-const headers = new HttpHeaders().set('Content-Type', 'application/json');
-
 @Injectable({
   providedIn: 'root'
 })
 export class DriverService {
 
-  private baseUrl = 'http://localhost:8089/examen/driver/'; // URL to the backend API
+  // Route through API Gateway → proxy.conf.json sends /driver-service/** to driver microservice
+  private baseUrl = '/driver-service/examen/driver';
+
+  private authHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+      'Content-Type': 'application/json'
+    });
+  }
 
 
   constructor(private http: HttpClient) { }
 
-  // Fetch available drivers
+  // Fetch available drivers (users with role DRIVER and availabilityD=true if present)
   getAvailableDrivers(): Observable<Driver[]> {
-    return this.http.get<Driver[]>(`${this.baseUrl}get-available-drivers`);  // Updated URL
+    return this.getAllDrivers().pipe(
+      map(users => users.filter(u => (u as any).availabilityD === true || (u as any).availabilityD === 'true'))
+    );
   }
 
-  // getAllDrivers(): Observable<Driver[]> {  // Retourner un tableau générique
-  //   return this.http.get<any[]>(`${this.baseUrl}get-all-drivers`);
-  // }
   getAllDrivers(): Observable<Driver[]> {
-    const headers = new HttpHeaders({
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-    return this.http.get<Driver[]>(`${this.baseUrl}get-all-drivers`, { headers });
-}
+    return this.http
+      .get(`${this.baseUrl}/get-all-drivers`, {
+        headers: this.authHeaders(),
+        responseType: 'text' as 'json'
+      })
+      .pipe(
+        map((raw: any) => {
+          if (raw == null) {
+            return [];
+          }
+
+          const toArray = (value: any): Driver[] => {
+            if (!value) return [];
+            if (Array.isArray(value)) return value as Driver[];
+            if (Array.isArray(value?.data)) return value.data as Driver[];
+            if (Array.isArray(value?.content)) return value.content as Driver[];
+            return [];
+          };
+
+          if (typeof raw !== 'string') {
+            return toArray(raw);
+          }
+
+          const text = raw.trim();
+          if (!text) return [];
+          if (text.startsWith('<')) {
+            throw new Error('Unexpected HTML response from gateway when fetching drivers.');
+          }
+
+          try {
+            const parsed = JSON.parse(text);
+            return toArray(parsed);
+          } catch {
+            throw new Error('Failed to parse driver list response.');
+          }
+        })
+      );
+  }
+
   createDriver(driver: Driver): Observable<Driver> {
-    return this.http.post<Driver>(`${this.baseUrl}createDriver`, driver, { headers });
+    return this.http.post<Driver>(`${this.baseUrl}/createDriver`, driver, {
+      headers: this.authHeaders()
+    });
   }
 
   deleteDriver(id: number): Observable<void> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    return this.http.delete<void>(`${this.baseUrl}/delete/${id}`, {
+      headers: this.authHeaders()
     });
-    return this.http.delete<void>(`${this.baseUrl}delete/${id}`, { headers });
   }
-  
-
   // Get a driver by ID
   getDriverById(driverId: string): Observable<Driver> {
-    return this.http.get<Driver>(`${this.baseUrl}find-driver/${driverId}`, { headers });
+    return this.http.get<Driver>(`${this.baseUrl}/find-driver/${driverId}`, {
+      headers: this.authHeaders()
+    });
   }
 
   // Update driver details
   updateDriver(driverId: number, driver: Driver): Observable<Driver> {
-    return this.http.put<Driver>(`${this.baseUrl}update/${driverId}`, driver, { headers });
+    return this.http.put<Driver>(`${this.baseUrl}/update/${driverId}`, driver, {
+      headers: this.authHeaders()
+    });
   }
 
   getDriverProfile(driverId: number): Observable<Driver> {
-    return this.http.get<Driver>(`${this.baseUrl}view-driver-profile/${driverId}`);
+    return this.http.get<Driver>(`${this.baseUrl}/view-driver-profile/${driverId}`, {
+      headers: this.authHeaders()
+    });
   }
 }

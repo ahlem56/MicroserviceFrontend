@@ -4,9 +4,6 @@ import { CarpoolService } from 'src/app/Core/carpool.service';
 import { HttpHeaders } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RatingService } from 'src/app/Core/rating.service';
-
-
 @Component({
   selector: 'app-carpooling-detail',
   templateUrl: './carpooling-detail.component.html',
@@ -30,8 +27,7 @@ export class CarpoolingDetailFrontOfficeComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private carpoolService: CarpoolService,
-    private ratingService: RatingService
+    private carpoolService: CarpoolService
 
   ) {}
 

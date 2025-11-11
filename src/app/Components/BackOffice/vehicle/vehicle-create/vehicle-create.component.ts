@@ -12,7 +12,7 @@ import {NgForm} from "@angular/forms";
 export class VehicleCreateBackOfficeComponent {
 
   vehicle: Partial<Vehicle> = {
-    vehicleType: 'Car',
+    vehicleType: 'CAR',
     vehiculeInsuranceStatus: false
   };
 

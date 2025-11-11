@@ -8,7 +8,11 @@
       <div class="profile-photo-container">
         <img [src]="profileImageUrl || 'assets/FrontOffice/images/users/user4.jpg'" alt="Profile Photo" class="profile-photo" />
         <input type="file" id="fileInput" (change)="onFileChange($event)" style="display: none" />
-        <button (click)="triggerFileInput()" class="change-photo-btn">Change Photo</button>
+        <button (click)="triggerFileInput()" class="change-photo-btn" [disabled]="photoUploading">
+          <span *ngIf="photoUploading" class="spinner"></span>
+          <span>{{ photoUploading ? 'Uploading...' : 'Change Photo' }}</span>
+        </button>
+        <p class="photo-status success" *ngIf="photoSuccessMessage">{{ photoSuccessMessage }}</p>
       </div>
   
       <form [formGroup]="editProfileForm" (ngSubmit)="saveChanges()" class="edit-form">

@@ -5,13 +5,10 @@ import { Router } from '@angular/router';
 import { ParcelService } from 'src/app/Core/parcel.service';
 import { TripService } from 'src/app/Core/trip.service';
 import { UserService } from 'src/app/Core/user.service';
-import { PaymentService } from 'src/app/Core/payment.service';
 import { CarpoolService } from 'src/app/Core/carpool.service';
-import { RatingService } from 'src/app/Core/rating.service';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { DriverService } from 'src/app/Core/driver.service';
-import { SubscriptionService } from 'src/app/Core/subscription.service';
 import { LocalizedString } from '@angular/compiler';
 
 import { HttpErrorResponse } from '@angular/common/http';
@@ -30,14 +27,6 @@ export class ProfileComponent implements OnInit {
   // Profile Image
   defaultProfilePhoto = 'assets/FrontOffice/images/users/user4.jpg';
   profileImageUrl = '';
-  subscriptionRemainingTime: number | null = null;
-  subscriptionStartDate: Date | null = null;  // make sure this is set properly
-
-  isRatingModalOpen = false;
-  currentRating = 0;  // Store the selected rating
-  ratingComment = ''; // Store the comment
-  tripToRate: any = {};  // Add this line to define the tripToRate property
-  predictedScore = 0; // Store the predicted score from sentiment analysis
 
   // Trip Data
   trips: any[] = [];
@@ -53,20 +42,10 @@ export class ProfileComponent implements OnInit {
  damageFile: File | null = null;
  selectedParcel: any = null;
  damageDescription: string = ''; // Description for the damage report 
-  // Payment Data
-  payments: any[] = [];
-  isPaymentsVisible = false;
-  
   // Carpool Data
   carpoolOffers: any[] = [];
   isCarpoolVisible = false;
   carpoolRatings: { [carpoolId: number]: any[] } = {}; // Notations des covoiturages
-
-  // Rating Data
-  ratingsReceived: any[] = [];
-  ratingsGiven: any[] = [];
-  averageRating = 0;
-  isRatingsVisible = false;
 
   isAvailable: boolean = false; // Default to not available
 Object: any;
@@ -79,11 +58,8 @@ Object: any;
     private router: Router,
     private tripService: TripService,
     private parcelService: ParcelService,
-    private paymentService: PaymentService,
     private carpoolService: CarpoolService,
-    private ratingService: RatingService,
     private driverService: DriverService, // Assuming you have a driver service
-    private subscriptionService: SubscriptionService, // Assuming you have a subscription service
 
   ) {}
 
@@ -91,12 +67,6 @@ Object: any;
     this.loadUserData();
     this.loadProfileData();
     this.checkAvailability(); // Check availability when the component is initialized
-    this.fetchSubscriptionDetails();  // Fetch subscription details
-
-    if (this.userRole === 'USER') {
-      this.subscriptionStartDate = this.user.subscriptionStartDate;
-      // Add fallback message
-    }
   
   }
 
@@ -113,19 +83,31 @@ Object: any;
     if (this.userRole !== 'Admin' && this.userRole !== 'Driver') {
       this.fetchTrips();
       this.fetchParcels();
-      this.fetchPayments();
       this.fetchCarpoolHistory();
-    }
-    if (this.userRole !== 'Admin') {
-      this.loadRatings();
     }
   }
 
   // Profile Image Methods
   getProfileImage(): string {
-    return this.user.userProfilePhoto
-      ? `http://localhost:8089/examen/user/profile-photo/${this.user.userProfilePhoto}`
-      : this.defaultProfilePhoto;
+    const photo = this.user?.userProfilePhoto;
+    if (!photo) {
+      return this.defaultProfilePhoto;
+    }
+    if (typeof photo !== 'string' || photo === 'null') {
+      return this.defaultProfilePhoto;
+    }
+    if (typeof photo === 'string' && photo.startsWith('data:image')) {
+      return photo;
+    }
+    if (typeof photo === 'string' && photo.startsWith('http')) {
+      return photo;
+    }
+    const sanitized = photo.replace(/\s/g, '');
+    const base64Pattern = /^[A-Za-z0-9+/=]+$/;
+    if (base64Pattern.test(sanitized)) {
+      return `data:image/jpeg;base64,${sanitized}`;
+    }
+    return this.defaultProfilePhoto;
   }
 
   triggerFileInput(): void {
@@ -138,20 +120,27 @@ Object: any;
   }
 
   uploadProfileImage(file: File): void {
-    const formData = new FormData();
-    formData.append('profilePhoto', file, file.name);
-  
-    this.userService.uploadProfileImage(formData).subscribe({
-      next: (response) => {
-        this.user.userProfilePhoto = response.fileName;
-        localStorage.setItem('user', JSON.stringify(this.user));
-        this.profileImageUrl = this.getProfileImage();
-      },
-      error: (error) => {
-        console.error('❌ Error uploading profile photo:', error);
-        alert("Error: " + (error.error?.message || "Failed to upload profile photo"));
-      }
-    });
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.userService.uploadProfileImage(base64).subscribe({
+        next: (response) => {
+          const updatedPhoto = response?.updated?.profilePhoto || base64;
+          this.user.userProfilePhoto = updatedPhoto;
+          localStorage.setItem('user', JSON.stringify(this.user));
+          this.profileImageUrl = this.getProfileImage();
+          document.dispatchEvent(new Event('updateProfileImage'));
+        },
+        error: (error) => {
+          console.error('❌ Error uploading profile photo:', error);
+          alert('Error: ' + (error.error?.message || error.message || 'Failed to upload profile photo'));
+        }
+      });
+    };
+    reader.onerror = () => {
+      alert('Failed to read the selected file. Please try another image.');
+    };
+    reader.readAsDataURL(file);
   }
 
   // Data Fetching Methods
@@ -176,12 +165,6 @@ Object: any;
     });
   }
 
-  fetchPayments(): void {
-    this.paymentService.getPaymentHistory().subscribe({
-      next: (payments) => this.payments = payments,
-      error: (err) => console.error('Failed to fetch payment history', err)
-    });
-  }
 
   fetchCarpoolHistory(): void {
     const headers = this.getAuthHeaders();
@@ -212,26 +195,7 @@ Object: any;
     });
   }
 
-  loadRatings(): void {
-    const headers = this.getAuthHeaders();
-    const userId = this.user.userId;
-  
-    this.ratingService.getUserRatings(userId, headers).subscribe({
-      next: (ratingsData) => {
-        this.ratingsReceived = ratingsData.ratingsReceived || [];
-        this.ratingsGiven = ratingsData.ratingsGiven || [];
-        this.calculateAverageRating();
-      },
-      error: (error) => console.error('Error fetching ratings:', error)
-    });
-  }
-  
   // Utility Methods
-  calculateAverageRating(): void {
-    if (this.ratingsReceived.length > 0) {
-      this.averageRating = this.ratingsReceived.reduce((acc, rating) => acc + rating.score, 0) / this.ratingsReceived.length;
-    }
-  }
 
   isCarpoolInPast(carpoolDate: string, carpoolTime: string): boolean {
     const now = new Date();
@@ -286,16 +250,8 @@ Object: any;
     this.isParcelsVisible = !this.isParcelsVisible;
   }
 
-  togglePaymentHistory(): void {
-    this.isPaymentsVisible = !this.isPaymentsVisible;
-  }
-
   toggleCarpoolHistory(): void {
     this.isCarpoolVisible = !this.isCarpoolVisible;
-  }
-
-  toggleRatingHistory(): void {
-    this.isRatingsVisible = !this.isRatingsVisible;
   }
 
   // Navigation
@@ -311,123 +267,6 @@ Object: any;
 
 
 
-   // This method is called when the user clicks on "Rate This Trip"
- // This method is called when the user clicks on "Rate This Trip"
- openRatingModal(trip: any): void {
-  this.isRatingModalOpen = true;
-  this.tripToRate = trip;  // Store the trip that the user is rating
-
-  // Ensure `isRated` is initialized before using it
-  if (typeof this.tripToRate.isRated === 'undefined') {
-    this.tripToRate.isRated = false;  // Initialize if undefined
-  }
-
-  // Reset rating state to prepare for new rating
-  this.currentRating = 0;
-  this.ratingComment = '';  // Reset comment if any
-  this.predictedScore = 0;  // Reset predicted score
-}
-
-// Close the rating modal
-closeRatingModal(): void {
-  this.isRatingModalOpen = false;
-  this.currentRating = 0;  // Reset rating
-  this.ratingComment = '';  // Reset comment
-}
-
-// Set the rating value when a star is clicked
-setRating(rating: number): void {
-  this.currentRating = rating;
-  this.predictedScore = rating; // Allow users to adjust the rating
-}
-
-// Automatically rate based on the sentiment of the comment as the user types
-autoRateFromComment(): void {
-  if (this.ratingComment.trim().length > 0) {
-    // ❌ WRONG : no saving here!!
-    // ✅ CORRECT: only ask for sentiment prediction
-    
-    this.ratingService.getSentimentAnalysis(this.ratingComment).subscribe({
-      next: (sentimentResponse) => {
-        let score = Math.round(sentimentResponse.predicted_score || 3);
-        if (isNaN(score) || score < 1 || score > 5) {
-          score = 3;
-        }
-        this.predictedScore = score;
-        this.currentRating = this.predictedScore;
-      },
-      error: (error) => {
-        console.error('Error analyzing sentiment:', error);
-        this.predictedScore = 3;
-        this.currentRating = 3;
-      }
-    });
-  }
-}
-
-
-
-// Submit the rating to the backend
-submitRating(): void {
-  if (this.currentRating === 0) {
-    alert('Please provide a rating!');
-    return;
-  }
-
-  const ratingData = {
-    comment: this.ratingComment, // Only comment (Spring Boot will handle AI)
-  };
-
-  this.ratingService.createRating(ratingData, this.tripToRate.tripId, this.user.userId, this.tripToRate.driver.userId, this.getAuthHeaders()).subscribe({
-    next: (response) => {
-      console.log('Rating submitted successfully:', response);
-      this.tripToRate.isRated = true;
-      this.refreshTripData(this.tripToRate.tripId);
-      this.closeRatingModal();
-    },
-    error: (error) => {
-      console.error('Error submitting rating:', error);
-    }
-  });
-}
-
-hoverRating(rating: number): void {
-  // If hovering over a star, temporarily set the displayed rating
-  if (rating > 0) {
-    this.currentRating = rating;
-  } else {
-    // When mouse leaves, reset to the selected rating (predictedScore)
-    this.currentRating = this.predictedScore || 0;
-  }
-}
-
-
-// Fetch updated trip data after rating submission
-refreshTripData(tripId: number): void {
-  this.tripService.getTripById(tripId, this.getAuthHeaders()).subscribe(
-    (updatedTrip) => {
-      // Find the trip in trips array and update it
-      const index = this.trips.findIndex(t => t.tripId === tripId);
-      if (index !== -1) {
-        this.trips[index] = updatedTrip;  // ✅ Update trip inside the array
-      }
-      this.tripToRate = updatedTrip;  // ✅ Update tripToRate as well
-    },
-    (error) => {
-      console.error('Error fetching trip data:', error);
-    }
-  );
-}
-
-// Helper method to check if the user can rate the trip
-canRate(trip: any): boolean {
-  return trip && trip.reservationStatus === 'COMPLETED' && !this.isTripRated(trip);
-}
-
-// Check if the trip has already been rated
-isTripRated(trip: any): boolean {
-  return trip.isRated;  // If the trip has been rated, the `isRated` flag will be true
-}
 
 
 
@@ -547,46 +386,6 @@ isTripRated(trip: any): boolean {
 
 
 
-  fetchSubscriptionDetails(): void {
-    // Assuming this.user.userId is available and valid
-    this.subscriptionService.getUserSubscription(this.user.userId).subscribe({
-      next: (subscription) => {
-        console.log("Fetched subscription:", subscription);
-
-        this.user.subscription = subscription;
-        this.calculateSubscriptionRemainingTime(subscription);
-      },
-      error: (error) => console.error('Error fetching subscription details:', error)
-    });
-  }
-  
-  calculateSubscriptionRemainingTime(subscription: any): void {
-    const currentDate = new Date();
-  
-    // Ensure subscriptionStartDate is a Date object
-    let startDate = new Date(this.user.subscriptionStartDate);
-  
-    // Check if startDate is invalid
-    if (isNaN(startDate.getTime())) {
-      console.error('Invalid subscription start date');
-      return;
-    }
-  
-    console.log("Subscription Start Date:", startDate);
-  
-    // Add the subscription duration (in months) to the start date
-    const endDate = new Date(startDate);
-    endDate.setMonth(startDate.getMonth() + subscription.durationInMonths);
-  
-    const timeDiff = endDate.getTime() - currentDate.getTime();
-    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));  // Convert milliseconds to days
-  
-    this.subscriptionRemainingTime = daysLeft;
-  }
-  
-  
-  
-  
 
 
  // Méthodes

@@ -7,13 +7,12 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
-import { RatingService } from 'src/app/Core/rating.service';
-
 @Component({
   selector: 'app-trip-create',
   templateUrl: './trip-create.component.html',
   styleUrls: ['./trip-create.component.css'],
-  imports: [FormsModule, CommonModule, GoogleMapsModule,RouterModule]
+  imports: [FormsModule, CommonModule, GoogleMapsModule,RouterModule],
+  standalone: true
 })
 export class TripCreateFrontOfficeComponent implements OnInit, AfterViewInit {
   @ViewChild(GoogleMap) googleMap!: GoogleMap;
@@ -48,8 +47,7 @@ export class TripCreateFrontOfficeComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     private router: Router,
     private http: HttpClient, 
-    private ngZone: NgZone ,
-    private ratingService: RatingService
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -370,26 +368,13 @@ calculateDynamicPrice(durationInSeconds: number): number {
 loadDriversWithRatings() {
   this.driverService.getAvailableDrivers().subscribe(
     (drivers) => {
-      const ratingPromises = drivers.map((driver) => {
-        if (driver.userId) {
-          return this.ratingService.getAverageRating(driver.userId, new HttpHeaders())
-            .toPromise()
-            .then((rating) => {
-              (driver as any).averageRating = rating || 0;  // if no rating, 0
-              return driver;
-            })
-            .catch((error) => {
-              console.error('Error fetching rating for driver', driver.userId, error);
-              (driver as any).averageRating = 0;
-              return driver;
-            });
-        } else {
-          (driver as any).averageRating = 0;
-          return Promise.resolve(driver);
-        }
+      // Rating service removed - set default rating to 0
+      const driversWithRatings = drivers.map((driver) => {
+        (driver as any).averageRating = 0;
+        return driver;
       });
 
-      Promise.all(ratingPromises).then((driversWithRatings) => {
+      Promise.resolve(driversWithRatings).then((driversWithRatings) => {
         // Sort drivers by average rating, highest first
         this.availableDrivers = driversWithRatings.sort((a: any, b: any) => b.averageRating - a.averageRating);
         console.log('Sorted Drivers:', this.availableDrivers);
