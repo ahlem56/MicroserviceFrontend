@@ -31,15 +31,79 @@ export class ComplaintListBackOfficeComponent implements OnInit {
     this.isLoading = true;
     this.complaintService.getAllComplaints(headers).subscribe({
       next: (response) => {
-        this.complaints = response;
-        this.applyFilter(this.filterType); // Appliquer le filtre initial
+        const resp: any = response as any;
+        // Normalize paginated or wrapped responses
+        const maybeList = Array.isArray(resp)
+          ? resp
+          : (resp?.content ?? resp?.data ?? resp?.items ?? resp?.reclamations ?? resp?.reclamationList ?? []);
+        const list = (maybeList || []).filter((raw: any) => !!raw && (
+          raw.reportId !== undefined ||
+          raw.id !== undefined ||
+          raw.userId !== undefined ||
+          raw.issueDescription !== undefined ||
+          raw.description !== undefined ||
+          raw.complaintDescription !== undefined
+        ));
 
-        // Charger les informations de l'utilisateur pour chaque réclamation
-        this.complaints.forEach((complaint) => {
-          if (complaint?.complaintId) {
-            this.getSimpleUserByComplaintId(complaint.complaintId, headers);
+        // Dev: inspect unexpected shapes
+        console.log('Complaints raw response:', resp);
+
+        this.complaints = (list || []).map((raw: any, idx: number) => {
+          console.log('Complaint raw item', idx, raw);
+          const complaintId =
+            raw?.complaintId ?? raw?.id ?? raw?.reportId ?? raw?.report_id ?? undefined;
+          const description =
+            raw?.complaintDescription ??
+            raw?.description ??
+            raw?.issueDescription ??
+            raw?.issue_description ??
+            'N/A';
+          const severity = (raw?.severity ?? raw?.level ?? '').toString();
+          const status = (raw?.complaintStatus ?? raw?.status ?? 'unknown').toString().toLowerCase();
+          const simpleUser = raw?.simpleUser ?? raw?.user ?? undefined;
+          const userId = raw?.userId ?? raw?.simpleUserId ?? raw?.user_id ?? undefined;
+          const rawDate = raw?.createdDate ?? raw?.created_date ?? raw?.created_at ?? undefined;
+          let displayCreatedDate: string | undefined;
+          if (Array.isArray(rawDate) && rawDate.length >= 3) {
+            const [y, m, d] = rawDate;
+            const mm = String(m).padStart(2, '0');
+            const dd = String(d).padStart(2, '0');
+            displayCreatedDate = `${y}-${mm}-${dd}`;
+          } else if (typeof rawDate === 'string' && rawDate.trim().length > 0) {
+            displayCreatedDate = rawDate;
+          } else if (rawDate && typeof rawDate === 'object') {
+            const y =
+              rawDate.year ?? rawDate.Year ?? rawDate.Y ?? rawDate?.['$year'] ?? undefined;
+            const m =
+              rawDate.monthValue ?? rawDate.month ?? rawDate.Month ?? rawDate?.['$month'] ?? undefined;
+            const d2 =
+              rawDate.dayOfMonth ?? rawDate.day ?? rawDate.Day ?? rawDate?.['$day'] ?? undefined;
+            if (y !== undefined && m !== undefined && d2 !== undefined) {
+              const mm = String(m).padStart(2, '0');
+              const dd = String(d2).padStart(2, '0');
+              displayCreatedDate = `${y}-${mm}-${dd}`;
+            }
+          } else if (rawDate instanceof Date && !isNaN(rawDate.getTime())) {
+            const y = rawDate.getFullYear();
+            const m = String(rawDate.getMonth() + 1).padStart(2, '0');
+            const d2 = String(rawDate.getDate()).padStart(2, '0');
+            displayCreatedDate = `${y}-${m}-${d2}`;
           }
+
+          const normalized = {
+            complaintId,
+            complaintDescription: description,
+            severity,
+            complaintStatus: status,
+            simpleUser,
+            userId,
+            createdDate: rawDate,
+            displayCreatedDate
+          };
+          console.log('Complaint normalized item', idx, normalized);
+          return normalized;
         });
+        this.applyFilter(this.filterType); // Appliquer le filtre initial
 
         this.isLoading = false;
       },
@@ -57,9 +121,13 @@ export class ComplaintListBackOfficeComponent implements OnInit {
     if (status === 'all') {
       this.filteredComplaints = [...this.complaints]; // Afficher toutes les réclamations
     } else {
-      this.filteredComplaints = this.complaints.filter(
-        (complaint) => complaint.complaintStatus === status
-      );
+      this.filteredComplaints = this.complaints.filter((complaint) => {
+        const normalized =
+          (complaint.complaintStatus || complaint.status || 'unknown')
+            .toString()
+            .toLowerCase();
+        return normalized === status.toLowerCase();
+      });
     }
   }
 
@@ -68,25 +136,7 @@ export class ComplaintListBackOfficeComponent implements OnInit {
     this.router.navigate(['back-office/complaints', complaintId]);
   }
 
-  // Obtenir les informations du SimpleUser à partir de l'ID d'une réclamation
-  getSimpleUserByComplaintId(complaintId: number, headers: HttpHeaders): void {
-    this.complaintService.getUserByComplaintId(complaintId, headers).subscribe({
-      next: (user) => {
-        const complaint = this.complaints.find((c) => c.complaintId === complaintId);
-        if (complaint) {
-          complaint.simpleUser = user;
-          // Update filteredComplaints to reflect user data
-          const filteredComplaint = this.filteredComplaints.find((c) => c.complaintId === complaintId);
-          if (filteredComplaint) {
-            filteredComplaint.simpleUser = user;
-          }
-        }
-      },
-      error: (error) => {
-        console.error('Erreur lors de la récupération des informations du SimpleUser :', error);
-      },
-    });
-  }
+  // Note: user lookup by complaint is not supported in Reclamation MS; skipping here.
 
 
 // Calculate number of dots based on severity
@@ -106,6 +156,66 @@ getSeverityDots(severity: string): number {
 // Determine dot color based on severity
 getSeverityColor(severity: string): string {
   return severity?.toLowerCase() === 'high' ? 'red' : 'orange';
+}
+
+// Update complaint (admin/backoffice quick edit: only description)
+onEditComplaint(row: any): void {
+  const newDesc = prompt('Update description:', row?.complaintDescription || row?.issueDescription || '');
+  if (newDesc === null) {
+    return;
+  }
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  const id = row?.complaintId ?? row?.reportId ?? row?.id;
+  if (!id) {
+    alert('Invalid complaint id.');
+    return;
+  }
+  // Build DTO aligned with backend
+  const payload = {
+    userId: row?.userId ?? row?.simpleUser?.userId ?? null,
+    issueDescription: newDesc,
+    createdDate: row?.createdDate ?? row?.created_at ?? row?.created_date ?? null
+  };
+  this.complaintService.updateComplaint(id, 0, payload, headers).subscribe({
+    next: () => {
+      // reflect in UI
+      row.complaintDescription = newDesc;
+      row.issueDescription = newDesc;
+      alert('Updated successfully.');
+    },
+    error: (err) => {
+      console.error('Update failed', err);
+      alert('Update failed.');
+    }
+  });
+}
+
+// Delete complaint
+onDeleteComplaint(row: any): void {
+  if (!confirm('Are you sure you want to delete this complaint?')) {
+    return;
+  }
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  const id = row?.complaintId ?? row?.reportId ?? row?.id;
+  if (!id) {
+    alert('Invalid complaint id.');
+    return;
+  }
+  this.complaintService.deleteComplaint(id, 0, headers).subscribe({
+    next: () => {
+      this.complaints = this.complaints.filter(c =>
+        (c?.complaintId ?? c?.reportId ?? c?.id) !== id
+      );
+      this.applyFilter(this.filterType);
+      alert('Deleted successfully.');
+    },
+    error: (err) => {
+      console.error('Delete failed', err);
+      alert('Delete failed.');
+    }
+  });
 }
 
 }

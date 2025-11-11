@@ -13,13 +13,18 @@ import {FormsModule} from "@angular/forms";
     FormsModule,
     RouterModule
   ],
-  styleUrls: ['event-listBackOffice.component.css']
+  styleUrls: ['event-listBackOffice.component.css'],
+  providers: [DatePipe]
 })
 export class EventListBackOfficeComponent implements OnInit {
   events: AppEvent[] = [];
   loading = true;
   error: string | null = null;
   searchQuery = '';
+  showDeleteModal = false;
+  deleting = false;
+  deleteError: string | null = null;
+  eventPendingDelete: AppEvent | null = null;
 
   constructor(
     private eventService: EventService,
@@ -49,27 +54,68 @@ export class EventListBackOfficeComponent implements OnInit {
     });
   }
 
-  formatDate(dateString: string): string {
+  formatDate(dateString: string | null | undefined): string {
+    if (!dateString) {
+      return 'N/A';
+    }
     return this.datePipe.transform(dateString, 'medium') || 'Invalid date';
   }
 
-  deleteEvent(eventId: number) {
-    if (confirm('Are you sure you want to delete this event?')) {
-      this.eventService.deleteEvent(eventId).subscribe({
-        next: () => {
-          this.events = this.events.filter(event => event.eventId !== eventId);
-        },
-        error: (err) => {
-          this.error = 'Delete failed: ' + err;
-        }
-      });
+  openDeleteModal(event: AppEvent) {
+    console.log('[Delete Modal] opening for event', event);
+    this.eventPendingDelete = event;
+    this.deleteError = null;
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete() {
+    console.log('[Delete Modal] cancel clicked');
+    if (this.deleting) {
+      return;
     }
+    this.showDeleteModal = false;
+    this.eventPendingDelete = null;
+    this.deleteError = null;
+  }
+
+  confirmDelete() {
+    console.log('[Delete Modal] confirm clicked', this.eventPendingDelete);
+    if (!this.eventPendingDelete || this.deleting) {
+      return;
+    }
+
+    const eventId = this.eventPendingDelete.id;
+    console.log('[Delete Modal] using eventId', eventId);
+    if (eventId == null) {
+      this.deleteError = 'Selected event is missing an identifier.';
+      return;
+    }
+
+    this.deleting = true;
+    this.deleteError = null;
+
+    this.eventService.deleteEvent(eventId).subscribe({
+      next: () => {
+        console.log('[Delete Modal] delete succeeded, removing event');
+        this.events = this.events.filter(event => event.id !== eventId);
+        this.deleting = false;
+        this.showDeleteModal = false;
+        this.eventPendingDelete = null;
+      },
+      error: (err) => {
+        console.error('[Delete Modal] delete failed', err);
+        this.deleteError = typeof err === 'string' ? err : err?.message || 'Failed to delete event. Please try again.';
+        this.deleting = false;
+      }
+    });
   }
 
   get filteredEvents() {
+    if (!this.searchQuery) return this.events;
+    const query = this.searchQuery.toLowerCase();
     return this.events.filter(event =>
-      event.eventDescription.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      event.eventLocation.toLowerCase().includes(this.searchQuery.toLowerCase())
+      (event.title?.toLowerCase().includes(query) || event.description?.toLowerCase().includes(query)) ||
+      event.location?.toLowerCase().includes(query)
     );
   }
 
@@ -80,5 +126,26 @@ export class EventListBackOfficeComponent implements OnInit {
 
   navigateToCreate(){
     this.router.navigate(['/back-office/events/create']);
+  }
+
+  get totalEvents(): number {
+    return this.events.length;
+  }
+
+  get publishedCount(): number {
+    return this.events.filter(evt => evt.published).length;
+  }
+
+  get draftCount(): number {
+    return this.events.filter(evt => !evt.published).length;
+  }
+
+  get upcomingCount(): number {
+    const now = new Date().getTime();
+    return this.events.filter(evt => {
+      if (!evt.startDate) return false;
+      const start = new Date(evt.startDate).getTime();
+      return !isNaN(start) && start > now;
+    }).length;
   }
 }

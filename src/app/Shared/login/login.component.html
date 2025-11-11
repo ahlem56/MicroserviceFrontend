@@ -1,256 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="login-page">
+  <div class="illustration" aria-hidden="true">
+    <img src="assets/FrontOffice/images/bg/back.png" alt="" />
+  </div>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <style>
-    /* Global reset */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <div class="form-wrapper">
+    <div class="form-card">
+      <a routerLink="/landingPage" class="brand">
+        <img src="assets/FrontOffice/images/logos/logoSpeedy.png" alt="SpeedyGo Logo" />
+      </a>
 
-    /* Body styling */
-    body {
-      font-family: 'Arial', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0 !important;
-      background: #f5f3f3;
-      color: #fff;
-      overflow: hidden;
-      font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;   
-    }
+      <h1>Welcome back</h1>
+      <p>Sign in to access your personalized SpeedyGo experience.</p>
 
-    .welcome {
-      color: #251d1d;
-    }
-
-    /* Full-page container */
-    /* Full-page container */
-.login-page {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  margin-right: 0px;
-  background-image: url('src/assets/FrontOffice/images/bg/back2.png'); /* Your background image */
-  background-size: cover; /* Ensure it covers the whole section */
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Don't repeat the image */
-}
-
-
-    /* Left side: abstract design or image */
-    .left-section {
-      flex: 0.6;
-      position: relative;
-      height: 100vh;  /* Full height of the page */
-    }
-
-    /* Full image that covers the section */
-    .left-section img {
-      width: 100%;  /* Make the image fill the width */
-      height: 100%;  /* Make the image fill the height */
-      object-fit: cover;  /* Ensure the image maintains aspect ratio and fills the area */
-    }
-
-    /* Right side: login form container */
-    .right-section {
-      flex: 0.4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba(248, 248, 248, 0.514);
-      padding: 30px;
-      border-radius: 0 10px 10px 0;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-      position: relative;
-    }
-
-    
-    /* Login form */
-    .login-container {
-      width: 100%;
-      text-align: center;
-      color: #f1f1f1;
-      background: rgba(255, 255, 255, 0.7); /* Optional: Light background for the login container to stand out */
-      padding: 30px;
-      border-radius: 10px;
-    }
-
-    /* Logo styling */
-        .logo {
-      width: 120px;
-      margin-bottom: 25px;
-    }
-
-    
-    h2 {
-      font-size: 34px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    p {
-      margin-bottom: 25px;
-      font-size: 18px;
-      font-weight: 300;
-      color: #251d1d;
-    }
-
-    .input-group {
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .input-group label {
-      font-size: 14px;
-      color: #251d1d;
-      margin-bottom: 10px;
-      display: block;
-      font-weight: 500;
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 12px 20px;
-      font-size: 16px;
-      border: 2px solid #524a4a;
-      border-radius: 8px;
-      outline: none;
-      background-color: #fffefe;
-      color: #220d0d;
-      transition: 0.3s;
-    }
-
-    .input-field:focus {
-      border-color: #fff;
-    }
-
-    .submit-button {
-      width: 100%;
-      padding: 14px;
-      background-color: #251d1d;
-      color: #dfd8d8;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .submit-button:hover {
-      background-color: #bd2121;
-    }
-
-    /* Links section */
-    .link-container {
-      margin-top: 20px;
-      font-size: 14px;
-      font-weight: 300;
-      color: #251d1d;
-    }
-
-    .link-container a {
-      color: #942525;
-      text-decoration: none;
-    }
-
-    .link-container a:hover {
-      text-decoration: underline;
-    }
-
-    /* Mobile design */
-    @media (max-width: 768px) {
-      .left-section {
-        display: none;
-      }
-
-      .right-section {
-        padding: 20px;
-        max-width: 350px;
-      }
-
-      h2 {
-        font-size: 28px;
-      }
-
-      .input-field {
-        font-size: 14px;
-      }
-
-      .submit-button {
-        font-size: 16px;
-      }
-
-      
-    }
-  </style>
-</head>
-
-<body>
-  <div class="login-page">
-    
-    <!-- Left side: abstract design or image -->
-    <div class="left-section">
-      <!-- The image now fills the full height and width of the section -->
-      <img src="assets/FrontOffice/images/bg/back.png" alt="SpeedyGo Logo" />
-    </div>
-
-    <!-- Right side: login form -->
-    <div class="right-section">
-      <div class="login-container">
-        <!-- Logo -->
-        <a href="/landingPage">
-          <img src="assets/FrontOffice/images/logos/logoSpeedy.png" alt="SpeedyGo Logo" class="logo" />
-        </a>
-
-        <h2 class="welcome">Welcome Back!</h2>
-        <p>Please sign in to continue</p>
-
-        <!-- Login Form -->
-        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
-          <!-- Email Input -->
-          <div class="input-group">
-            <label for="email">Email Address</label>
-            <input id="email" formControlName="email" type="email" placeholder="Enter your email" class="input-field">
-            <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error-message">
-              <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</small>
-              <small *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</small>
-            </div>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+        <div class="input-group" [class.invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          <label for="email">Email address</label>
+          <div class="input-shell">
+            <i class="fas fa-envelope"></i>
+            <input id="email" formControlName="email" type="email" placeholder="name@example.com" />
           </div>
-
-          <!-- Password Input -->
-          <div class="input-group">
-            <label for="password">Password</label>
-            <input id="password" formControlName="password" type="password" placeholder="Enter your password" class="input-field">
-            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error-message">
-              <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</small>
-              <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</small>
-            </div>
+          <div class="errors" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
           </div>
+        </div>
 
-          <!-- Submit Button -->
-          <button type="submit" [disabled]="loginForm.invalid" class="submit-button">Sign In</button>
-
-          <!-- Forgot Password and Signup Links -->
-          <div class="link-container">
-            <a href="/forgot-password">Forgot Password?</a> | 
-            <a href="/signup">Create a new account</a>
+        <div class="input-group" [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          <label for="password">Password</label>
+          <div class="input-shell">
+            <i class="fas fa-lock"></i>
+            <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
           </div>
-        </form>
-      </div>
+          <div class="errors" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">At least 6 characters required.</span>
+          </div>
+        </div>
+
+        <div class="utility-row">
+          <label class="remember">
+            <input type="checkbox" />
+            Remember me
+          </label>
+          <a routerLink="/forgot-password">Forgot password?</a>
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid || submitting" class="submit-button">
+          <span *ngIf="submitting" class="spinner"></span>
+          <span>{{ submitting ? 'Signing in…' : 'Sign in' }}</span>
+        </button>
+
+        <div class="error-banner" *ngIf="errorMessage">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+
+        <p class="signup-message">
+          New to SpeedyGo?
+          <a routerLink="/signup">Create an account</a>
+        </p>
+      </form>
     </div>
   </div>
-</body>
-
-</html>
+</div>

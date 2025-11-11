@@ -1,18 +1,22 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from 'src/app/Core/user.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, RouterModule]
 })
 export class SignupComponent {
   signupForm: FormGroup;
+  submitting = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -31,7 +35,11 @@ export class SignupComponent {
   }
   
 onSignup(): void {
+  console.log('Signup submit clicked', this.signupForm.value, 'valid=', this.signupForm.valid);
   if (this.signupForm.valid) {
+    this.submitting = true;
+    this.errorMessage = null;
+    this.successMessage = null;
     const formData = this.signupForm.value;
 
     const signupPayload = {
@@ -44,19 +52,24 @@ onSignup(): void {
       role: 'USER'                    // default role
     };
 
-    this.userService.signup(signupPayload).subscribe(
+    this.userService.signup(signupPayload).pipe(
+      finalize(() => {
+        this.submitting = false;
+      })
+    ).subscribe(
       (response: any) => {
         console.log('Signup success:', response);
-        alert('Signup successful! You can now log in.');
-        this.router.navigate(['/login']);
+        this.successMessage = 'Signup successful! Redirecting to login…';
+        setTimeout(() => this.router.navigate(['/login']), 1200);
       },
       (error: any) => {
         console.error('Signup error:', error);
-        alert('Signup failed: ' + (error.message || 'Please try again.'));
+        this.errorMessage = error?.message || error?.error?.message || 'Signup failed. Please try again.';
       }
     );
   } else {
-    alert('Please fill out the form correctly');
+    this.signupForm.markAllAsTouched();
+    this.errorMessage = 'Please fill out the form correctly.';
   }
 }
 

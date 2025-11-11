@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/Core/user.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -9,10 +9,12 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [ReactiveFormsModule, CommonModule]  // Import ReactiveFormsModule directly here
+  imports: [ReactiveFormsModule, CommonModule, RouterModule]  // Import required standalone modules
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  submitting = false;
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
     this.loginForm = this.fb.group({
@@ -23,31 +25,47 @@ export class LoginComponent {
 
   onLogin(): void {
     if (this.loginForm.valid) {
+      this.submitting = true;
+      this.errorMessage = null;
       const { email, password } = this.loginForm.value;
 
       this.userService.login(email, password).subscribe(
         (response) => {
           // Store auth token and user role
-          const token = response.token.split(' ')[1];
+          const token = response.token?.startsWith('Bearer ')
+            ? response.token.split(' ')[1]
+            : response.token;
           localStorage.setItem('token', token);
           localStorage.setItem('userRole', response.role);
           localStorage.setItem('user', JSON.stringify(response.user));
 
           // Redirect based on user role (case-insensitive comparison)
           const role = response.role.toLowerCase();
-          if (role === 'admin') {
-            this.router.navigate(['back-office/dashboard']);
-          } else if (role === 'driver') {
-            this.router.navigate(['driver-interface/trips']);
-          } else if (role === 'partner') {
-            this.router.navigate(['partner/commissions']);
-          } else {
-            this.router.navigate(['landingPage']); // Default route if no specific role
-          }
+          const navigateByRole = () => {
+            if (role === 'admin') {
+              this.router.navigate(['back-office/dashboard']);
+            } else if (role === 'driver') {
+              this.router.navigate(['driver-interface/trips']);
+            } else {
+              this.router.navigate(['landingPage']);
+            }
+          };
+
+          this.userService.refreshUserProfile().subscribe({
+            next: () => {
+              navigateByRole();
+              this.submitting = false;
+            },
+            error: () => {
+              navigateByRole();
+              this.submitting = false;
+            }
+          });
         },
         (error) => {
           console.error('Login error:', error);
-          alert('Invalid email or password!');
+          this.errorMessage = error?.error?.message || 'Invalid email or password!';
+          this.submitting = false;
         }
       );
     } else {

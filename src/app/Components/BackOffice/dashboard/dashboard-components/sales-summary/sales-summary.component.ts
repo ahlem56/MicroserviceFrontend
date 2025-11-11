@@ -77,7 +77,7 @@ export class SalesSummaryComponent implements OnInit {
   }
 
   loadMonthlyRevenue(): void {
-    this.http.get<Map<string, number>>('http://localhost:8089/examen/partners/revenue/monthly')
+    this.http.get<Map<string, number>>('http://localhost:8090/user-service/partners/revenue/monthly')
       .subscribe({
         next: (data) => {
           const revenueData = Object.values(data);
@@ -90,7 +90,7 @@ export class SalesSummaryComponent implements OnInit {
   }
 
   loadDailyRevenue(): void {
-    this.http.get<Map<string, number>>('http://localhost:8089/examen/partners/revenue/daily', {
+    this.http.get<Map<string, number>>('http://localhost:8090/user-service/partners/revenue/daily', {
       params: { month: this.selectedMonth.toString(), year: this.selectedYear.toString() }
     }).subscribe({
       next: (data) => {

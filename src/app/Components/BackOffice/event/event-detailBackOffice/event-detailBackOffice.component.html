@@ -1,50 +1,148 @@
-<!-- src/app/BackOffice/event-detailBackOffice.component.html -->
-<div *ngIf="loading" class="loading">Chargement...</div>
-<div *ngIf="error" class="error">{{ error }}</div>
-
-<form *ngIf="!loading" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label>Date</label>
-    <input type="datetime-local" formControlName="eventDate" />
-    <div *ngIf="submitting && f['eventDate'].errors" class="error">
-      Date requise.
-    </div>
+<div class="page-wrapper">
+  <div *ngIf="loading" class="loading-block">
+    <span class="spinner"></span>
+    Loading event details…
   </div>
 
-  <div class="form-group">
-    <label>Description</label>
-    <textarea formControlName="eventDescription"></textarea>
-    <div *ngIf="submitting && f['eventDescription'].errors" class="error">
-      Description invalide (max 500).
+  <ng-container *ngIf="!loading">
+    <div class="page-header">
+      <div class="header-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+          <path
+            d="M6.75 2A.75.75 0 0 0 6 2.75V4H4.75A2.75 2.75 0 0 0 2 6.75v11.5A2.75 2.75 0 0 0 4.75 21h14.5A2.75 2.75 0 0 0 22 18.25V6.75A2.75 2.75 0 0 0 19.25 4H18V2.75a.75.75 0 0 0-1.5 0V4h-9V2.75A.75.75 0 0 0 6.75 2Zm0 4.5h10.5c.69 0 1.25.56 1.25 1.25v9.75c0 .41-.34.75-.75.75H6.25a.75.75 0 0 1-.75-.75V7.75c0-.69.56-1.25 1.25-1.25Z"
+          />
+        </svg>
+      </div>
+      <div class="header-content">
+        <p class="eyebrow">Back-office · Events</p>
+        <h1>Edit event</h1>
+        <p class="subtitle">
+          Tweak the details, refresh the visuals, or regroup the schedule before republishing this event.
+        </p>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label>Lieu</label>
-    <input type="text" formControlName="eventLocation" />
-    <div *ngIf="submitting && f['eventLocation'].errors" class="error">
-      Lieu invalide (max 100).
-    </div>
-  </div>
+    <section class="form-card">
+      <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="title">Title <span class="required">*</span></label>
+            <input
+              id="title"
+              type="text"
+              formControlName="title"
+              maxlength="200"
+              placeholder="Give your event a standout name"
+            />
+            <p *ngIf="submitted && f['title'].errors?.['required']" class="error">Title is required.</p>
+            <p *ngIf="submitted && f['title'].errors?.['maxlength']" class="error">Maximum 200 characters.</p>
+          </div>
 
-  <div class="form-group">
-    <label>Max participants</label>
-    <input type="number" formControlName="maxParticipants" />
-    <div *ngIf="submitting && f['maxParticipants'].errors" class="error">
-      Doit être ≥ 1.
-    </div>
-  </div>
+          <div class="form-group">
+            <label for="location">Location <span class="required">*</span></label>
+            <input
+              id="location"
+              type="text"
+              formControlName="location"
+              maxlength="100"
+              placeholder="Where is the event taking place?"
+            />
+            <p *ngIf="submitted && f['location'].errors?.['required']" class="error">Location is required.</p>
+            <p *ngIf="submitted && f['location'].errors?.['maxlength']" class="error">Maximum 100 characters.</p>
+          </div>
 
-  <div class="form-group">
-    <label>Photo</label>
-    <input type="file" (change)="onFileChange($event)" />
-    <div *ngIf="photoPreview" class="preview">
-      <img [src]="photoPreview" alt="Aperçu" />
-    </div>
-  </div>
+          <div class="form-group">
+            <label for="startDate">Start Date <span class="required">*</span></label>
+            <input
+              id="startDate"
+              type="datetime-local"
+              formControlName="startDate"
+            />
+            <p *ngIf="submitted && f['startDate'].errors" class="error">Start date is required.</p>
+          </div>
 
-  <button type="submit" [disabled]="submitting">Enregistrer</button>
-  <button type="button" (click)="router.navigate(['/back-office/events/list'])">
-    Annuler
-  </button>
-</form>
+          <div class="form-group">
+            <label for="endDate">
+              End Date
+              <span class="optional">Optional</span>
+            </label>
+            <input
+              id="endDate"
+              type="datetime-local"
+              formControlName="endDate"
+            />
+            <p class="helper-text">Leave empty to use the start date.</p>
+          </div>
+
+          <div class="form-group span-2">
+            <label for="description">Description <span class="required">*</span></label>
+            <textarea
+              id="description"
+              rows="5"
+              formControlName="description"
+              maxlength="500"
+              placeholder="Share what's new: updated schedule, guest speakers, or key highlights."
+            ></textarea>
+            <div class="meta-row">
+              <p class="helper-text">Use up to 500 characters to capture attention.</p>
+              <p class="helper-text counter">{{ f['description'].value?.length || 0 }}/500</p>
+            </div>
+            <p *ngIf="submitted && f['description'].errors?.['required']" class="error">Description is required.</p>
+            <p *ngIf="submitted && f['description'].errors?.['maxlength']" class="error">Maximum 500 characters.</p>
+          </div>
+
+          <div class="form-group span-2 published-group">
+            <span class="group-title">Visibility</span>
+            <div class="toggle-row">
+              <label class="switch">
+                <input type="checkbox" formControlName="published" />
+                <span class="slider"></span>
+              </label>
+              <div class="toggle-copy">
+                <span class="toggle-title">Publish changes immediately</span>
+                <span class="toggle-hint">Disable to keep this event in draft mode while you refine it.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group span-2 photo-group">
+            <div class="photo-heading">
+              <label for="photo">Event cover</label>
+              <p class="helper-text">Keep your visuals aligned with the latest edition of the event.</p>
+            </div>
+            <input
+              id="photo"
+              type="file"
+              accept="image/*"
+              (change)="onFileChange($event)"
+              class="file-input"
+            />
+            <p class="helper-text">PNG or JPG, up to 5 MB recommended.</p>
+            <div *ngIf="photoPreview" class="preview-wrapper">
+              <img [src]="photoPreview" alt="Event cover preview" class="preview-img" />
+              <button type="button" class="btn-remove" (click)="clearPhoto()">Remove photo</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="error" class="alert alert-error">
+          {{ error }}
+        </div>
+
+        <div class="actions">
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="router.navigate(['/back-office/events/list'])"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="eventForm.invalid || submitting">
+            <span *ngIf="submitting" class="spinner"></span>
+            Save changes
+          </button>
+        </div>
+      </form>
+    </section>
+  </ng-container>
+</div>

@@ -13,6 +13,7 @@ yarn-error.log
 
 # IDEs and editors
 .idea/
+**/.idea/
 .project
 .classpath
 .c9/
@@ -36,6 +37,20 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+/build_event.log
+/event_logs.txt
+
+# Java / Maven
+**/target/
+
+# Node (nested projects)
+**/node_modules/
+
+# Symfony / PHP
+speedygo-user-service/app/.env.local
+speedygo-user-service/app/.env.local.php
+speedygo-user-service/app/var/
+speedygo-user-service/app/vendor/
 
 # System files
 .DS_Store

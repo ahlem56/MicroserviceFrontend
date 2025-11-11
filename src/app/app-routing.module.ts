@@ -25,16 +25,9 @@ import { ParcelDetailFrontOfficeComponent } from './Components/FrontOffice/parce
 // Vehicle components
 import { VehicleDetailFrontOfficeComponent } from './Components/FrontOffice/vehicle/vehicle-detail/vehicle-detail.component';
 
-// Payment components
-import { PaymentCreationFrontOfficeComponent } from './Components/FrontOffice/payment/payment-creation/payment-creation.component';
-import { PaymentHistoryFrontOfficeComponent } from './Components/FrontOffice/payment/payment-history/payment-history.component';
-import { PaymentMethodFrontOfficeComponent } from './Components/FrontOffice/payment/payment-method/payment-method.component';
-
-
 // Event components
 import { EventListFrontOfficeComponent } from './Components/FrontOffice/event/event-list/event-list.component';
 import { EventDetailFrontOfficeComponent } from './Components/FrontOffice/event/event-detail/event-detail.component';
-import { EventNotifyFrontOfficeComponent } from './Components/FrontOffice/event/event-notify/event-notify.component';
 
 // Chat components
 import { ChatFrontOfficeComponent } from './Components/FrontOffice/chat/chat/chat.component';
@@ -49,13 +42,6 @@ import { ComplaintCreationFrontOfficeComponent } from './Components/FrontOffice/
 import { ComplaintListFrontOfficeComponent } from './Components/FrontOffice/complaint/complaint-list/complaint-list.component';
 import { ComplaintDetailsFrontOfficeComponent } from './Components/FrontOffice/complaint/complaint-details/complaint-details.component';
 
-// Subscription components
-import { SubscriptionCreationFrontOfficeComponent } from './Components/FrontOffice/subscription/subscription-creation/subscription-creation.component';
-import { SubscriptionDetailsFrontOfficeComponent } from './Components/FrontOffice/subscription/subscription-details/subscription-details.component';
-
-// Promotion components
-import { PromotionDetailsFrontOfficeComponent } from './Components/FrontOffice/promotion/promotion-details/promotion-details.component';
-
 //Sign Up Component
 import { SignupComponent } from './Components/FrontOffice/signup/signup.component';
 
@@ -64,25 +50,10 @@ import { SignupComponent } from './Components/FrontOffice/signup/signup.componen
 
 // *************** Imports BackOffice Components ***************
 
-// Rule components
-import { RuleCreationBackOfficeComponent } from './Components/BackOffice/rule/rule-creation/rule-creation.component';
-import { RuleDetailsBackOfficeComponent } from './Components/BackOffice/rule/rule-details/rule-details.component';
-import { RuleEditBackOfficeComponent } from './Components/BackOffice/rule/rule-edit/rule-edit.component';
-
-// Promotion components
-import { PromotionCreationBackOfficeComponent } from './Components/BackOffice/promotion/promotion-creation/promotion-creation.component';
-import { PromotionEditBackOfficeComponent } from './Components/BackOffice/promotion/promotion-edit/promotion-edit.component';
-
 //Event components
 import { EventCreateBackOfficeComponent } from './Components/BackOffice/event/event-createBackOffice/event-createBackOffice.component';
 import { EventListBackOfficeComponent } from './Components/BackOffice/event/event-listBackOffice/event-listBackOffice.component';
 import { EventDetailBackOfficeComponent } from './Components/BackOffice/event/event-detailBackOffice/event-detailBackOffice.component';
-import { EventNotifyBackOfficeComponent } from './Components/BackOffice/event/event-notify/event-notify.component';
-
-// Partner components
-import { PartnerListBackOfficeComponent } from './Components/BackOffice/partner/partner-list/partner-list.component';
-import { PartnerCreateBackOfficeComponent } from './Components/BackOffice/partner/partner-create/partner-create.component';
-import { PartnerEditComponent } from './Components/BackOffice/partner/partner-edit/partner-edit.component';
 
 // Carpool components
 import { CarpoolingListBackOfficeComponent } from './Components/BackOffice/carpoolBackOffice/carpooling-listBackOffice/carpooling-listBackOffice.component';
@@ -100,13 +71,6 @@ import { ParcelListBackOfficeComponent } from './Components/BackOffice/parcelBac
 import { ParcelDetailBackOfficeComponent } from './Components/BackOffice/parcelBackOffice/parcel-detailBackOffice/parcel-detailBackOffice.component';
 import { ParcelTrackBackOfficeComponent } from './Components/BackOffice/parcelBackOffice/parcel-trackBackOffice/parcel-trackBackOffice.component';
 
-// payment components
-import { PaymentHistoryBackOfficeComponent } from './Components/BackOffice/payment/payment-history/payment-history.component';
-import { PaymentMethodBackOfficeComponent } from './Components/BackOffice/payment/payment-method/payment-method.component';
-
-// subscription components
-import { SubscriptionDetailsBackOfficeComponent } from './Components/BackOffice/subscription/subscription-details/subscription-details.component';
-
 //trip components
 import { TripListBackOfficeComponent } from './Components/BackOffice/tripBackOffice/trip-listBackOffice/trip-listBackOffice.component';
 import { TripDetailBackOfficeComponent } from './Components/BackOffice/tripBackOffice/trip-detailBackOffice/trip-detailBackOffice.component';
@@ -116,10 +80,6 @@ import { VehicleListBackOfficeComponent } from './Components/BackOffice/vehicle/
 import { VehicleCreateBackOfficeComponent } from './Components/BackOffice/vehicle/vehicle-create/vehicle-create.component';
 import { VehicleEditBackOfficeComponent } from './Components/BackOffice/vehicle/vehicle-edit/vehicle-edit.component';
 import { VehicleDetailBackOfficeComponent } from './Components/BackOffice/vehicle/vehicle-detail/vehicle-detail.component';
-
-// Commission components
-import { CommissionListComponent } from './Components/BackOffice/commission/commission-list/commission-list.component';
-import { PartnerCommissionComponent } from './Components/FrontOffice/commission/commission.component';
 
 //************* Imports Driver Interface Components *************
 // Chat components
@@ -158,7 +118,6 @@ import { AboutComponent } from './Shared/about/about.component';
 
 // Import components
 import { FullComponent } from './Shared/layouts/full/full.component'; // Template's FullComponent
-import { PromotionDetailsBackOfficeComponent } from './Components/BackOffice/promotion/promotion-details/promotion-details.component';
 import { LandingPageComponent } from './Shared/landing-page/landing-page.component';
 import { AuthGuard } from './auth.guard';
 import { ProfileComponent } from './Shared/profile/profile.component';
@@ -170,13 +129,11 @@ import { ResetPasswordComponent } from './Shared/reset-password/reset-password.c
 import {
   VehicleAssignComponent
 } from "./Components/BackOffice/vehicle/vehicle-assign/vehicle-assign/vehicle-assign.component";
-import { SubscriptionEditBackOfficeComponent } from './Components/BackOffice/subscription/subscription-edit/subscription-edit.component';
 import { CreateDriverBackOfficeComponent } from './Components/BackOffice/drivers/create-driver/create-driver.component';
 import { SettingsComponent } from './Shared/settings/settings.component';
 import { EditProfileComponent } from './Shared/profile/edit-profile/edit-profile.component';
 import { EditDriverComponent } from './Components/BackOffice/drivers/edit-driver/edit-driver.component';
 import { DriverProfileComponent } from './Shared/profile/driver-profile/driver-profile.component';
-import { StripeComponent } from './Components/FrontOffice/stripe/stripe.component';
 
 import {VehicleMapComponent} from "./Components/BackOffice/vehicle/vehicle-map/vehicle-map.component";
 import {VehicleService} from "./Core/vehicle.service";
@@ -200,8 +157,6 @@ const routes: Routes = [
       { path: 'about', component: AboutComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'signup', component: SignupComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: 'commissions', component: PartnerCommissionComponent, canActivate: [AuthGuard], data: { roles: ['USER',"ADMIN"] } }, // New route
-      { path: 'partner/commissions', component: PartnerCommissionComponent, canActivate: [AuthGuard], data: { roles: ['PARTNER'] }},
       { path: 'edit-profile', component: EditProfileComponent },
       {path: 'forgot-password', component: ForgotPasswordComponent},
       { path: 'reset-password', component: ResetPasswordComponent },
@@ -214,18 +169,13 @@ const routes: Routes = [
       { path: 'carpooling/:id', component: CarpoolingDetailFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'carpooling/join/:id', component: CarpoolingJoinFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'offer', component: CarpoolingOfferFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
-      {path:'stripe', component : StripeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'parcels', component: ParcelListFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'parcels/track', component: ParcelTrackFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'parcels/create', component: ParcelCreateFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'parcels/:id', component: ParcelDetailFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
       { path: 'vehicle/:id', component: VehicleDetailFrontOfficeComponent },
-      { path: 'payments/create', component: PaymentCreationFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
-      { path: 'payments/history', component: PaymentHistoryFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
-      { path: 'payments/method', component: PaymentMethodFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
       { path: 'events', component: EventListFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
       { path: 'events/:id', component: EventDetailFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
-      { path: 'events/notify', component: EventNotifyFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
       { path: 'chat', component: ChatFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       { path: 'chat/list', component: ChatListFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
       { path: 'chat-message/create', component: ChatMessageCreationFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
@@ -233,28 +183,14 @@ const routes: Routes = [
       { path: 'complaints/create', component: ComplaintCreationFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
       { path: 'complaints/list', component: ComplaintListFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER'] } },
       { path: 'complaints/:id', component: ComplaintDetailsFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
-      { path: 'subscriptions/create', component: SubscriptionCreationFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
-      { path: 'subscriptions/:id', component: SubscriptionDetailsFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
-      { path: 'promotions/:id', component: PromotionDetailsFrontOfficeComponent , canActivate: [AuthGuard], data: { roles: ['USER'] }},
       {path:'notifications',component:NotificationFrontOfficeComponent, canActivate: [AuthGuard], data: { roles: ['USER','Driver'] }},
       { path: 'driver-profile/:id', component: DriverProfileComponent },
 
       // BackOffice Routes
       { path: 'back-office/dashboard', component: DashboardComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/commissions', component: CommissionListComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/rules/create', component: RuleCreationBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
-      { path: 'back-office/rules/:id', component: RuleDetailsBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
-      { path: 'back-office/rules/edit/:id', component: RuleEditBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/promotions/create', component: PromotionCreationBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/promotions/:id', component: PromotionDetailsBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/promotions/edit/:id', component: PromotionEditBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
       { path: 'back-office/events/create', component: EventCreateBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
       { path: 'back-office/events/list', component: EventListBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
       { path: 'back-office/events/:id', component: EventDetailBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
-      { path: 'back-office/events/notify', component: EventNotifyBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
-      { path: 'back-office/partners', component: PartnerListBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/partners/create', component: PartnerCreateBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
-      { path: 'back-office/partners/edit/:id', component: PartnerEditComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
       { path: 'back-office/carpool/list', component: CarpoolingListBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
       { path: 'back-office/carpool/:id', component: CarpoolingDetailBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
       { path: 'back-office/complaints', component: ComplaintListBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
@@ -262,10 +198,6 @@ const routes: Routes = [
       { path: 'back-office/parcels', component: ParcelListBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] }},
       { path: 'back-office/parcels/damage', component: ParcelDetailBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
       { path: 'back-office/parcels/track', component: ParcelTrackBackOfficeComponent },
-      { path: 'back-office/payments/history', component: PaymentHistoryBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/payments/method', component: PaymentMethodBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},
-      { path: 'back-office/subscriptions', component: SubscriptionDetailsBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
-      {path: 'back-office/subscription/edit/:id', component: SubscriptionEditBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] }},
       { path: 'back-office/trips', component: TripListBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
       { path: 'back-office/trips/:id', component: TripDetailBackOfficeComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] }},
       { path: 'back-office/vehicles', component: VehicleListBackOfficeComponent , canActivate: [AuthGuard], data: { roles: ['Admin'] }},

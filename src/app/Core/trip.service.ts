@@ -1,80 +1,126 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TripService {
 
-  private apiUrl = `http://localhost:8089/examen/trip/`; // Update with correct URL
+  private readonly proxyBase = '/trip/';
+  private readonly fallbackBase = environment.gatewayUrl
+    ? `${environment.gatewayUrl.replace(/\/$/, '')}/trip/`
+    : null;
 
   constructor(private http: HttpClient) {
   }
 
   createTrip(tripData: any, simpleUserId: number, driverId: number, headers: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}createTrip/${simpleUserId}/${driverId}`;
-    return this.http.post(url, tripData, {headers});
+    const segment = `createTrip/${simpleUserId}/${driverId}`;
+    return this.requestWithFallback('post', segment, tripData, headers);
   }
 
   // Get all trips for a specific user
   getTripsForUser(userId: number, headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getTripsForUser/${userId}`;
-    return this.http.get<any[]>(url, {headers});
+    const segment = `getTripsForUser/${userId}`;
+    return this.requestWithFallback('get', segment, undefined, headers);
   }
 
   getTripsByVehicle(vehicleId: number, headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getTripsByVehicle/${vehicleId}`; // Remove leading slash
-    return this.http.get<any[]>(url, {headers});
+    const segment = `getTripsByVehicle/${vehicleId}`;
+    return this.requestWithFallback('get', segment, undefined, headers);
   }
 
   // Delete a trip by tripId
   deleteTrip(tripId: number, headers: HttpHeaders): Observable<void> {
-    const url = `${this.apiUrl}deleteTrip/${tripId}`;
-    return this.http.delete<void>(url, {headers});
+    const segment = `deleteTrip/${tripId}`;
+    return this.requestWithFallback('delete', segment, undefined, headers);
   }
 
   // Get all trips for a specific driver
   getTripsForDriver(driverId: number, headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getTripsForDriver/${driverId}`;
-    const token = localStorage.getItem('token');  // Get token from localStorage
-  
+    const token = localStorage.getItem('token');
     if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);  // Attach token to the headers
+      headers = headers.set('Authorization', `Bearer ${token}`);
     }
-
-    return this.http.get<any[]>(url, {headers});
+    const segment = `getTripsForDriver/${driverId}`;
+    return this.requestWithFallback('get', segment, undefined, headers);
   }
 
   getAllTrips(headers: HttpHeaders): Observable<any[]> {
-    const url = `${this.apiUrl}getAllTrips`;
-    return this.http.get<any[]>(url, {headers});
+    const segment = 'getAllTrips';
+    return this.requestWithFallback('get', segment, undefined, headers);
   }
 
   acceptTrip(tripId: number, headers: HttpHeaders) {
-    return this.http.put<any>(`http://localhost:8089/examen/trip/acceptTrip/${tripId}`, {}, {headers});
+    const segment = `acceptTrip/${tripId}`;
+    return this.requestWithFallback('put', segment, {}, headers);
   }
 
   refuseTrip(tripId: number, headers: HttpHeaders) {
-    return this.http.put<any>(`http://localhost:8089/examen/trip/refuseTrip/${tripId}`, {}, {headers});
+    const segment = `refuseTrip/${tripId}`;
+    return this.requestWithFallback('put', segment, {}, headers);
   }
 
   completeTrip(tripId: number, headers: HttpHeaders) {
-    return this.http.put<any>(`http://localhost:8089/examen/trip/completeTrip/${tripId}`, {}, {headers});
+    const segment = `completeTrip/${tripId}`;
+    return this.requestWithFallback('put', segment, {}, headers);
   }
 
   getTripById(tripId: number, headers: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}getTrip/${tripId}`;
-    return this.http.get<any>(url, {headers});
+    const segment = `getTrip/${tripId}`;
+    return this.requestWithFallback('get', segment, undefined, headers);
   }
 
   reachNextCheckpoint(vehicleId: number, headers: HttpHeaders): Observable<any> {
-    return this.http.put(
-      `http://localhost:8089/examen/vehicle/markNextArrived/${vehicleId}`, 
-      {}, 
-      { headers }
-    );
+    const segment = `vehicle/markNextArrived/${vehicleId}`;
+    return this.requestWithFallback('put', segment, {}, headers);
   }
   
+  private requestWithFallback<T>(
+    method: 'get' | 'post' | 'put' | 'delete',
+    segment: string,
+    body: any,
+    headers: HttpHeaders
+  ): Observable<T> {
+    const primaryUrl = `${this.proxyBase}${segment}`;
+    const fallbackUrl = this.fallbackBase ? `${this.fallbackBase}${segment}` : null;
+
+    const primary$ = this.dispatchRequest<T>(method, primaryUrl, body, headers);
+
+    if (!fallbackUrl) {
+      return primary$.pipe(catchError(error => throwError(() => error)));
+    }
+
+    return primary$.pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          return this.dispatchRequest<T>(method, fallbackUrl, body, headers);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  private dispatchRequest<T>(
+    method: 'get' | 'post' | 'put' | 'delete',
+    url: string,
+    body: any,
+    headers: HttpHeaders
+  ): Observable<T> {
+    switch (method) {
+      case 'get':
+        return this.http.get<T>(url, { headers });
+      case 'post':
+        return this.http.post<T>(url, body ?? {}, { headers });
+      case 'put':
+        return this.http.put<T>(url, body ?? {}, { headers });
+      case 'delete':
+        return this.http.delete<T>(url, { headers });
+      default:
+        return throwError(() => new Error(`Unsupported HTTP method: ${method}`));
+    }
+  }
 }

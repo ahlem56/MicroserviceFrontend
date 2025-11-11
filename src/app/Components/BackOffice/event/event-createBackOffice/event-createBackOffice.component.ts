@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { EventService, AppEvent } from '../../../../Core/event.service';
+import { EventService, EventPayload } from '../../../../Core/event.service';
 
 @Component({
   selector: 'app-event-create-back-office',
@@ -28,10 +28,12 @@ export class EventCreateBackOfficeComponent {
     private router: Router
   ) {
     this.eventForm = this.fb.group({
-      eventDate: ['', Validators.required],
-      eventDescription: ['', [Validators.required, Validators.maxLength(500)]],
-      eventLocation: ['', [Validators.required, Validators.maxLength(100)]],
-      maxParticipants: [1, [Validators.required, Validators.min(1)]],
+      title: ['', [Validators.required, Validators.maxLength(200)]],
+      description: ['', [Validators.required, Validators.maxLength(500)]],
+      location: ['', [Validators.required, Validators.maxLength(100)]],
+      startDate: ['', Validators.required],
+      endDate: [''],
+      published: [false],
       photo: [null]
     });
   }
@@ -41,28 +43,35 @@ export class EventCreateBackOfficeComponent {
   }
 
   onFileChange(event: Event) {
-    // 1) Cast to HTMLInputElement
     const inputEl = event.target as HTMLInputElement;
-
-    // 2) Now check for files
     const fileList = inputEl.files;
     if (!fileList || fileList.length === 0) {
       return;
     }
 
-    // 3) Grab the first File
     const file = fileList.item(0);
     if (!file) {
       return;
     }
 
-    // 4) Read it as Data URL
     const reader = new FileReader();
     reader.onload = () => {
       this.photoPreview = reader.result as string;
       this.eventForm.patchValue({ photo: this.photoPreview });
     };
     reader.readAsDataURL(file);
+  }
+
+  clearPhoto(): void {
+    this.photoPreview = null;
+    this.eventForm.patchValue({ photo: null });
+  }
+
+  private toApiDate(value: string): string {
+    if (!value) {
+      return value;
+    }
+    return value.length === 16 ? `${value}:00` : value;
   }
 
   onSubmit() {
@@ -73,14 +82,28 @@ export class EventCreateBackOfficeComponent {
       return;
     }
 
-    const newEvent: AppEvent = this.eventForm.value;
+    const vals = this.eventForm.value;
+    const newEvent: EventPayload = {
+      title: vals.title?.trim(),
+      description: vals.description?.trim(),
+      location: vals.location?.trim(),
+      startDate: this.toApiDate(vals.startDate),
+      endDate: this.toApiDate(vals.endDate || vals.startDate),
+      published: vals.published ?? false,
+      photo: vals.photo ?? null
+    };
+    
     this.eventService.createEvent(newEvent).subscribe({
       next: () => this.router.navigate(['/back-office/events/list']),
       error: err => {
         console.error('CreateEvent error response:', err);
         // If the backend returned { message: "...", timestamp: "..." }
-        this.serverError = err.message || err.error?.message || 'Création échouée';
+        this.serverError = err.message || err.error?.message || 'Creation failed';
       }
     });
+  }
+
+  cancel(): void {
+    this.router.navigate(['/back-office/events/list']);
   }
 }

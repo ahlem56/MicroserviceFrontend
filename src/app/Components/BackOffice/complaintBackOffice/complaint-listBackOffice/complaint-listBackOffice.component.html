@@ -26,11 +26,13 @@
       <table>
         <thead>
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Created Date</th>
             <th>Description</th>
             <th>Severity</th>
             <th>Status</th>
+            <th>Actions</th>
             @if (filterType === 'resolved') {
               <th>Admin's Response</th>
             }
@@ -42,15 +44,16 @@
         <tbody>
           @for (complaint of filteredComplaints; track complaint.complaintId) {
             <tr>
-              <td data-label="First Name">{{ complaint.simpleUser?.firstName || 'N/A' }}</td>
-              <td data-label="Last Name">{{ complaint.simpleUser?.lastName || 'N/A' }}</td>
-              <td data-label="Description">{{ complaint.complaintDescription }}</td>
+              <td data-label="ID">{{ complaint.reportId || complaint.complaintId || complaint.id || 'N/A' }}</td>
+              <td data-label="User ID">{{ complaint.userId || complaint.simpleUser?.userId || 'N/A' }}</td>
+              <td data-label="Created Date">{{ complaint.displayCreatedDate || complaint.createdDate || complaint.created_at || complaint.created_date || 'N/A' }}</td>
+              <td data-label="Description">{{ complaint.issueDescription || complaint.issue_description || complaint.description || complaint.complaintDescription || 'N/A' }}</td>
               <td data-label="Severity">
-                <div class="severity-dots" [title]="complaint.severity + ' severity'" role="img" [attr.aria-label]="complaint.severity + ' severity'">
+                <div class="severity-dots" [title]="(complaint.severity || 'unknown') + ' severity'" role="img" [attr.aria-label]="(complaint.severity || 'unknown') + ' severity'">
                   <span
-                    *ngFor="let _ of [].constructor(getSeverityDots(complaint.severity))"
+                    *ngFor="let _ of [].constructor(getSeverityDots(complaint.severity || ''))"
                     class="severity-dot"
-                    [style.backgroundColor]="getSeverityColor(complaint.severity)"
+                    [style.backgroundColor]="getSeverityColor(complaint.severity || '')"
                   ></span>
                 </div>
               </td>
@@ -59,7 +62,11 @@
                 'status-ignored': complaint.complaintStatus === 'ignored',
                 'status-resolved': complaint.complaintStatus === 'resolved'
               }">
-                {{ complaint.complaintStatus.charAt(0).toUpperCase() + complaint.complaintStatus.slice(1) }}
+                {{ (complaint.complaintStatus || complaint.status || 'unknown') | titlecase }}
+              </td>
+              <td data-label="Actions">
+                <button class="btn btn-sm btn-primary" (click)="onEditComplaint(complaint)">Update</button>
+                <button class="btn btn-sm btn-danger" (click)="onDeleteComplaint(complaint)">Delete</button>
               </td>
               @if (filterType === 'resolved') {
                 <td data-label="Admin's Response">{{ complaint.response || 'No response available' }}</td>

@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule,DatePipe } from '@angular/common';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './Core/auth.interceptor';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -30,10 +31,6 @@ import { ParcelDetailFrontOfficeComponent } from './Components/FrontOffice/parce
 
 import { VehicleDetailFrontOfficeComponent } from './Components/FrontOffice/vehicle/vehicle-detail/vehicle-detail.component';
 
-import { PaymentCreationFrontOfficeComponent } from './Components/FrontOffice/payment/payment-creation/payment-creation.component';
-import { PaymentHistoryFrontOfficeComponent } from './Components/FrontOffice/payment/payment-history/payment-history.component';
-import { PaymentMethodFrontOfficeComponent } from './Components/FrontOffice/payment/payment-method/payment-method.component';
-
 import { EventListFrontOfficeComponent } from './Components/FrontOffice/event/event-list/event-list.component';
 import { EventDetailFrontOfficeComponent } from './Components/FrontOffice/event/event-detail/event-detail.component';
 import { EventNotifyFrontOfficeComponent } from './Components/FrontOffice/event/event-notify/event-notify.component';
@@ -48,28 +45,15 @@ import { ComplaintCreationFrontOfficeComponent } from './Components/FrontOffice/
 import { ComplaintListFrontOfficeComponent } from './Components/FrontOffice/complaint/complaint-list/complaint-list.component';
 import { ComplaintDetailsFrontOfficeComponent } from './Components/FrontOffice/complaint/complaint-details/complaint-details.component';
 
-import { SubscriptionCreationFrontOfficeComponent } from './Components/FrontOffice/subscription/subscription-creation/subscription-creation.component';
-import { SubscriptionDetailsFrontOfficeComponent } from './Components/FrontOffice/subscription/subscription-details/subscription-details.component';
-
-import { PromotionDetailsFrontOfficeComponent } from './Components/FrontOffice/promotion/promotion-details/promotion-details.component';
-
 import { SignupComponent } from './Components/FrontOffice/signup/signup.component';
 
 // *************** BackOffice Components ***************
 import { DashboardModule } from './Components/BackOffice/dashboard/dashboard.module';  // Import the module where DashboardComponent is declared
-import { RuleCreationBackOfficeComponent } from './Components/BackOffice/rule/rule-creation/rule-creation.component';
-import { RuleDetailsBackOfficeComponent } from './Components/BackOffice/rule/rule-details/rule-details.component';
-import { PromotionCreationBackOfficeComponent } from './Components/BackOffice/promotion/promotion-creation/promotion-creation.component';
-import { PromotionEditBackOfficeComponent } from './Components/BackOffice/promotion/promotion-edit/promotion-edit.component';
 
 import { EventCreateBackOfficeComponent } from './Components/BackOffice/event/event-createBackOffice/event-createBackOffice.component';
 import { EventListBackOfficeComponent } from './Components/BackOffice/event/event-listBackOffice/event-listBackOffice.component';
 import { EventDetailBackOfficeComponent } from './Components/BackOffice/event/event-detailBackOffice/event-detailBackOffice.component';
 import { EventNotifyBackOfficeComponent } from './Components/BackOffice/event/event-notify/event-notify.component';
-
-import { PartnerListBackOfficeComponent } from './Components/BackOffice/partner/partner-list/partner-list.component';
-import { PartnerCreateBackOfficeComponent } from './Components/BackOffice/partner/partner-create/partner-create.component';
-import { PartnerEditComponent } from './Components/BackOffice/partner/partner-edit/partner-edit.component';
 
 import { CarpoolingListBackOfficeComponent } from './Components/BackOffice/carpoolBackOffice/carpooling-listBackOffice/carpooling-listBackOffice.component';
 import { CarpoolingDetailBackOfficeComponent } from './Components/BackOffice/carpoolBackOffice/carpooling-detailBackOffice/carpooling-detailBackOffice.component';
@@ -80,11 +64,6 @@ import { ComplaintDetailsBackOfficeComponent } from './Components/BackOffice/com
 import { ParcelListBackOfficeComponent } from './Components/BackOffice/parcelBackOffice/parcel-listBackOffice/parcel-listBackOffice.component';
 import { ParcelDetailBackOfficeComponent } from './Components/BackOffice/parcelBackOffice/parcel-detailBackOffice/parcel-detailBackOffice.component';
 import { ParcelTrackBackOfficeComponent } from './Components/BackOffice/parcelBackOffice/parcel-trackBackOffice/parcel-trackBackOffice.component';
-
-import { PaymentHistoryBackOfficeComponent } from './Components/BackOffice/payment/payment-history/payment-history.component';
-import { PaymentMethodBackOfficeComponent } from './Components/BackOffice/payment/payment-method/payment-method.component';
-
-import { SubscriptionDetailsBackOfficeComponent } from './Components/BackOffice/subscription/subscription-details/subscription-details.component';
 
 import { TripListBackOfficeComponent } from './Components/BackOffice/tripBackOffice/trip-listBackOffice/trip-listBackOffice.component';
 import { TripDetailBackOfficeComponent } from './Components/BackOffice/tripBackOffice/trip-detailBackOffice/trip-detailBackOffice.component';
@@ -136,9 +115,6 @@ import { ToastNotificationComponent } from './Shared/toast-notification/toast-no
 
 import {VehicleTravelHistoryComponent} from "./Components/BackOffice/vehicle/vehicle-travel-history/vehicle-travel-history.component";
 
-import { CommissionListComponent } from './Components/BackOffice/commission/commission-list/commission-list.component';
-import { PartnerCommissionComponent } from './Components/FrontOffice/commission/commission.component';
-
 // Define routes
 @NgModule({
   declarations: [
@@ -153,21 +129,13 @@ import { PartnerCommissionComponent } from './Components/FrontOffice/commission/
     ParcelCreateFrontOfficeComponent,
     ParcelDetailFrontOfficeComponent,
     VehicleDetailFrontOfficeComponent,
-    PaymentHistoryFrontOfficeComponent,
-    PaymentMethodFrontOfficeComponent,
     EventDetailFrontOfficeComponent,
     EventNotifyFrontOfficeComponent,
     ChatFrontOfficeComponent,
     ChatListFrontOfficeComponent,
     ChatMessageCreationFrontOfficeComponent,
     ChatMessageEditFrontOfficeComponent,
-    SubscriptionDetailsFrontOfficeComponent,
-    PromotionDetailsFrontOfficeComponent,
 
-
-    RuleDetailsBackOfficeComponent,
-    PromotionCreationBackOfficeComponent,
-    PromotionEditBackOfficeComponent,
    //EventDetailBackOfficeComponent,
     EventNotifyBackOfficeComponent,
    
@@ -176,8 +144,6 @@ import { PartnerCommissionComponent } from './Components/FrontOffice/commission/
     ParcelListBackOfficeComponent,
     ParcelDetailBackOfficeComponent,
     ParcelTrackBackOfficeComponent,
-    PaymentHistoryBackOfficeComponent,
-    PaymentMethodBackOfficeComponent,
     TripListBackOfficeComponent,
     TripDetailBackOfficeComponent,
     VehicleListBackOfficeComponent,
@@ -205,10 +171,8 @@ import { PartnerCommissionComponent } from './Components/FrontOffice/commission/
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatSort,
+    
     MatPaginatorModule,
-    RuleCreationBackOfficeComponent,
-    PartnerCreateBackOfficeComponent,
     MatTableModule,
     ConfirmDeleteComponentComponent,
     CommonModule,
@@ -221,10 +185,7 @@ import { PartnerCommissionComponent } from './Components/FrontOffice/commission/
     CarpoolingOfferFrontOfficeComponent,
     ComplaintDetailsFrontOfficeComponent,
     ComplaintListFrontOfficeComponent,
-    RuleCreationBackOfficeComponent,
 
-    PartnerListBackOfficeComponent,
-    PartnerEditComponent,
     DashboardModule,
     ToastrModule.forRoot({
       progressBar: true,
@@ -236,17 +197,13 @@ import { PartnerCommissionComponent } from './Components/FrontOffice/commission/
       preventDuplicates: true,
     }),
     ToastNotificationComponent,
-    SubscriptionCreationFrontOfficeComponent,
-    SubscriptionDetailsBackOfficeComponent,
     TripListDriverInterfaceComponent,
-    PaymentCreationFrontOfficeComponent,
     ResetPasswordComponent,
     EditDriverComponent,
     ComplaintListBackOfficeComponent,
     ComplaintDetailsBackOfficeComponent,
     CarpoolingCreateFrontOfficeComponent,
     ComplaintCreationFrontOfficeComponent,
-    ReactiveFormsModule,
     FooterComponent,
     EditProfileComponent,
     FormsModule,
@@ -255,15 +212,15 @@ import { PartnerCommissionComponent } from './Components/FrontOffice/commission/
     RouterModule,
     ScheduleDriverInterfaceComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent,
     ProfileComponent,
     AccessDeniedComponent,
     NotificationFrontOfficeComponent,
-    FullComponent,   // Import standalone component
-    CommissionListComponent,  // Import standalone component
-    PartnerCommissionComponent  // Import standalone component
+    FullComponent   // Import standalone component
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
   exports: [FooterComponent]
 })

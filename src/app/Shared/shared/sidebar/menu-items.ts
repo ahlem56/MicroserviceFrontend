@@ -44,25 +44,9 @@ export const ALL_ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: '/subscriptions/create',
-    title: 'Subscriptions',
-    icon: 'bi bi-journal-bookmark',  // Bookmark icon for subscriptions
-    class: '',
-    extralink: false,
-    submenu: []
-  },
-  {
     path: 'complaints/create',
     title: 'Complaints',
     icon: 'bi bi-exclamation-circle',  // Exclamation circle for complaints
-    class: '',
-    extralink: false,
-    submenu: []
-  },
-  {
-    path: 'partner/commissions',
-    title: 'My Commissions',
-    icon: 'bi bi-cash-stack',  // Cash stack icon for commissions
     class: '',
     extralink: false,
     submenu: []
@@ -144,41 +128,9 @@ export const ALL_ROUTES: RouteInfo[] = [
   submenu: []
 },
 {
-  path: 'back-office/subscriptions',
-  title: 'Subscriptions',
-  icon: 'bi bi-journal-bookmark',  // Bookmark icon for subscriptions
-  class: '',
-  extralink: false,
-  submenu: []
-},
-{
-  path: 'back-office/partners',
-  title: 'Partners',
-  icon: 'bi bi-person-lines-fill',  // Example: user icon for partners
-  class: '',
-  extralink: false,
-  submenu: []
-},
-{
-  path: 'back-office/commissions',
-  title: 'Commissions',
-  icon: 'bi bi-cash-stack',  // Cash stack icon for commissions
-  class: '',
-  extralink: false,
-  submenu: []
-},
-{
   path: 'back-office/complaints',
   title: 'Complaints',
   icon: 'bi bi-exclamation-circle',  // Exclamation circle for complaints
-  class: '',
-  extralink: false,
-  submenu: []
-},
-{
-  path: 'back-office/rules/create',
-  title: 'rules',
-  icon: "bi bi-clipboard-check",  // Exclamation circle for complaints
   class: '',
   extralink: false,
   submenu: []
@@ -210,14 +162,6 @@ export const ALL_ROUTES: RouteInfo[] = [
     extralink: false,
     submenu: []
   },
-{
-  path: 'partner/commissions',
-  title: 'My Commissions',
-  icon: 'bi bi-cash-stack',  // Cash stack icon for commissions
-  class: '',
-  extralink: false,
-  submenu: []
-},
 
 
 

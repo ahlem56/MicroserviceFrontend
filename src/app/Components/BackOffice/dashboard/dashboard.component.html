@@ -110,56 +110,103 @@
   </section>
 
   <!-- ============================================================== -->
-  <!-- Subscription and Event with Most Participants Section -->
+  <!-- Event with Most Participants Section -->
   <!-- ============================================================== -->
   <section class="subscription-event-container">
-    <!-- Subscription Stats Section -->
-    <div class="subscription-section">
-      <section class="metrics-section">
-        <div class="metrics-card">
-          <div class="metrics-card-header">
-            <h3>Subscription Statistics</h3>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-header">
-                <h4>Subscription Distribution</h4>
-              </div>
-              <div class="stat-main">
-                <div class="chart-container">
-                  <canvas id="subscriptionChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
     <!-- Event with Most Participants Section -->
     <div class="event-section">
       <section class="metrics-section">
         <div class="metrics-card">
           <div class="metrics-card-header">
-            <h3>Event with Most Participants</h3>
+            <h3>Upcoming Event Spotlight</h3>
           </div>
           <div class="event-container">
-            <div *ngIf="eventWithMostParticipants" class="event-card">
+            <div *ngIf="featuredEvent; else noEvents" class="event-card">
               <div class="event-image-container">
-                <img [src]="eventWithMostParticipants.photo || 'assets/default-event-photo.jpg'" alt="Event Image" class="event-image">
+                <img [src]="featuredEvent.photo || 'assets/default-event-photo.jpg'" alt="Event Image" class="event-image">
               </div>
               <div class="event-details">
-                <h4>{{ eventWithMostParticipants.eventDescription }}</h4>
-                <p><strong>Location:</strong> {{ eventWithMostParticipants.eventLocation }}</p>
-                <p><strong>Participants:</strong> {{ eventWithMostParticipants.simpleUsers.length }} / {{ eventWithMostParticipants.maxParticipants }}</p>
+                <h4>{{ featuredEvent.title || featuredEvent.description }}</h4>
+                <p><strong>Location:</strong> {{ featuredEvent.location || '—' }}</p>
+                <p *ngIf="featuredEvent.startDate"><strong>Happening:</strong> {{ featuredEvent.startDate | date: 'medium' }}</p>
+                <p *ngIf="featuredEvent.endDate"><strong>Ends:</strong> {{ featuredEvent.endDate | date: 'medium' }}</p>
+                <p *ngIf="featuredEvent.currentParticipants !== undefined">
+                  <strong>Registrations:</strong> {{ featuredEvent.currentParticipants }}
+                </p>
+                <p><strong>Status:</strong> {{ featuredEvent.published ? 'Published' : 'Draft' }}</p>
               </div>
             </div>
-            <div *ngIf="!eventWithMostParticipants">
-              <p>Loading event details...</p>
-            </div>
+            <ng-template #noEvents>
+              <div class="empty-event">
+                <i class="fas fa-calendar-times"></i>
+                <p>No events available yet. Start by creating a new event.</p>
+              </div>
+            </ng-template>
           </div>
         </div>
       </section>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- Events Calendar -->
+  <!-- ============================================================== -->
+  <section class="calendar-section">
+    <div class="metrics-card">
+      <div class="metrics-card-header calendar-header">
+        <h3>Events Calendar</h3>
+        <div class="calendar-toolbar">
+          <button type="button" class="calendar-btn" (click)="previousMonth()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button type="button" class="calendar-btn" (click)="goToToday()">Today</button>
+          <button type="button" class="calendar-btn" (click)="nextMonth()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <span class="calendar-current-month">{{ viewDate | date: 'MMMM yyyy' }}</span>
+        </div>
+      </div>
+
+      <div class="calendar-wrapper">
+        <mwl-calendar-month-view
+          [viewDate]="viewDate"
+          [events]="calendarEvents"
+          [activeDayIsOpen]="activeDayIsOpen"
+          [refresh]="calendarRefresh"
+          (dayClicked)="dayClicked($event.day)"
+          (eventClicked)="eventClicked($event.event)"
+        >
+        </mwl-calendar-month-view>
+      </div>
+
+      <div class="day-events" *ngIf="selectedDate">
+        <h4>{{ selectedDate | date: 'fullDate' }}</h4>
+        <ng-container *ngIf="selectedDayEvents.length; else noDayEvents">
+          <div class="day-event-card" *ngFor="let event of selectedDayEvents">
+            <div class="day-event-header">
+              <h5>{{ event.title }}</h5>
+              <span class="badge" [class.badge-live]="event.meta?.published" [class.badge-draft]="!event.meta?.published">
+                {{ event.meta?.published ? 'Published' : 'Draft' }}
+              </span>
+            </div>
+            <p class="day-event-time">
+              <i class="fas fa-clock"></i>
+              {{ event.start | date: 'shortTime' }}
+              <span *ngIf="event.end"> - {{ event.end | date: 'shortTime' }}</span>
+            </p>
+            <p class="day-event-location" *ngIf="event.meta?.location">
+              <i class="fas fa-map-marker-alt"></i>
+              {{ event.meta?.location }}
+            </p>
+            <p class="day-event-description" *ngIf="event.meta?.description">
+              {{ event.meta?.description }}
+            </p>
+          </div>
+        </ng-container>
+        <ng-template #noDayEvents>
+          <p class="no-day-events">No events scheduled for this day.</p>
+        </ng-template>
+      </div>
     </div>
   </section>
 
